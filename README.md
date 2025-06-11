@@ -19,3 +19,23 @@ Just add the `yaml-language-server` comment to the top of your YAML files.
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/storage.json
 ```
+
+### `deploy.yml`
+
+Planned
+
+### `recurring.yml`
+
+Planned
+
+### `queue.yml`
+
+Planned
+
+### `cache.yml`
+
+Planned
+
+### `cable.yml`
+
+Planned
