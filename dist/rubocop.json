@@ -232,7 +232,48 @@
           }
         }
       ]
-    }
+    },
+    "Gemspec/AddRuntimeDependency": { "$ref": "#/definitions/cop" },
+    "Gemspec/DependencyVersion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["required", "forbidden"]
+            }
+          }
+        }
+      ]
+    },
+    "Gemspec/DeprecatedAttributeAssignment": { "$ref": "#/definitions/cop" },
+    "Gemspec/DevelopmentDependencies": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["Gemfile", "gems.rb", "gemspec"]
+            }
+          }
+        }
+      ]
+    },
+    "Gemspec/DuplicatedAssignment": { "$ref": "#/definitions/cop" },
+    "Gemspec/OrderedDependencies": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "TreatCommentsAsGroupSeparators": { "type": "boolean" },
+            "ConsiderPunctuation": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Gemspec/RequireMFA": { "$ref": "#/definitions/cop" },
+    "Gemspec/RequiredRubyVersion": { "$ref": "#/definitions/cop" },
+    "Gemspec/RubyVersionGlobalsUsage": { "$ref": "#/definitions/cop" }
   },
   "additionalProperties": {
     "anyOf": [
