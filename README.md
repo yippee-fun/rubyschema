@@ -44,4 +44,8 @@ Planned
 
 ### `rubocop.yml`
 
-Planned
+Currently only supports the Bundler department. Other departments and cops should work but will have limited validation.
+
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
+```
