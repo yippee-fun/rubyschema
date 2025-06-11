@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://www.rubyschema.org/rails/storage.json",
+  "title": "Rails Storage Configuration",
+  "description": "Configuration for ActiveStorage.",
+  "type": "object",
+  "definitions": {
+    "disk_service": {
+      "description": "Disk Service",
+      "properties": {
+        "service": { "enum": ["Disk"] },
+        "root": {
+          "type": "string",
+          "default": "<%= Rails.root.join(\"storage\") %>"
+        }
+      },
+      "required": ["service", "root"]
+    },
+    "s3_service": {
+      "description": "",
+      "properties": {
+        "service": {
+          "enum": ["S3"]
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "access_key_id": {
+          "type": "string",
+          "default": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>"
+        },
+        "secret_access_key": {
+          "type": "string",
+          "default": "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>"
+        },
+        "region": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "enum": [
+                "af-south-1",
+                "ap-east-1",
+                "ap-east-2",
+                "ap-northeast-1",
+                "ap-northeast-2",
+                "ap-northeast-3",
+                "ap-south-1",
+                "ap-south-2",
+                "ap-southeast-1",
+                "ap-southeast-2",
+                "ap-southeast-3",
+                "ap-southeast-4",
+                "ap-southeast-5",
+                "ap-southeast-7",
+                "ca-central-1",
+                "ca-west-1",
+                "eu-central-1",
+                "eu-central-2",
+                "eu-north-1",
+                "eu-south-1",
+                "eu-south-2",
+                "eu-west-1",
+                "eu-west-2",
+                "eu-west-3",
+                "il-central-1",
+                "me-central-1",
+                "me-south-1",
+                "mx-central-1",
+                "sa-east-1",
+                "us-east-1",
+                "us-east-2",
+                "us-gov-east-1",
+                "us-gov-west-1",
+                "us-west-1",
+                "us-west-2"
+              ]
+            }
+          ]
+        },
+        "bucket": {
+          "type": "string"
+        }
+      },
+      "required": ["service", "access_key_id", "secret_access_key", "bucket"]
+    },
+    "gcs_service": {
+      "properties": {
+        "service": {
+          "enum": ["GCS"]
+        },
+        "project": {
+          "type": "string"
+        },
+        "credentials": {
+          "oneOf": [
+            {
+              "description": "Your GCS keyfile path.",
+              "type": "string",
+              "default": "<%= Rails.root.join(\"path/to/gcs.keyfile\") %>"
+            },
+            {
+              "type": "object",
+              "title": "GCS Credentials",
+              "properties": {
+                "type": { "type": "string" },
+                "project_id": { "type": "string" },
+                "private_key_id": {
+                  "type": "string",
+                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key_id) %>"
+                },
+                "private_key": {
+                  "type": "string",
+                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key).dump %>"
+                },
+                "client_email": { "type": "string" },
+                "client_id": { "type": "string" },
+                "auth_uri": { "type": "string" },
+                "token_uri": { "type": "string" },
+                "auth_provider_x509_cert_url": { "type": "string" },
+                "client_x509_cert_url": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "iam": {
+          "type": "boolean"
+        },
+        "bucket": {
+          "type": "string"
+        },
+        "cache_control": {
+          "type": "string"
+        }
+      },
+      "required": ["service", "project", "bucket"]
+    },
+    "azure_storage_service": {
+      "properties": {
+        "service": {
+          "enum": ["AzureStorage"]
+        },
+        "storage_account_name": {
+          "type": "string"
+        },
+        "storage_access_key": {
+          "type": "string",
+          "default": "<%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>"
+        }
+      },
+      "required": ["service", "storage_account_name", "storage_access_key"]
+    },
+    "mirror_service": {
+      "properties": {
+        "service": {
+          "enum": ["Mirror"]
+        },
+        "primary": {
+          "type": "string"
+        },
+        "mirrors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["service", "primary", "mirrors"]
+    },
+    "service": {
+      "type": "object",
+      "anyOf": [
+        { "$ref": "#/definitions/disk_service" },
+        { "$ref": "#/definitions/s3_service" },
+        { "$ref": "#/definitions/gcs_service" },
+        { "$ref": "#/definitions/azure_storage_service" },
+        { "$ref": "#/definitions/mirror_service" }
+      ]
+    }
+  },
+  "properties": {
+    "test": { "$ref": "#/definitions/service" },
+    "local": { "$ref": "#/definitions/service" },
+    "amazon": { "$ref": "#/definitions/service" },
+    "google": { "$ref": "#/definitions/service" },
+    "microsoft": { "$ref": "#/definitions/service" },
+    "mirror": { "$ref": "#/definitions/service" }
+  },
+  "additionalProperties": { "$ref": "#/definitions/service" }
+}
