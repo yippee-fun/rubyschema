@@ -125,7 +125,12 @@
               "type": "object",
               "title": "GCS Credentials",
               "properties": {
-                "type": { "type": "string" },
+                "type": {
+                  "anyOf": [
+                    { "type": "string" },
+                    { "enum": ["service_account"] }
+                  ]
+                },
                 "project_id": { "type": "string" },
                 "private_key_id": {
                   "type": "string",
