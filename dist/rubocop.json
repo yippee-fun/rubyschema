@@ -1,0 +1,243 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://www.rubyschema.org/rails/storage.json",
+  "title": "Rubocop Configuration",
+  "definitions": {
+    "cop": {
+      "properties": {
+        "Enabled": { "type": "boolean" },
+        "Include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "Exclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "Severity": {
+          "enum": [
+            "info",
+            "refactor",
+            "convention",
+            "warning",
+            "error",
+            "fatal"
+          ]
+        },
+        "Details": {
+          "type": "string"
+        },
+        "AutoCorrect": {
+          "enum": ["always", "contextual", "disabled"]
+        },
+        "StyleGuide": {
+          "type": "string"
+        },
+        "VersionAdded": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+        "VersionChanged": { "type": "string", "pattern": "^\\d+\\.\\d+$" }
+      }
+    },
+    "department": {
+      "properties": {
+        "Enabled": { "type": "boolean" },
+        "StyleGuideBaseURL": {
+          "type": "string",
+          "format": "uri"
+        },
+        "DocumentationBaseURL": {
+          "type": "string",
+          "format": "uri"
+        },
+        "DocumentationExtension": {
+          "anyOf": [{ "type": "string" }, { "enum": [".md", ".html", ".txt"] }]
+        }
+      }
+    }
+  },
+  "properties": {
+    "inherit_gem": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          {
+            "type": "array",
+            "items": { "type": "string" },
+            "uniqueItems": true
+          }
+        ]
+      }
+    },
+    "inherit_from": {
+      "anyOf": [
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      ]
+    },
+    "inherit_mode": {
+      "type": "object",
+      "properties": {
+        "merge": {
+          "type": "array",
+          "items": { "enum": ["Exclude", "Include"] },
+          "uniqueItems": true
+        }
+      }
+    },
+    "AllCops": {
+      "type": "object",
+      "properties": {
+        "Exclude": {
+          "description": "A list of globs for file paths that should be excluded.",
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "Include": {
+          "description": "A list of globs for file paths that should be included.",
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "DisabledByDefault": {
+          "type": "boolean"
+        },
+        "EnabledByDefault": {
+          "type": "boolean"
+        },
+        "TargetRubyVersion": {
+          "anyOf": [{ "type": "string", "pattern": "^\\d+\\.\\d+$" }]
+        },
+        "ParserEngine": {
+          "enum": ["parser_whitequark", "parser_prism"]
+        },
+        "StyleGuideBaseURL": {
+          "type": "string",
+          "format": "uri"
+        },
+        "DocumentationBaseURL": {
+          "type": "string",
+          "format": "uri"
+        },
+        "DocumentationExtension": {
+          "anyOf": [{ "type": "string" }, { "enum": [".md", ".html", ".txt"] }]
+        },
+        "ActiveSupportExtensionsEnabled": {
+          "type": "boolean"
+        },
+        "StringLiteralsFrozenByDefault": {
+          "description": "Set this to `true` if you enable frozen string literals globally with the `RUBYOPT` environment variable.",
+          "type": "boolean"
+        }
+      },
+      "not": {
+        "allOf": [
+          { "required": ["DisabledByDefault"] },
+          { "required": ["EnabledByDefault"] }
+        ]
+      }
+    },
+    "Bundler": { "$ref": "#/definitions/department" },
+    "Gemspec": { "$ref": "#/definitions/department" },
+    "Layout": { "$ref": "#/definitions/department" },
+    "Lint": { "$ref": "#/definitions/department" },
+    "Metrics": { "$ref": "#/definitions/department" },
+    "Migration": { "$ref": "#/definitions/department" },
+    "Naming": { "$ref": "#/definitions/department" },
+    "Security": { "$ref": "#/definitions/department" },
+    "Style": { "$ref": "#/definitions/department" },
+    "Bundler/DuplicatedGem": { "$ref": "#/definitions/cop" },
+    "Bundler/DuplicatedGroup": { "$ref": "#/definitions/cop" },
+    "Bundler/GemComment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "OnlyFor": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "type": "string" },
+                  {
+                    "enum": [
+                      "version_specifiers",
+                      "restrictive_version_specifiers",
+                      "bitbucket",
+                      "gist",
+                      "git",
+                      "github",
+                      "source"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Bundler/GemFilename": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["Gemfile", "gems.rb"]
+            }
+          }
+        }
+      ]
+    },
+    "Bundler/GemVersion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["required", "forbidden"]
+            },
+            "AllowedGems": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Bundler/InsecureProtocolSource": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowHttpProtocol": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Bundler/OrderedGems": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "TreatCommentsAsGroupSeparators": { "type": "boolean" },
+            "ConsiderPunctuation": { "type": "boolean" }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      { "$ref": "#/definitions/cop" },
+      { "$ref": "#/definitions/department" }
+    ]
+  }
+}
