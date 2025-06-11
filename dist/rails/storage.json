@@ -14,7 +14,8 @@
           "default": "<%= Rails.root.join(\"storage\") %>"
         }
       },
-      "required": ["service", "root"]
+      "required": ["service", "root"],
+      "additionalProperties": false
     },
     "s3_service": {
       "description": "",
@@ -79,9 +80,31 @@
         },
         "bucket": {
           "type": "string"
+        },
+        "http_open_timeout": {
+          "type": ["integer", "string"]
+        },
+        "http_read_timeout": {
+          "type": ["integer", "string"]
+        },
+        "retry_limit": {
+          "type": ["integer", "string"]
+        },
+        "upload": {
+          "type": "object",
+          "properties": {
+            "server_side_encryption": {
+              "enum": ["aws:kms", "AES256"]
+            },
+            "cache_control": {
+              "type": "string",
+              "default": "private, max-age=<%= 1.day.to_i %>"
+            }
+          }
         }
       },
-      "required": ["service", "access_key_id", "secret_access_key", "bucket"]
+      "required": ["service", "access_key_id", "secret_access_key", "bucket"],
+      "additionalProperties": false
     },
     "gcs_service": {
       "properties": {
@@ -132,7 +155,15 @@
           "type": "string"
         }
       },
-      "required": ["service", "project", "bucket"]
+      "anyOf": [
+        {
+          "required": ["service", "project", "bucket", "credentials"]
+        },
+        {
+          "required": ["service", "project", "bucket", "iam"]
+        }
+      ],
+      "additionalProperties": false
     },
     "azure_storage_service": {
       "properties": {
@@ -147,7 +178,8 @@
           "default": "<%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>"
         }
       },
-      "required": ["service", "storage_account_name", "storage_access_key"]
+      "required": ["service", "storage_account_name", "storage_access_key"],
+      "additionalProperties": false
     },
     "mirror_service": {
       "properties": {
@@ -159,12 +191,14 @@
         },
         "mirrors": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
             "type": "string"
           }
         }
       },
-      "required": ["service", "primary", "mirrors"]
+      "required": ["service", "primary", "mirrors"],
+      "additionalProperties": false
     },
     "service": {
       "type": "object",
@@ -178,12 +212,56 @@
     }
   },
   "properties": {
-    "test": { "$ref": "#/definitions/service" },
-    "local": { "$ref": "#/definitions/service" },
-    "amazon": { "$ref": "#/definitions/service" },
-    "google": { "$ref": "#/definitions/service" },
-    "microsoft": { "$ref": "#/definitions/service" },
-    "mirror": { "$ref": "#/definitions/service" }
+    "test": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "Disk",
+        "root": "<%= Rails.root.join(\"tmp/storage\") %>"
+      }
+    },
+    "local": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "Disk",
+        "root": "<%= Rails.root.join(\"storage\") %>"
+      }
+    },
+    "amazon": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "S3",
+        "access_key_id": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>",
+        "secret_access_key": "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>",
+        "region": "us-east-1",
+        "bucket": "your_own_bucket-<%= Rails.env %>"
+      }
+    },
+    "google": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "GCS",
+        "project": "your_project",
+        "credentials": "<%= Rails.root.join(\"path/to/gcs.keyfile\") %>",
+        "bucket": "your_own_bucket-<%= Rails.env %>"
+      }
+    },
+    "microsoft": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "AzureStorage",
+        "storage_account_name": "your_account_name",
+        "storage_access_key": "<%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>",
+        "container": "your_container_name-<%= Rails.env %>"
+      }
+    },
+    "mirror": {
+      "$ref": "#/definitions/service",
+      "default": {
+        "service": "Mirror",
+        "primary": "local",
+        "mirrors": ["amazon", "google", "microsoft"]
+      }
+    }
   },
   "additionalProperties": { "$ref": "#/definitions/service" }
 }
