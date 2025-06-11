@@ -39,3 +39,9 @@ Planned
 ### `cable.yml`
 
 Planned
+
+## Other
+
+### `rubocop.yml`
+
+Planned
