@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$id": "database.json",
+  "$id": "https://rubyschema.pages.dev/rails/database.json",
   "title": "Rails Database Configuration",
   "description": "A list of environments and their respective database configurations.",
   "type": "object",
