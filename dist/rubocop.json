@@ -273,7 +273,89 @@
     },
     "Gemspec/RequireMFA": { "$ref": "#/definitions/cop" },
     "Gemspec/RequiredRubyVersion": { "$ref": "#/definitions/cop" },
-    "Gemspec/RubyVersionGlobalsUsage": { "$ref": "#/definitions/cop" }
+    "Gemspec/RubyVersionGlobalsUsage": { "$ref": "#/definitions/cop" },
+    "Layout/AccessModifierIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["indent", "outdent"]
+            },
+            "IndentationWidth": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "Layout/ArgumentAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["with_first_argument", "with_fixed_indentation"]
+            },
+            "IndentationWidth": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "Layout/ArrayAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["with_first_element", "with_fixed_indentation"]
+            },
+            "IndentationWidth": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "Layout/AssignmentIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "IndentationWidth": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "Layout/BeginEndAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleAlignWith": {
+              "enum": ["start_of_line", "begin"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/BlockAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleAlignWith": {
+              "enum": ["either", "start_of_block", "start_of_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/BlockEndNewline": { "$ref": "#/definitions/cop" }
   },
   "additionalProperties": {
     "anyOf": [
