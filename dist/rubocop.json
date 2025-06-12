@@ -705,6 +705,31 @@
           }
         }
       ]
+    },
+    "Layout/FirstHashElementLineBreak": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstMethodArgumentLineBreak": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
