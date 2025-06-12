@@ -1713,6 +1713,32 @@
           }
         }
       ]
+    },
+    "Lint/EmptyInPattern": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowComments": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Lint/EmptyInterpolation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/EmptyWhen": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowComments": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Lint/EnsureReturn": {
+      "$ref": "#/definitions/cop"
     }
   },
   "additionalProperties": {
