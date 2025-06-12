@@ -730,6 +730,113 @@
           }
         }
       ]
+    },
+    "Layout/FirstMethodParameterLineBreak": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstParameterIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["consistent", "align_parentheses"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/HashAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedHashRocketStyle": {
+              "enum": ["key", "separator", "table"]
+            },
+            "EnforcedColonStyle": { "enum": ["key", "separator", "table"] },
+            "EnforcedLastArgumentHashStyle": {
+              "enum": [
+                "always_inspect",
+                "always_ignore",
+                "ignore_implicit",
+                "ignore_explicit"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/HeredocArgumentClosingParenthesis": { "$ref": "#/definitions/cop" },
+    "Layout/HeredocIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/IndentationConsistency": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["normal", "indented_internal_methods"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/IndentationStyle": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["spaces", "tabs"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/IndentationWidth": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Width": { "type": "integer" },
+            "AllowedPatterns": {
+              "type": "array",
+              "description": "Allowed regular expression patterns",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Layout/InitialIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/LeadingCommentSpace": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowDoxygenCommentStyle": { "type": "boolean" },
+            "AllowGemfileRubyComment": { "type": "boolean" },
+            "AllowRBSInlineAnnotation": { "type": "boolean" },
+            "AllowSteepAnnotation": { "type": "boolean" }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
