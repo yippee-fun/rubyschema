@@ -56,12 +56,6 @@
       }
     }
   },
-  "additionalProperties": {
-    "anyOf": [
-      { "$ref": "#/definitions/cop" },
-      { "$ref": "#/definitions/department" }
-    ]
-  },
   "properties": {
     "inherit_gem": {
       "type": "object",
@@ -161,9 +155,16 @@
     "Naming": { "$ref": "#/definitions/department" },
     "Security": { "$ref": "#/definitions/department" },
     "Style": { "$ref": "#/definitions/department" },
-    "Bundler/DuplicatedGem": { "$ref": "#/definitions/cop" },
-    "Bundler/DuplicatedGroup": { "$ref": "#/definitions/cop" },
+    "Bundler/DuplicatedGem": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlerduplicatedgem",
+      "$ref": "#/definitions/cop"
+    },
+    "Bundler/DuplicatedGroup": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlerduplicatedgroup",
+      "$ref": "#/definitions/cop"
+    },
     "Bundler/GemComment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlergemcomment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -192,6 +193,7 @@
       ]
     },
     "Bundler/GemFilename": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlergemfilename",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -204,6 +206,7 @@
       ]
     },
     "Bundler/GemVersion": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlergemversion",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -220,6 +223,7 @@
       ]
     },
     "Bundler/InsecureProtocolSource": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlerinsecureprotocolsource",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -232,6 +236,7 @@
       ]
     },
     "Bundler/OrderedGems": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_bundler.html#bundlerorderedgems",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -242,8 +247,12 @@
         }
       ]
     },
-    "Gemspec/AddRuntimeDependency": { "$ref": "#/definitions/cop" },
+    "Gemspec/AddRuntimeDependency": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecaddruntimedependency",
+      "$ref": "#/definitions/cop"
+    },
     "Gemspec/DependencyVersion": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecdependencyversion",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -255,8 +264,12 @@
         }
       ]
     },
-    "Gemspec/DeprecatedAttributeAssignment": { "$ref": "#/definitions/cop" },
+    "Gemspec/DeprecatedAttributeAssignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecdeprecatedattributeassignment",
+      "$ref": "#/definitions/cop"
+    },
     "Gemspec/DevelopmentDependencies": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecdevelopmentdependencies",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -268,8 +281,12 @@
         }
       ]
     },
-    "Gemspec/DuplicatedAssignment": { "$ref": "#/definitions/cop" },
+    "Gemspec/DuplicatedAssignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecduplicatedassignment",
+      "$ref": "#/definitions/cop"
+    },
     "Gemspec/OrderedDependencies": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecordereddependencies",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -280,9 +297,18 @@
         }
       ]
     },
-    "Gemspec/RequireMFA": { "$ref": "#/definitions/cop" },
-    "Gemspec/RequiredRubyVersion": { "$ref": "#/definitions/cop" },
-    "Gemspec/RubyVersionGlobalsUsage": { "$ref": "#/definitions/cop" },
+    "Gemspec/RequireMFA": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecrequiremfa",
+      "$ref": "#/definitions/cop"
+    },
+    "Gemspec/RequiredRubyVersion": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecrequiredrubyversion",
+      "$ref": "#/definitions/cop"
+    },
+    "Gemspec/RubyVersionGlobalsUsage": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_gemspec.html#gemspecrubyversionglobalsusage",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/AccessModifierIndentation": {
       "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutaccessmodifierindentation",
       "allOf": [
@@ -1337,6 +1363,104 @@
           }
         }
       ]
+    },
+    "Layout/SpaceInsideHashLiteralBraces": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidehashliteralbraces",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space", "compact"]
+            },
+            "EnforcedStyleForEmptyBraces": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceInsideParens": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsideparens",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space", "compact"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceInsidePercentLiteralDelimiters": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidepercentliteraldelimiters",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceInsideRangeLiteral": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsiderangeliteral",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceInsideReferenceBrackets": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidereferencebrackets",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space"]
+            },
+            "EnforcedStyleForEmptyBrackets": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceInsideStringInterpolation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidestringinterpolation",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/TrailingEmptyLines": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layouttrailingemptylines",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["final_newline", "final_blank_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/TrailingWhitespace": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layouttrailingwhitespace",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowInHeredoc": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
     }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      { "$ref": "#/definitions/cop" },
+      { "$ref": "#/definitions/department" }
+    ]
   }
 }
