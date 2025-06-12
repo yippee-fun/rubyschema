@@ -8,13 +8,13 @@
         "Enabled": { "type": "boolean" },
         "Include": {
           "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "type": "string" }
         },
         "Exclude": {
           "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "type": "string" }
         },
         "Severity": {
           "enum": [
@@ -56,6 +56,12 @@
       }
     }
   },
+  "additionalProperties": {
+    "anyOf": [
+      { "$ref": "#/definitions/cop" },
+      { "$ref": "#/definitions/department" }
+    ]
+  },
   "properties": {
     "inherit_gem": {
       "type": "object",
@@ -75,8 +81,8 @@
         { "type": "string" },
         {
           "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "type": "string" }
         }
       ]
     },
@@ -85,8 +91,8 @@
       "properties": {
         "merge": {
           "type": "array",
-          "items": { "enum": ["Exclude", "Include"] },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "enum": ["Exclude", "Include"] }
         }
       }
     },
@@ -96,14 +102,14 @@
         "Exclude": {
           "description": "A list of globs for file paths that should be excluded.",
           "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "type": "string" }
         },
         "Include": {
           "description": "A list of globs for file paths that should be included.",
           "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "items": { "type": "string" }
         },
         "DisabledByDefault": {
           "type": "boolean"
@@ -1292,12 +1298,45 @@
           }
         }
       ]
+    },
+    "Layout/SpaceInsideArrayLiteralBrackets": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidearrayliteralbrackets",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space", "compact"]
+            },
+            "EnforcedStyleForEmptyBrackets": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceInsideArrayPercentLiteral": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsidearraypercentliteral",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceInsideBlockBraces": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinsideblockbraces",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space"]
+            },
+            "EnforcedStyleForEmptyBraces": {
+              "enum": ["space", "no_space"]
+            },
+            "SpaceBeforeBlockParameters": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
     }
-  },
-  "additionalProperties": {
-    "anyOf": [
-      { "$ref": "#/definitions/cop" },
-      { "$ref": "#/definitions/department" }
-    ]
   }
 }
