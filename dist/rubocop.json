@@ -278,6 +278,7 @@
     "Gemspec/RequiredRubyVersion": { "$ref": "#/definitions/cop" },
     "Gemspec/RubyVersionGlobalsUsage": { "$ref": "#/definitions/cop" },
     "Layout/AccessModifierIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutaccessmodifierindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -293,6 +294,7 @@
       ]
     },
     "Layout/ArgumentAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutargumentalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -308,6 +310,7 @@
       ]
     },
     "Layout/ArrayAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutarrayalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -323,6 +326,7 @@
       ]
     },
     "Layout/AssignmentIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutassignmentindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -335,6 +339,7 @@
       ]
     },
     "Layout/BeginEndAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutbeginendalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -347,6 +352,7 @@
       ]
     },
     "Layout/BlockAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutblockalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -358,8 +364,12 @@
         }
       ]
     },
-    "Layout/BlockEndNewline": { "$ref": "#/definitions/cop" },
+    "Layout/BlockEndNewline": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutblockendnewline",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/CaseIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutcaseindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -374,6 +384,7 @@
       ]
     },
     "Layout/ClassStructure": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutclassstructure",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -462,9 +473,16 @@
         }
       ]
     },
-    "Layout/ClosingHeredocIndentation": { "$ref": "#/definitions/cop" },
-    "Layout/ClosingParenthesisIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/ClosingHeredocIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutclosingheredocindentation",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/ClosingParenthesisIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutclosingparenthesisindentation",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/CommentIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutcommentindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -474,8 +492,12 @@
         }
       ]
     },
-    "Layout/ConditionPosition": { "$ref": "#/definitions/cop" },
+    "Layout/ConditionPosition": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutconditionposition",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/DefEndAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutdefendalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -486,6 +508,7 @@
       ]
     },
     "Layout/DotPosition": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutdotposition",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -495,8 +518,12 @@
         }
       ]
     },
-    "Layout/ElseAlignment": { "$ref": "#/definitions/cop" },
+    "Layout/ElseAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutelsealignment",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyComment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptycomment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -507,10 +534,20 @@
         }
       ]
     },
-    "Layout/EmptyLineAfterGuardClause": { "$ref": "#/definitions/cop" },
-    "Layout/EmptyLineAfterMagicComment": { "$ref": "#/definitions/cop" },
-    "Layout/EmptyLineAfterMultilineCondition": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLineAfterGuardClause": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylineafterguardclause",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/EmptyLineAfterMagicComment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylineaftermagiccomment",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/EmptyLineAfterMultilineCondition": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylineaftermultilinecondition",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyLineBetweenDefs": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinebetweendefs",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -529,8 +566,12 @@
         }
       ]
     },
-    "Layout/EmptyLines": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLines": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylines",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyLinesAroundAccessModifier": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundaccessmodifier",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -542,8 +583,12 @@
         }
       ]
     },
-    "Layout/EmptyLinesAroundArguments": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLinesAroundArguments": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundarguments",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyLinesAroundAttributeAccessor": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundattributeaccessor",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -558,8 +603,12 @@
         }
       ]
     },
-    "Layout/EmptyLinesAroundBeginBody": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLinesAroundBeginBody": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundbeginbody",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyLinesAroundBlockBody": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundblockbody",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -570,6 +619,7 @@
       ]
     },
     "Layout/EmptyLinesAroundClassBody": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundclassbody",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -589,12 +639,15 @@
       ]
     },
     "Layout/EmptyLinesAroundExceptionHandlingKeywords": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundexceptionhandlingkeywords",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundMethodBody": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundmethodbody",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundModuleBody": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutemptylinesaroundmodulebody",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -612,6 +665,7 @@
       ]
     },
     "Layout/EndAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutendalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -624,6 +678,7 @@
       ]
     },
     "Layout/EndOfLine": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutendofline",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -636,6 +691,7 @@
       ]
     },
     "Layout/ExtraSpacing": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutextraspacing",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -648,6 +704,7 @@
       ]
     },
     "Layout/FirstArgumentIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstargumentindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -666,6 +723,7 @@
       ]
     },
     "Layout/FirstArrayElementIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstarrayelementindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -683,6 +741,7 @@
       ]
     },
     "Layout/FirstArrayElementLineBreak": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstarrayelementlinebreak",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -693,6 +752,7 @@
       ]
     },
     "Layout/FirstHashElementIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirsthashelementindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -710,6 +770,7 @@
       ]
     },
     "Layout/FirstHashElementLineBreak": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirsthashelementlinebreak",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -720,6 +781,7 @@
       ]
     },
     "Layout/FirstMethodArgumentLineBreak": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstmethodargumentlinebreak",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -735,6 +797,7 @@
       ]
     },
     "Layout/FirstMethodParameterLineBreak": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstmethodparameterlinebreak",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -745,6 +808,7 @@
       ]
     },
     "Layout/FirstParameterIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutfirstparameterindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -760,6 +824,7 @@
       ]
     },
     "Layout/HashAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layouthashalignment",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -780,9 +845,16 @@
         }
       ]
     },
-    "Layout/HeredocArgumentClosingParenthesis": { "$ref": "#/definitions/cop" },
-    "Layout/HeredocIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/HeredocArgumentClosingParenthesis": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutheredocargumentclosingparenthesis",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/HeredocIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutheredocindentation",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/IndentationConsistency": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutindentationconsistency",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -795,6 +867,7 @@
       ]
     },
     "Layout/IndentationStyle": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutindentationstyle",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -810,6 +883,7 @@
       ]
     },
     "Layout/IndentationWidth": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutindentationwidth",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -827,8 +901,12 @@
         }
       ]
     },
-    "Layout/InitialIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/InitialIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutinitialindentation",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/LeadingCommentSpace": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutleadingcommentspace",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -841,8 +919,12 @@
         }
       ]
     },
-    "Layout/LeadingEmptyLines": { "$ref": "#/definitions/cop" },
+    "Layout/LeadingEmptyLines": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutleadingemptylines",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/LineContinuationLeadingSpace": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutlinecontinuationleadingspace",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -855,6 +937,7 @@
       ]
     },
     "Layout/LineContinuationSpacing": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutlinecontinuationspacing",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -867,6 +950,7 @@
       ]
     },
     "Layout/LineEndStringConcatenationIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutlineendstringconcatenationindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -882,6 +966,7 @@
       ]
     },
     "Layout/LineLength": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutlinelength",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -906,6 +991,7 @@
       ]
     },
     "Layout/MultilineArrayBraceLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinearraybracelayout",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -918,6 +1004,7 @@
       ]
     },
     "Layout/MultilineArrayLineBreaks": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinearraylinebreaks",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -928,6 +1015,7 @@
       ]
     },
     "Layout/MultilineAssignmentLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilineassignmentlayout",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -939,8 +1027,12 @@
         }
       ]
     },
-    "Layout/MultilineBlockLayout": { "$ref": "#/definitions/cop" },
+    "Layout/MultilineBlockLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilineblocklayout",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/MultilineHashBraceLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinehashbracelayout",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -953,6 +1045,7 @@
       ]
     },
     "Layout/MultilineHashKeyLineBreaks": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinehashkeylinebreaks",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -963,6 +1056,7 @@
       ]
     },
     "Layout/MultilineMethodArgumentLineBreaks": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinemethodargumentlinebreaks",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -973,6 +1067,7 @@
       ]
     },
     "Layout/MultilineMethodCallBraceLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinemethodcallbracelayout",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -985,6 +1080,7 @@
       ]
     },
     "Layout/MultilineMethodCallIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinemethodcallindentation",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
