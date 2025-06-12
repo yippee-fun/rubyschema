@@ -5,31 +5,36 @@
   "description": "A list of environments and their respective database configurations.",
   "type": "object",
   "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
     "environment": {
       "description": "Guide: https://guides.rubyonrails.org/configuring.html#configuring-a-database",
       "type": "object",
       "properties": {
         "adapter": {
           "anyOf": [
-            { "type": "string" },
-            { "enum": ["postgresql", "mysql2", "sqlite3"] }
+            { "enum": ["postgresql", "mysql2", "sqlite3"] },
+            { "type": "string" }
           ]
         },
         "url": {
           "type": "string"
         },
         "host": {
-          "oneOf": [
-            { "type": "string" },
-            { "enum": ["localhost", "127.0.0.1"] }
+          "anyOf": [
+            { "enum": ["localhost", "127.0.0.1"] },
+            { "type": "string" }
           ]
         },
         "port": {
           "anyOf": [
-            { "type": ["string", "integer"] },
             {
-              "enum": ["3306", 3306, "5432", 5432]
-            }
+              "enum": [3306, 5432]
+            },
+            { "type": "integer" },
+            { "$ref": "#/definitions/erb" }
           ]
         },
         "migrations_paths": {
@@ -40,7 +45,7 @@
         },
         "query_cache": {
           "description": "Enable or disable query caching.",
-          "type": ["string", "boolean"]
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
         },
         "database": {
           "type": "string"
@@ -53,33 +58,27 @@
         },
         "pool": {
           "description": "A connection pool synchronizes thread access to a limited number of database connections. This value sets the maximum number of connections that can be open to the database at the same time.\n\nIn most cases, this should be set to at least the number of threads your server manages.",
-          "type": ["integer", "string"]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "timeout": {
           "description": "Specifies the timeout in milliseconds for database operations.",
-          "type": ["integer", "string"]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "default": 1000
         },
         "socket": {
           "type": "string"
         },
         "advisory_locks": {
-          "type": ["boolean", "string"]
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
         },
         "statement_limit": {
-          "type": ["integer", "string"]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "connection_retries": {
-          "type": ["integer", "string"]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "encoding": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "enum": ["unicode", "utf8mb4"]
-            }
-          ]
+          "anyOf": [{ "enum": ["unicode", "utf8mb4"] }, { "type": "string" }]
         }
       },
       "additionalProperties": {
