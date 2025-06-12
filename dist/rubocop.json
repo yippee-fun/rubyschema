@@ -458,6 +458,73 @@
           }
         }
       ]
+    },
+    "Layout/ClosingHeredocIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/ClosingParenthesisIndentation": { "$ref": "#/definitions/cop" },
+    "Layout/CommentIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowForAlignment": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/ConditionPosition": { "$ref": "#/definitions/cop" },
+    "Layout/DefEndAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleAlignWith": { "enum": ["start_of_line", "def"] }
+          }
+        }
+      ]
+    },
+    "Layout/DotPosition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": { "enum": ["leading", "trailing"] }
+          }
+        }
+      ]
+    },
+    "Layout/ElseAlignment": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyComment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowBorderComment": { "type": "boolean" },
+            "AllowMarginComment": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/EmptyLineAfterGuardClause": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLineAfterMagicComment": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLineAfterMultilineCondition": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLineBetweenDefs": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EmptyLineBetweenMethodDefs": { "type": "boolean" },
+            "EmptyLineBetweenClassDefs": { "type": "boolean" },
+            "EmptyLineBetweenModuleDefs": { "type": "boolean" },
+            "DefLikeMacros": {
+              "type": "array",
+              "items": { "type": "string" },
+              "uniqueItems": true
+            },
+            "AllowAdjacentOneLineDefs": { "type": "boolean" },
+            "NumberOfEmptyLines": { "type": "integer" }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
