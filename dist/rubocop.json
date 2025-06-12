@@ -112,7 +112,7 @@
           "type": "boolean"
         },
         "TargetRubyVersion": {
-          "anyOf": [{ "type": "string", "pattern": "^\\d+\\.\\d+$" }]
+          "type": "number"
         },
         "ParserEngine": {
           "enum": ["parser_whitequark", "parser_prism"]
