@@ -837,6 +837,70 @@
           }
         }
       ]
+    },
+    "Layout/LeadingEmptyLines": { "$ref": "#/definitions/cop" },
+    "Layout/LineContinuationLeadingSpace": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["leading", "trailing"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/LineContinuationSpacing": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/LineEndStringConcatenationIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["aligned", "indented"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/LineLength": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Max": { "type": "integer" },
+            "AllowHeredoc": { "type": "boolean" },
+            "AllowURI": { "type": "boolean" },
+            "URISchemes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "IgnoreCopDirectives": { "type": "boolean" },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "SplitStrings": { "type": "boolean" }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
