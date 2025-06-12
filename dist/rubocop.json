@@ -112,7 +112,10 @@
           "type": "boolean"
         },
         "TargetRubyVersion": {
-          "type": "number"
+          "anyOf": [
+            { "type": "number" },
+            { "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4] }
+          ]
         },
         "ParserEngine": {
           "enum": ["parser_whitequark", "parser_prism"]
@@ -898,6 +901,100 @@
               "items": { "type": "string" }
             },
             "SplitStrings": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineArrayBraceLayout": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["symmetrical", "new_line", "same_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineArrayLineBreaks": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineAssignmentLayout": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["same_line", "new_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineBlockLayout": { "$ref": "#/definitions/cop" },
+    "Layout/MultilineHashBraceLayout": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["symmetrical", "new_line", "same_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineHashKeyLineBreaks": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineMethodArgumentLineBreaks": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineMethodCallBraceLayout": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["symmetrical", "new_line", "same_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineMethodCallIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["aligned", "indented", "indented_relative_to_receiver"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
           }
         }
       ]
