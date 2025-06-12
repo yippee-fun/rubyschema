@@ -283,7 +283,7 @@
               "enum": ["indent", "outdent"]
             },
             "IndentationWidth": {
-              "type": "integer"
+              "type": ["integer", "null"]
             }
           }
         }
@@ -298,7 +298,7 @@
               "enum": ["with_first_argument", "with_fixed_indentation"]
             },
             "IndentationWidth": {
-              "type": "integer"
+              "type": ["integer", "null"]
             }
           }
         }
@@ -313,7 +313,7 @@
               "enum": ["with_first_element", "with_fixed_indentation"]
             },
             "IndentationWidth": {
-              "type": "integer"
+              "type": ["integer", "null"]
             }
           }
         }
@@ -325,7 +325,7 @@
         {
           "properties": {
             "IndentationWidth": {
-              "type": "integer"
+              "type": ["integer", "null"]
             }
           }
         }
@@ -365,7 +365,7 @@
               "enum": ["case", "end"]
             },
             "IndentOneStep": { "type": "boolean" },
-            "IndentationWidth": { "type": "integer" }
+            "IndentationWidth": { "type": ["integer", "null"] }
           }
         }
       ]
@@ -657,7 +657,7 @@
                 "special_for_inner_method_call_in_parentheses"
               ]
             },
-            "IndentationWidth": { "type": "integer" }
+            "IndentationWidth": { "type": ["integer", "null"] }
           }
         }
       ]
@@ -674,7 +674,7 @@
                 "align_brackets"
               ]
             },
-            "IndentationWidth": { "type": "integer" }
+            "IndentationWidth": { "type": ["integer", "null"] }
           }
         }
       ]
@@ -701,7 +701,7 @@
                 "align_braces"
               ]
             },
-            "IndentationWidth": { "type": "integer" }
+            "IndentationWidth": { "type": ["integer", "null"] }
           }
         }
       ]
