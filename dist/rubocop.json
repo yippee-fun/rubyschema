@@ -1094,6 +1094,204 @@
           }
         }
       ]
+    },
+    "Layout/MultilineMethodDefinitionBraceLayout": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinemethoddefinitionbracelayout",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["symmetrical", "new_line", "same_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineMethodParameterLineBreaks": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutmultilinemethodparameterlinebreaks",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/MultilineOperationIndentation": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layout/multilineoperationindentation",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["aligned", "indented"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/ParameterAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutparameteralignment",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["with_first_parameter", "with_fixed_indentation"]
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/RedundantLineBreak": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutredundantlinebreak",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "InspectBlocks": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/RescueEnsureAlignment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutrescueensurealignment",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SingleLineBlockChain": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutsinglelineblockchain",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAfterColon": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceaftercolon",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAfterComma": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceaftercomma",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAfterMethodName": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceaftermethodname",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAfterNot": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceafternot",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAfterSemicolon": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceaftersemicolon",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAroundBlockParameters": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacearoundblockparameters",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleInsidePipes": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceAroundEqualsInParameterDefault": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacearoundequalsinparameterdefault",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceAroundKeyword": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacearoundkeyword",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAroundMethodCallOperator": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacearoundmethodcalloperator",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceAroundOperators": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacearoundoperators",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowForAlignment": { "type": "boolean" },
+            "EnforcedStyleForExponentOperator": {
+              "enum": ["space", "no_space"]
+            },
+            "EnforcedStyleForRationalLiterals": {
+              "enum": ["space", "no_space"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceBeforeBlockBraces": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforeblockbraces",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": { "enum": ["space", "no_space"] },
+            "EnforcedStyleForEmptyBraces": { "enum": ["space", "no_space"] }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceBeforeBrackets": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforebrackets",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceBeforeComma": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforecomma",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceBeforeComment": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforecomment",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceBeforeFirstArg": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforefirstarg",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowForAlignment": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/SpaceBeforeSemicolon": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspacebeforesemicolon",
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/SpaceInLambdaLiteral": {
+      "description": "https://docs.rubocop.org/rubocop/1.76/cops_layout.html#layoutspaceinlambdaliteral",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["require_no_space", "require_space"]
+            }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
