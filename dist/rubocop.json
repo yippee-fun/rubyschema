@@ -525,6 +525,186 @@
           }
         }
       ]
+    },
+    "Layout/EmptyLines": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLinesAroundAccessModifier": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["around", "only_before"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/EmptyLinesAroundArguments": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLinesAroundAttributeAccessor": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowAliasSyntax": { "type": "boolean" },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Layout/EmptyLinesAroundBeginBody": { "$ref": "#/definitions/cop" },
+    "Layout/EmptyLinesAroundBlockBody": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": { "enum": ["empty_lines", "no_empty_lines"] }
+          }
+        }
+      ]
+    },
+    "Layout/EmptyLinesAroundClassBody": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "empty_lines",
+                "empty_lines_except_namespace",
+                "empty_lines_special",
+                "no_empty_lines",
+                "beginning_only",
+                "ending_only"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/EmptyLinesAroundExceptionHandlingKeywords": {
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/EmptyLinesAroundMethodBody": {
+      "$ref": "#/definitions/cop"
+    },
+    "Layout/EmptyLinesAroundModuleBody": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "empty_lines",
+                "empty_lines_except_namespace",
+                "empty_lines_special",
+                "no_empty_lines"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/EndAlignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleAlignWith": {
+              "enum": ["keyword", "variable", "start_of_line"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/EndOfLine": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["native", "lf", "crlf"]
+            }
+          }
+        }
+      ]
+    },
+    "Layout/ExtraSpacing": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowForAlignment": { "type": "boolean" },
+            "AllowBeforeTrailingComments": { "type": "boolean" },
+            "ForceEqualSignAlignment": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstArgumentIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "consistent",
+                "consistent_relative_to_receiver",
+                "special_for_inner_method_call",
+                "special_for_inner_method_call_in_parentheses"
+              ]
+            },
+            "IndentationWidth": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstArrayElementIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "special_inside_parentheses",
+                "consistent",
+                "align_brackets"
+              ]
+            },
+            "IndentationWidth": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstArrayElementLineBreak": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultilineFinalElement": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "Layout/FirstHashElementIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "special_inside_parentheses",
+                "consistent",
+                "align_braces"
+              ]
+            },
+            "IndentationWidth": { "type": "integer" }
+          }
+        }
+      ]
     }
   },
   "additionalProperties": {
