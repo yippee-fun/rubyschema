@@ -355,7 +355,110 @@
         }
       ]
     },
-    "Layout/BlockEndNewline": { "$ref": "#/definitions/cop" }
+    "Layout/BlockEndNewline": { "$ref": "#/definitions/cop" },
+    "Layout/CaseIndentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["case", "end"]
+            },
+            "IndentOneStep": { "type": "boolean" },
+            "IndentationWidth": { "type": "integer" }
+          }
+        }
+      ]
+    },
+    "Layout/ClassStructure": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "ExpectedOrder": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "enum": [
+                  "module_inclusion",
+                  "constants",
+                  "association",
+                  "public_attribute_macros",
+                  "public_delegate",
+                  "macros",
+                  "public_class_methods",
+                  "initializer",
+                  "public_methods",
+                  "protected_attribute_macros",
+                  "protected_methods",
+                  "private_attribute_macros",
+                  "private_delegate",
+                  "private_methods"
+                ]
+              }
+            },
+            "Categories": {
+              "type": "object",
+              "properties": {
+                "association": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "enum": [
+                          "belongs_to",
+                          "has_one",
+                          "has_many",
+                          "has_and_belongs_to_many"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "attribute_macros": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "enum": ["attr_accessor", "attr_reader", "attr_writer"]
+                      }
+                    ]
+                  }
+                },
+                "macros": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "enum": ["validates", "validate"]
+                      }
+                    ]
+                  }
+                },
+                "module_inclusion": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "enum": ["include", "prepend", "extend"]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   },
   "additionalProperties": {
     "anyOf": [
