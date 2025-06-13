@@ -1838,6 +1838,296 @@
     },
     "Lint/MixedCaseRange": {
       "$ref": "#/definitions/cop"
+    },
+    "Lint/MixedRegexpCaptureTypes": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/MultipleComparison": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NestedMethodDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/NestedPercentLiteral": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NextWithoutAccumulator": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NoReturnInBeginEndBlocks": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NonAtomicFileOperation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NonDeterministicRequireOrder": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NonLocalExitFromIterator": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NumberConversion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "IgnoredClasses": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/NumberedParameterAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/NumericOperationWithConstantResult": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/OrAssignmentToConstant": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/OrderedMagicComments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/OutOfRangeRegexpRef": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ParenthesesAsGroupedExpression": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/PercentStringArray": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/PercentSymbolArray": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RaiseException": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedImplicitNamespaces": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/RandOne": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantCopDisableDirective": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantCopEnableDirective": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantDirGlobSort": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantRegexpQuantifiers": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantRequireStatement": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantSafeNavigation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/RedundantSplatExpansion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowPercentLiteralArrayArgument": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Lint/RedundantStringCoercion": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantTypeConversion": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantWithIndex": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RedundantWithObject": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RefinementImportMethods": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RegexpAsCondition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RequireParentheses": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RequireRangeParentheses": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RequireRelativeSelfPath": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RescueException": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/RescueType": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ReturnInVoidContext": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SafeNavigationChain": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/SafeNavigationConsistency": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/SafeNavigationWithEmpty": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ScriptPermission": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SelfAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SendWithMixinArgument": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ShadowedArgument": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "IgnoreImplicitReferences": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Lint/ShadowedException": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ShadowingOuterLocalVariable": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SharedMutableDefault": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/StructNewOverride": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SuppressedException": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowComments": {
+              "type": "boolean"
+            },
+            "AllowNil": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Lint/SuppressedExceptionInNumberConversion": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SymbolConversion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["strict", "consistent"]
+            }
+          }
+        }
+      ]
+    },
+    "Lint/Syntax": {
+      "$ref": "#/definitions/cop"
     }
   },
   "additionalProperties": {
