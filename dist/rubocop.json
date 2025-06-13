@@ -1739,6 +1739,105 @@
     },
     "Lint/EnsureReturn": {
       "$ref": "#/definitions/cop"
+    },
+    "Lint/ErbNewArguments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/FlipFlop": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/FloatComparison": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/FloatOutOfRange": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/FormatParameterMismatch": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/HashCompareByIdentity": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/HashNewWithKeywordArgumentsAsDefault": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/HeredocMethodCallPosition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/IdentityComparison": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ImplicitStringConcatenation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/IncompatibleIoSelectWithFiberScheduler": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/IneffectiveAccessModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/InheritException": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["standard_error", "runtime_error"]
+            }
+          }
+        }
+      ]
+    },
+    "Lint/InterpolationCheck": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/ItWithoutArgumentsInBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/LambdaWithoutLiteralBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/LiteralAsCondition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/LiteralAssignmentInCondition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/LiteralInInterpolation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/Loop": {
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/MissingCopEnableDirective": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MaximumRangeSize": { "type": "number" }
+          }
+        }
+      ]
+    },
+    "Lint/MissingSuper": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedParentClasses": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Lint/MixedCaseRange": {
+      "$ref": "#/definitions/cop"
     }
   },
   "additionalProperties": {
