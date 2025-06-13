@@ -55,3 +55,11 @@ Currently only supports the Bundler department. Other departments and cops shoul
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
 ```
+
+### `vite.json`
+
+```json
+{
+  "$schema": "https://www.rubyschema.org/vite.json"
+}
+```

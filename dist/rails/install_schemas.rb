@@ -16,6 +16,7 @@ json_schemas = {
   "./.prettierrc" => "https://www.schemastore.org/prettierrc.json",
   "./tsconfig.json" => "https://www.schemastore.org/tsconfig.json",
   "./.stylelintrc" => "https://www.schemastore.org/stylelintrc.json",
+  "./config/vite.json" => "https://www.rubyschema.org/vite.json",
 }.freeze
 
 yaml_schemas.each do |pattern, schema_url|
