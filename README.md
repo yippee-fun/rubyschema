@@ -46,7 +46,7 @@ Planned
 
 ### `rubocop.yml`
 
-Currently only supports the Bundler department. Other departments and cops should work but will have limited validation.
+Currently only supports `Bundler`, `Gemspec`, `Layout`, `Lint`, `Metrics` and `Migration` departments. Other departments and cops should work but will have limited validation for now.
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
