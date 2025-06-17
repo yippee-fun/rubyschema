@@ -1901,11 +1901,7 @@
         {
           "properties": {
             "AllowedParentClasses": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "$ref": "#/definitions/constant"
-              }
+              "$ref": "#/definitions/constants"
             }
           }
         }
@@ -1984,11 +1980,7 @@
               "items": { "type": "string" }
             },
             "IgnoredClasses": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "$ref": "#/definitions/constant"
-              }
+              "$ref": "#/definitions/constants"
             }
           }
         }
@@ -2033,11 +2025,7 @@
         {
           "properties": {
             "AllowedImplicitNamespaces": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "$ref": "#/definitions/constant"
-              }
+              "$ref": "#/definitions/constants"
             }
           }
         }
@@ -2372,11 +2360,7 @@
               "type": "boolean"
             },
             "NotImplementedExceptions": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "$ref": "#/definitions/constant"
-              }
+              "$ref": "#/definitions/constants"
             }
           }
         }
@@ -2486,6 +2470,251 @@
           }
         }
       ]
+    },
+    "Metrics/AbcSize": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsabcsize",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "CountRepeatedAttributes": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/BlockLength": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsblocklength",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CountComments": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "CountAsOne": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/BlockNesting": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsblocknesting",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CountBlocks": {
+              "type": "boolean"
+            },
+            "CountModifierForms": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/ClassLength": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsclasslength",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CountComments": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "CountAsOne": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/CollectionLiteralLength": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricscollectionliterallength",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "LengthThreshold": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/CyclomaticComplexity": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricscyclomaticcomplexity",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/MethodLength": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsmethodlength",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CountComments": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "CountAsOne": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/ModuleLength": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsmodulelength",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CountComments": {
+              "type": "boolean"
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "CountAsOne": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/ParameterLists": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsparameterlists",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "CountKeywordArgs": {
+              "type": "boolean"
+            },
+            "MaxOptionalParameters": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Metrics/PerceivedComplexity": {
+      "description": "https://docs.rubocop.org/rubocop/cops_metrics.html#metricsperceivedcomplexity",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Migration/DepartmentName": {
+      "$ref": "#/definitions/cop"
     }
   },
   "additionalProperties": {
