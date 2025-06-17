@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
+# yaml-language-server: $schema=./dist/rubocop.json
 
 inherit_from:
   - "https://www.goodcop.style/base.yml"
