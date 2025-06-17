@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://www.rubyschema.org/rubocop.json",
+  "$id": "https://www.rubyschema.org/kamal/deploy.json",
   "title": "Kamal Deployment Configuration",
   "definitions": {
     "registry": {
