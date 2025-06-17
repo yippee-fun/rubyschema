@@ -5,3 +5,5 @@ inherit_from:
 
 AllCops:
   TargetRubyVersion: 3.4
+
+Metrics/AbcSize:
