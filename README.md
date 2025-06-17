@@ -26,10 +26,6 @@ bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails/install
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/storage.json
 ```
 
-### `deploy.yml`
-
-Planned
-
 ### `recurring.yml`
 
 Planned
@@ -46,7 +42,7 @@ Planned
 
 Planned
 
-## Other
+## Rubocop
 
 ### `rubocop.yml`
 
@@ -56,10 +52,20 @@ Currently only supports the Bundler department. Other departments and cops shoul
 # yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
 ```
 
+## Vite
+
 ### `vite.json`
 
 ```json
 {
   "$schema": "https://www.rubyschema.org/vite.json"
 }
+```
+
+## Kamal
+
+### `deploy.yml`
+
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json
 ```

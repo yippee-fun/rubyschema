@@ -1,0 +1,564 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/rubocop.json",
+  "title": "Kamal Deployment Configuration",
+  "definitions": {
+    "registry": {
+      "type": "object",
+      "properties": {
+        "server": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          ]
+        }
+      }
+    },
+    "env": {
+      "properties": {
+        "clear": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["string", "number", "boolean", "null"]
+          }
+        },
+        "secret": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "clear": {
+              "type": "object",
+              "additionalProperties": {
+                "type": ["string", "number", "boolean", "null"]
+              }
+            },
+            "secret": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "proxy": {
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "app_port": {
+              "$ref": "#/definitions/port"
+            },
+            "ssl": {
+              "type": "boolean"
+            },
+            "ssl_redirect": {
+              "type": "boolean"
+            },
+            "forward_headers": {
+              "type": "boolean"
+            },
+            "response_timeout": {
+              "type": "integer"
+            },
+            "healthcheck": {
+              "type": "object",
+              "properties": {
+                "interval": {
+                  "type": "integer"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "timeout": {
+                  "type": "integer"
+                }
+              }
+            },
+            "buffering": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "boolean"
+                },
+                "responses": {
+                  "type": "boolean"
+                },
+                "max_request_body": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max_response_body": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "memory": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "logging": {
+              "type": "object",
+              "properties": {
+                "request_headers": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "response_headers": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "host": {
+                  "type": "string"
+                }
+              },
+              "required": ["host"]
+            },
+            {
+              "properties": {
+                "hosts": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": ["hosts"]
+            }
+          ]
+        }
+      ]
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "hosts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                { "type": "string" },
+                {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": { "type": "string" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "driver": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["driver"]
+    }
+  },
+  "properties": {
+    "service": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "registry": {
+      "$ref": "#/definitions/registry"
+    },
+    "servers": {
+      "oneOf": [
+        { "$ref": "#/definitions/hosts" },
+        {
+          "type": "object",
+          "properties": {
+            "hosts": {
+              "$ref": "#/definitions/hosts"
+            },
+            "cmd": {
+              "type": "string"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpus": {
+                  "type": "integer"
+                }
+              }
+            },
+            "logging": {
+              "$ref": "#/definitions/logging"
+            },
+            "proxy": {
+              "type": "boolean"
+            },
+            "labels": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "env": {
+              "type": "object"
+            },
+            "asset_path": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "env": {
+      "$ref": "#/definitions/env"
+    },
+    "asset_path": {
+      "type": "string"
+    },
+    "hooks_path": {
+      "type": "string"
+    },
+    "error_pages_path": {
+      "type": "string"
+    },
+    "require_destination": {
+      "type": "boolean"
+    },
+    "primary_role": {
+      "type": "string"
+    },
+    "allow_empty_roles": {
+      "type": "boolean"
+    },
+    "retain_containers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "minimum_version": {
+      "type": "number"
+    },
+    "readiness_delay": {
+      "type": "integer"
+    },
+    "deploy_timeout": {
+      "type": "integer"
+    },
+    "drain_timeout": {
+      "type": "integer"
+    },
+    "run_directory": {
+      "type": "string"
+    },
+    "ssh": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "proxy": {
+          "type": "string"
+        },
+        "proxy_command": {
+          "type": "string"
+        },
+        "log_level": {
+          "enum": ["debug", "fatal"]
+        },
+        "keys_only": {
+          "type": "boolean"
+        },
+        "keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "key_data": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "config": {
+          "type": "boolean"
+        }
+      }
+    },
+    "builder": {
+      "type": "object",
+      "properties": {
+        "arch": {
+          "anyOf": [
+            { "enum": ["amd64", "arm64"] },
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "enum": ["amd64", "arm64"] }
+            }
+          ]
+        },
+        "remote": {
+          "type": "string"
+        },
+        "local": {
+          "type": "boolean"
+        },
+        "cache": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "enum": ["gha", "registry"]
+            },
+            "options": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string"
+            }
+          }
+        },
+        "context": {
+          "type": "string"
+        },
+        "dockerfile": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "args": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "secrets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "ssh": {
+          "type": "string"
+        },
+        "driver": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "string"
+        },
+        "sbom": {
+          "type": "boolean"
+        }
+      }
+    },
+    "accessories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "service": {
+                "type": "string"
+              },
+              "image": {
+                "type": "string"
+              },
+              "registry": {
+                "$ref": "#/definitions/registry"
+              },
+              "cmd": {
+                "type": "string"
+              },
+              "port": {
+                "type": "string"
+              },
+              "labels": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "options": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "env": {
+                "$ref": "#/definitions/env"
+              },
+              "files": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "directories": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "volumes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "network": {
+                "type": "string"
+              },
+              "proxy": {
+                "$ref": "#/definitions/proxy"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "host": {
+                    "type": "string"
+                  }
+                },
+                "required": ["host"]
+              },
+              {
+                "properties": {
+                  "hosts": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["hosts"]
+              },
+              {
+                "properties": {
+                  "role": {
+                    "type": "string"
+                  }
+                },
+                "required": ["role"]
+              },
+              {
+                "properties": {
+                  "roles": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["roles"]
+              },
+              {
+                "properties": {
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": ["tag"]
+              },
+              {
+                "properties": {
+                  "tags": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["tags"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "proxy": {
+      "$ref": "#/definitions/proxy"
+    },
+    "boot": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "anyOf": [
+            { "type": "integer" },
+            { "type": "string", "pattern": "^\\d+%$" }
+          ]
+        },
+        "wait": {
+          "type": "integer"
+        }
+      }
+    },
+    "logging": {
+      "$ref": "#/definitions/logging"
+    },
+    "aliases": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["service"]
+}
