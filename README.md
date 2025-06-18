@@ -6,7 +6,7 @@ Ruby schema is a collection of schemas for the YAML and JSON configuration in co
 
 Just add the `yaml-language-server` comment to the top of your YAML files.
 
-## Rails
+### Rails
 
 To install all Rails schemas, run:
 
@@ -14,45 +14,45 @@ To install all Rails schemas, run:
 bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails/install_schemas.rb
 ```
 
-### `database.yml`
+#### `database.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/database.json
 ```
 
-### `storage.yml`
+#### `storage.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/storage.json
 ```
 
-### `recurring.yml`
+#### `recurring.yml`
 
 Planned
 
-### `queue.yml`
+#### `queue.yml`
 
 Planned
 
-### `cache.yml`
+#### `cache.yml`
 
 Planned
 
-### `cable.yml`
+#### `cable.yml`
 
 Planned
 
-## Rubocop
+### Rubocop
 
-### `rubocop.yml`
+#### `rubocop.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
 ```
 
-## Vite
+### Vite
 
-### `vite.json`
+#### `vite.json`
 
 ```json
 {
@@ -60,10 +60,16 @@ Planned
 }
 ```
 
-## Kamal
+### Kamal
 
-### `deploy.yml`
+#### `deploy.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json
 ```
+
+## Contributing
+
+If you find an issue with a schema, for example it says that something is invalid when it isn’t, please open an issue with an example.
+
+The schemas are written in JSON Schema version 7 (since that’s the version that YAML LSP supports). They are currently committed directly to the `dist` folder, which is deployed automatically to Cloudflare.
