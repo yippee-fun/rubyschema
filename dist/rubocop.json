@@ -30,7 +30,10 @@
           "type": "string"
         },
         "AutoCorrect": {
-          "enum": [true, false, "always", "contextual", "disabled"]
+          "oneOf": [
+            { "type": "boolean" },
+            { "enum": ["always", "contextual", "disabled"] }
+          ]
         },
         "StyleGuide": {
           "type": "string"
