@@ -934,9 +934,7 @@
               "type": "array",
               "description": "Allowed regular expression patterns",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             }
           }
         }
@@ -2064,9 +2062,7 @@
             "AllowedMethods": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             }
           }
         }
@@ -2320,9 +2316,7 @@
             "AllowedPatterns": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             }
           }
         }
@@ -2383,16 +2377,12 @@
             "ContextCreatingMethods": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             },
             "MethodCreatingMethods": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             }
           }
         }
@@ -2415,9 +2405,7 @@
             "AllowedReceivers": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             }
           }
         }
@@ -2480,16 +2468,12 @@
             "AllowedMethods": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             },
             "AllowedPatterns": {
               "type": "array",
               "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "items": { "type": "string" }
             },
             "CountRepeatedAttributes": {
               "type": "boolean"
@@ -3127,6 +3111,2297 @@
     },
     "Security/YAMLLoad": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securityyamlload)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/AccessModifierDeclarations": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["inline", "group"]
+            },
+            "AllowModifiersOnSymbols": {
+              "type": "boolean"
+            },
+            "AllowModifiersOnAttrs": {
+              "type": "boolean"
+            },
+            "AllowModifiersOnAliasMethod": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/AccessorGrouping": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["separated", "grouped"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/Alias": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["prefer_alias", "prefer_alias_method"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/AmbiguousEndlessMethodDefinition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/AndOr": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["always", "conditionals"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ArgumentsForwarding": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowOnlyRestArgument": {
+              "type": "boolean"
+            },
+            "UseAnonymousForwarding": {
+              "type": "boolean"
+            },
+            "RedundantRestArgumentNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "RedundantKeywordRestArgumentNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "RedundantBlockArgumentNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/ArrayCoercion": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ArrayFirstLast": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ArrayIntersect": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ArrayJoin": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/AsciiComments": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedChars": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/Attr": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/AutoResourceCleanup": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/BarePercentLiterals": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["percent_q", "bare_percent"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/BeginBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/BisectedAttrAccessor": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/BitwisePredicate": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/BlockComments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/BlockDelimiters": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "type": "string",
+              "enum": [
+                "line_count_based",
+                "semantic",
+                "braces_for_chaining",
+                "always_braces"
+              ]
+            },
+            "ProceduralMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "FunctionalMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowBracesOnProceduralOneLiners": {
+              "type": "boolean"
+            },
+            "BracesRequiredMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/CaseEquality": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowOnConstant": {
+              "type": "boolean"
+            },
+            "AllowOnSelfClass": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/CaseLikeIf": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinBranchesCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/CharacterLiteral": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ClassAndModuleChildren": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["nested", "compact"]
+            },
+            "EnforcedStyleForClasses": {
+              "enum": [null, "nested", "compact"]
+            },
+            "EnforcedStyleForModules": {
+              "enum": [null, "nested", "compact"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ClassCheck": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["is_a?", "kind_of?"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ClassEqualityComparison": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/ClassMethods": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ClassMethodsDefinitions": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["def_self", "self_class"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ClassVars": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/CollectionCompact": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedReceivers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/CollectionMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "PreferredMethods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "MethodsAcceptingSymbol": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/ColonMethodCall": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ColonMethodDefinition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/CombinableDefined": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/CombinableLoops": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/CommandLiteral": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["backticks", "percent_x", "mixed"]
+            },
+            "AllowInnerBackticks": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/CommentAnnotation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Keywords": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "RequireColon": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/CommentedKeyword": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ComparableBetween": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ComparableClamp": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ConcatArrayLiterals": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ConditionalAssignment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["assign_to_condition", "assign_inside_condition"]
+            },
+            "SingleLineConditionsOnly": {
+              "type": "boolean"
+            },
+            "IncludeTernaryExpressions": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/ConstantVisibility": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "IgnoreModules": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/Copyright": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Notice": {
+              "type": "string"
+            },
+            "AutocorrectNotice": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Style/DataInheritance": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/DateTime": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowCoercion": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/DefWithParentheses": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/DigChain": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/Dir": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/DirEmpty": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/DisableCopsWithinSourceCodeDirective": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedCops": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/DocumentDynamicEvalDefinition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/Documentation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedConstants": {
+              "$ref": "#/definitions/constants"
+            }
+          }
+        }
+      ]
+    },
+    "Style/DocumentationMethod": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "RequireForNonPublicMethods": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/DoubleCopDisableDirective": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/DoubleNegation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["allowed_in_returns", "forbidden"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/EachForSimpleLoop": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EachWithObject": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyBlockParameter": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyCaseCondition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyElse": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["empty", "nil", "both"]
+            },
+            "AllowComments": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/EmptyHeredoc": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyLambdaParameter": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyLiteral": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EmptyMethod": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["compact", "expanded"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/EmptyStringInsideInterpolation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["trailing_conditional", "ternary"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/Encoding": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EndBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EndlessMethod": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "type": "string",
+              "enum": [
+                "allow_single_line",
+                "allow_always",
+                "disallow",
+                "require_single_line",
+                "require_always"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/EnvHome": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EvalWithLocation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/EvenOdd": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ExactRegexpMatch": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ExpandPathArguments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ExplicitBlockArgument": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ExponentialNotation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["scientific", "engineering", "integral"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/FetchEnvVar": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedVars": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/FileEmpty": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FileNull": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FileRead": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FileTouch": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FileWrite": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FloatDivision": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["left_coerce", "right_coerce", "single_coerce", "fdiv"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/For": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["each", "for"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/FormatString": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["format", "sprintf", "percent"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/FormatStringToken": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["annotated", "template", "unannotated"]
+            },
+            "MaxUnannotatedPlaceholdersAllowed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "Mode": {
+              "enum": ["conservative", "aggressive"]
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/FrozenStringLiteralComment": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["always", "always_true", "never"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/GlobalStdStream": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/GlobalVars": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedVariables": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/GuardClause": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinBodyLength": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "AllowConsecutiveConditionals": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashAsLastArrayItem": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["braces", "no_braces"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashConversion": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowSplatArgument": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashEachMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedReceivers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashExcept": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/HashFetchChain": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/HashLikeCase": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinBranchesCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashSlice": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/HashSyntax": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "ruby19",
+                "hash_rockets",
+                "no_mixed_keys",
+                "ruby19_no_mixed_keys"
+              ]
+            },
+            "EnforcedShorthandSyntax": {
+              "enum": [
+                "always",
+                "never",
+                "either",
+                "consistent",
+                "either_consistent"
+              ]
+            },
+            "UseHashRocketsWithSymbolValues": {
+              "type": "boolean"
+            },
+            "PreferHashRocketsForNonAlnumEndingSymbols": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/HashTransformKeys": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/HashTransformValues": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/IdenticalConditionalBranches": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/IfInsideElse": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowIfModifier": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/IfUnlessModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/IfUnlessModifierOfIfUnless": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/IfWithBooleanLiteralBranches": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/IfWithSemicolon": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ImplicitRuntimeError": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/InPatternThen": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/InfiniteLoop": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/InlineComment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/InverseMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "InverseMethods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "InverseBlocks": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/InvertibleUnlessCondition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "InverseMethods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/IpAddresses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedAddresses": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/ItAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ItBlockParameter": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "allow_single_line",
+                "only_numbered_parameters",
+                "always",
+                "disallow"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/KeywordArgumentsMerging": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/KeywordParametersOrder": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/Lambda": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["line_count_dependent", "lambda", "literal"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/LambdaCall": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["call", "braces"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/LineEndConcatenation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MagicCommentFormat": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["snake_case", "kebab_case"]
+            },
+            "DirectiveCapitalization": {
+              "enum": [null, "lowercase", "uppercase"]
+            },
+            "ValueCapitalization": {
+              "enum": [null, "lowercase", "uppercase"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MapCompactWithConditionalBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MapIntoArray": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MapToHash": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MapToSet": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MethodCallWithArgsParentheses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "IgnoreMacros": {
+              "type": "boolean"
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "IncludedMacros": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowParenthesesInMultilineCall": {
+              "type": "boolean"
+            },
+            "AllowParenthesesInChaining": {
+              "type": "boolean"
+            },
+            "AllowParenthesesInCamelCaseMethod": {
+              "type": "boolean"
+            },
+            "AllowParenthesesInStringInterpolation": {
+              "type": "boolean"
+            },
+            "EnforcedStyle": {
+              "enum": ["require_parentheses", "omit_parentheses"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MethodCallWithoutArgsParentheses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/MethodCalledOnDoEndBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MethodDefParentheses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "require_parentheses",
+                "require_no_parentheses",
+                "require_no_parentheses_except_multiline"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MinMax": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MinMaxComparison": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MissingElse": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["if", "case", "both"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MissingRespondToMissing": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MixinGrouping": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["separated", "grouped"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MixinUsage": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ModuleFunction": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["module_function", "extend_self", "forbidden"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MultilineBlockChain": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineIfModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineIfThen": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineInPatternThen": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineMemoization": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["keyword", "braces"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/MultilineMethodSignature": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineTernaryOperator": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultilineWhenThen": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MultipleComparison": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMethodComparison": {
+              "type": "boolean"
+            },
+            "ComparisonsThreshold": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/MutableConstant": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["literals", "strict"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NegatedIf": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["both", "prefix", "postfix"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NegatedIfElseCondition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NegatedUnless": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["both", "prefix", "postfix"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NegatedWhile": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NestedFileDirname": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NestedModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NestedParenthesizedCalls": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/NestedTernaryOperator": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/Next": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["skip_modifier_ifs", "always"]
+            },
+            "MinBodyLength": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "AllowConsecutiveConditionals": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/NilComparison": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["predicate", "comparison"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NilLambda": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NonNilCheck": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "IncludeSemanticChanges": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/Not": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/NumberedParameters": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["allow_single_line", "disallow"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NumberedParametersLimit": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/NumericLiteralPrefix": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedOctalStyle": {
+              "enum": ["zero_with_o", "zero_only"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/NumericLiterals": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinDigits": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "Strict": {
+              "type": "boolean"
+            },
+            "AllowedNumbers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/NumericPredicate": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["predicate", "comparison"]
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/ObjectThen": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["then", "yield_self"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/OneLineConditional": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AlwaysCorrectToMultiline": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/OpenStructUse": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/OperatorMethodCall": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/OptionHash": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "SuspiciousParamNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "Allowlist": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/OptionalArguments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/OptionalBooleanParameter": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/OrAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ParallelAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ParenthesesAroundCondition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowSafeAssignment": {
+              "type": "boolean"
+            },
+            "AllowInMultilineConditions": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/PercentLiteralDelimiters": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "PreferredDelimiters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/PercentQLiterals": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["lower_case_q", "upper_case_q"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/PerlBackrefs": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/PreferredHashMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["short", "verbose"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/Proc": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/QuotedSymbols": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "same_as_string_literals",
+                "single_quotes",
+                "double_quotes"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/RaiseArgs": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["compact", "exploded"]
+            },
+            "AllowedCompactTypes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/RandomWithOffset": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantArgument": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Methods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/RedundantArrayConstructor": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantArrayFlatten": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantBegin": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantCapitalW": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantCondition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/RedundantConditional": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantConstantBase": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantCurrentDirectoryInPath": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantDoubleSplatHashBraces": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantEach": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantException": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantFetchBlock": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "SafeForConstants": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/RedundantFileExtensionInRequire": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantFilterChain": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantFormat": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantFreeze": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantHeredocDelimiterQuotes": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantInitialize": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowComments": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/RedundantInterpolation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantInterpolationUnfreeze": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantLineContinuation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantParentheses": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantPercentQ": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantRegexpArgument": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantRegexpCharacterClass": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantRegexpConstructor": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantRegexpEscape": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantReturn": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMultipleReturnValues": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/RedundantSelf": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantSelfAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantSelfAssignmentBranch": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantSort": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantSortBy": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantStringEscape": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RegexpLiteral": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["slashes", "percent_r", "mixed"]
+            },
+            "AllowInnerSlashes": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/RequireOrder": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RescueModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RescueStandardError": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["implicit", "explicit"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ReturnNil": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["return", "return_nil"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/ReturnNilInPredicateMethodDefinition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/SafeNavigation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "ConvertCodeThatCanStartToReturnNil": {
+              "type": "boolean"
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "MaxChainLength": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/SafeNavigationChainLength": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Max": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/Sample": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SelectByRegexp": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SelfAssignment": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/Semicolon": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowAsExpressionSeparator": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/Send": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SendWithLiteralMethodName": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowSend": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/SignalException": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["only_raise", "only_fail", "semantic"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/SingleArgumentDig": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SingleLineBlockParams": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Methods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/SingleLineDoEndBlock": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SingleLineMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowIfMethodIsEmpty": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/SlicingWithRange": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SoleNestedConditional": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowModifier": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/SpecialGlobalVars": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "RequireEnglish": {
+              "type": "boolean"
+            },
+            "EnforcedStyle": {
+              "enum": [
+                "use_perl_names",
+                "use_english_names",
+                "use_builtin_english_names"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/StabbyLambdaParentheses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["require_parentheses", "require_no_parentheses"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/StaticClass": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/StderrPuts": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/StringChars": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/StringConcatenation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Mode": {
+              "enum": ["aggressive", "conservative"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/StringHashKeys": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/StringLiterals": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["single_quotes", "double_quotes"]
+            },
+            "ConsistentQuotesInMultiline": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/StringLiteralsInInterpolation": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["single_quotes", "double_quotes"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/StringMethods": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "PreferredMethods": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Style/Strip": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/StructInheritance": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SuperArguments": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SuperWithArgsParentheses": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SwapValues": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SymbolArray": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["percent", "brackets"]
+            },
+            "MinSize": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "Style/SymbolLiteral": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SymbolProc": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowMethodsWithArguments": {
+              "type": "boolean"
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowComments": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/TernaryParentheses": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "require_parentheses",
+                "require_no_parentheses",
+                "require_parentheses_when_complex"
+              ]
+            },
+            "AllowSafeAssignment": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/TopLevelMethodDefinition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingBodyOnClass": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingBodyOnMethodDefinition": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingBodyOnModule": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingCommaInArguments": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["comma", "consistent_comma", "no_comma"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/TrailingCommaInArrayLiteral": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleForMultiline": {
+              "enum": ["comma", "consistent_comma", "diff_comma", "no_comma"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/TrailingCommaInBlockArgs": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingCommaInHashLiteral": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleForMultiline": {
+              "enum": ["comma", "consistent_comma", "diff_comma", "no_comma"]
+            }
+          }
+        }
+      ]
+    },
+    "Style/TrailingMethodEndStatement": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/TrailingUnderscoreVariable": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowNamedUnderscoreVariables": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Style/TrivialAccessors": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "ExactNameMatch": {
+              "type": "boolean"
+            },
+            "AllowPredicates": {
+              "type": "boolean"
+            },
+            "AllowDSLWriters": {
+              "type": "boolean"
+            },
+            "IgnoreClassMethods": {
+              "type": "boolean"
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Style/UnlessElse": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/UnlessLogicalOperators": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "forbid_mixed_logical_operators",
+                "forbid_logical_operators"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/UnpackFirst": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/VariableInterpolation": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/WhenThen": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/WhileUntilDo": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/WhileUntilModifier": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/WordArray": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["percent", "brackets"]
+            },
+            "MinSize": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "WordRegex": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Style/YAMLFileRead": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/YodaCondition": {
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": [
+                "forbid_for_all_comparison_operators",
+                "forbid_for_equality_operators_only",
+                "require_for_all_comparison_operators",
+                "require_for_equality_operators_only"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Style/YodaExpression": {
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ZeroLengthPredicate": {
       "$ref": "#/definitions/cop"
     }
   },
