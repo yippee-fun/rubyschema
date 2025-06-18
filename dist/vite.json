@@ -92,6 +92,18 @@
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
+        },
+        "ssrBuildEnabled": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssrbuildenabled)",
+          "type": "boolean"
+        },
+        "ssrEntrypoint": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssrentrypoint)",
+          "type": "string"
+        },
+        "ssrOutputDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssroutputdir)",
+          "type": "string"
         }
       },
       "additionalProperties": false
