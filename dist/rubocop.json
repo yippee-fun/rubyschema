@@ -30,7 +30,7 @@
           "type": "string"
         },
         "AutoCorrect": {
-          "enum": ["always", "contextual", "disabled"]
+          "enum": [true, false, "always", "contextual", "disabled"]
         },
         "StyleGuide": {
           "type": "string"
