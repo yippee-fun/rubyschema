@@ -4,19 +4,94 @@
   "definitions": {
     "environment": {
       "properties": {
-        "watchAdditionalPaths": {
+        "autoBuild": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#autobuild)",
+          "type": "boolean"
+        },
+        "host": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#host)",
+          "type": "string"
+        },
+        "port": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#port)",
+          "type": "integer"
+        },
+        "https": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#https)",
+          "type": "boolean"
+        },
+        "buildCacheDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#buildcachedir)",
+          "type": "string"
+        },
+        "publicDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#publicdir)",
+          "type": "string"
+        },
+        "publicOutputDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#publicoutputdir)",
+          "type": "string"
+        },
+        "assetsDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#assetsdir)",
+          "type": "string"
+        },
+        "sourceCodeDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#sourcecodedir)",
+          "type": "string"
+        },
+        "entrypointsDir": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#entrypointsdir)",
+          "type": "string"
+        },
+        "additionalEntrypoints": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#additionalentrypoints)",
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
-        "autoBuild": {
-          "type": "boolean"
-        },
-        "publicOutputDir": {
+        "assetHost": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#assethost)",
           "type": "string"
         },
-        "port": {
-          "type": "integer"
+        "base": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#base)",
+          "type": "string"
+        },
+        "devServerConnectTimeout": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#devserverconnecttimeout)",
+          "type": "number",
+          "minimum": 0
+        },
+        "hideBuildConsoleOutput": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#hidebuildconsoleoutput)",
+          "type": "boolean"
+        },
+        "packageManager": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#packagemanager)",
+          "enum": ["npm", "pnpm", "yarn", "bun"]
+        },
+        "root": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#root)",
+          "type": "string"
+        },
+        "skipCompatibilityCheck": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#skipcompatibilitycheck)",
+          "type": "boolean"
+        },
+        "skipProxy": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#skipproxy-experimental)",
+          "type": "boolean"
+        },
+        "viteBinPath": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#vitebinpath)",
+          "type": "string"
+        },
+        "watchAdditionalPaths": {
+          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#watchadditionalpaths)",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
         }
       },
       "additionalProperties": false
