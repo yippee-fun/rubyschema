@@ -51,7 +51,7 @@
           "format": "uri"
         },
         "DocumentationExtension": {
-          "anyOf": [{ "type": "string" }, { "enum": [".md", ".html", ".txt"] }]
+          "anyOf": [{ "type": "string" }, { "enum": [".md", "", ".txt"] }]
         }
       }
     },
@@ -138,7 +138,7 @@
           "format": "uri"
         },
         "DocumentationExtension": {
-          "anyOf": [{ "type": "string" }, { "enum": [".md", ".html", ".txt"] }]
+          "anyOf": [{ "type": "string" }, { "enum": [".md", "", ".txt"] }]
         },
         "ActiveSupportExtensionsEnabled": {
           "type": "boolean"
@@ -165,15 +165,15 @@
     "Security": { "$ref": "#/definitions/department" },
     "Style": { "$ref": "#/definitions/department" },
     "Bundler/DuplicatedGem": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlerduplicatedgem)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlerduplicatedgem)",
       "$ref": "#/definitions/cop"
     },
     "Bundler/DuplicatedGroup": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlerduplicatedgroup)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlerduplicatedgroup)",
       "$ref": "#/definitions/cop"
     },
     "Bundler/GemComment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlergemcomment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlergemcomment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -202,7 +202,7 @@
       ]
     },
     "Bundler/GemFilename": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlergemfilename)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlergemfilename)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -215,7 +215,7 @@
       ]
     },
     "Bundler/GemVersion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlergemversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlergemversion)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -232,7 +232,7 @@
       ]
     },
     "Bundler/InsecureProtocolSource": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlerinsecureprotocolsource)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlerinsecureprotocolsource)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -245,7 +245,7 @@
       ]
     },
     "Bundler/OrderedGems": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler.html#bundlerorderedgems)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_bundler#bundlerorderedgems)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -257,11 +257,11 @@
       ]
     },
     "Gemspec/AddRuntimeDependency": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecaddruntimedependency)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecaddruntimedependency)",
       "$ref": "#/definitions/cop"
     },
     "Gemspec/DependencyVersion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecdependencyversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecdependencyversion)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -274,11 +274,11 @@
       ]
     },
     "Gemspec/DeprecatedAttributeAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecdeprecatedattributeassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecdeprecatedattributeassignment)",
       "$ref": "#/definitions/cop"
     },
     "Gemspec/DevelopmentDependencies": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecdevelopmentdependencies)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecdevelopmentdependencies)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -291,11 +291,11 @@
       ]
     },
     "Gemspec/DuplicatedAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecduplicatedassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecduplicatedassignment)",
       "$ref": "#/definitions/cop"
     },
     "Gemspec/OrderedDependencies": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecordereddependencies)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecordereddependencies)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -307,19 +307,19 @@
       ]
     },
     "Gemspec/RequireMFA": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecrequiremfa)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecrequiremfa)",
       "$ref": "#/definitions/cop"
     },
     "Gemspec/RequiredRubyVersion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecrequiredrubyversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecrequiredrubyversion)",
       "$ref": "#/definitions/cop"
     },
     "Gemspec/RubyVersionGlobalsUsage": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecrubyversionglobalsusage)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecrubyversionglobalsusage)",
       "$ref": "#/definitions/cop"
     },
     "Layout/AccessModifierIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutaccessmodifierindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutaccessmodifierindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -335,7 +335,7 @@
       ]
     },
     "Layout/ArgumentAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutargumentalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutargumentalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -351,7 +351,7 @@
       ]
     },
     "Layout/ArrayAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutarrayalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutarrayalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -367,7 +367,7 @@
       ]
     },
     "Layout/AssignmentIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutassignmentindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutassignmentindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -380,7 +380,7 @@
       ]
     },
     "Layout/BeginEndAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutbeginendalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutbeginendalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -393,7 +393,7 @@
       ]
     },
     "Layout/BlockAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutblockalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutblockalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -406,11 +406,11 @@
       ]
     },
     "Layout/BlockEndNewline": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutblockendnewline)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutblockendnewline)",
       "$ref": "#/definitions/cop"
     },
     "Layout/CaseIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutcaseindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutcaseindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -425,7 +425,7 @@
       ]
     },
     "Layout/ClassStructure": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutclassstructure)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutclassstructure)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -515,15 +515,15 @@
       ]
     },
     "Layout/ClosingHeredocIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutclosingheredocindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutclosingheredocindentation)",
       "$ref": "#/definitions/cop"
     },
     "Layout/ClosingParenthesisIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutclosingparenthesisindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutclosingparenthesisindentation)",
       "$ref": "#/definitions/cop"
     },
     "Layout/CommentIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutcommentindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutcommentindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -534,11 +534,11 @@
       ]
     },
     "Layout/ConditionPosition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutconditionposition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutconditionposition)",
       "$ref": "#/definitions/cop"
     },
     "Layout/DefEndAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutdefendalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutdefendalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -549,7 +549,7 @@
       ]
     },
     "Layout/DotPosition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutdotposition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutdotposition)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -560,11 +560,11 @@
       ]
     },
     "Layout/ElseAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutelsealignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutelsealignment)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyComment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptycomment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptycomment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -576,19 +576,19 @@
       ]
     },
     "Layout/EmptyLineAfterGuardClause": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylineafterguardclause)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylineafterguardclause)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLineAfterMagicComment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylineaftermagiccomment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylineaftermagiccomment)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLineAfterMultilineCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylineaftermultilinecondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylineaftermultilinecondition)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLineBetweenDefs": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinebetweendefs)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinebetweendefs)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -608,11 +608,11 @@
       ]
     },
     "Layout/EmptyLines": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylines)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylines)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundAccessModifier": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundaccessmodifier)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundaccessmodifier)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -625,11 +625,11 @@
       ]
     },
     "Layout/EmptyLinesAroundArguments": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundarguments)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundarguments)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundAttributeAccessor": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundattributeaccessor)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundattributeaccessor)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -645,11 +645,11 @@
       ]
     },
     "Layout/EmptyLinesAroundBeginBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundbeginbody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundbeginbody)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundBlockBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundblockbody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundblockbody)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -660,7 +660,7 @@
       ]
     },
     "Layout/EmptyLinesAroundClassBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundclassbody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundclassbody)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -680,15 +680,15 @@
       ]
     },
     "Layout/EmptyLinesAroundExceptionHandlingKeywords": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundexceptionhandlingkeywords)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundexceptionhandlingkeywords)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundMethodBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundmethodbody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundmethodbody)",
       "$ref": "#/definitions/cop"
     },
     "Layout/EmptyLinesAroundModuleBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutemptylinesaroundmodulebody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundmodulebody)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -706,7 +706,7 @@
       ]
     },
     "Layout/EndAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutendalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutendalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -719,7 +719,7 @@
       ]
     },
     "Layout/EndOfLine": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutendofline)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutendofline)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -732,7 +732,7 @@
       ]
     },
     "Layout/ExtraSpacing": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutextraspacing)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutextraspacing)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -745,7 +745,7 @@
       ]
     },
     "Layout/FirstArgumentIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstargumentindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstargumentindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -764,7 +764,7 @@
       ]
     },
     "Layout/FirstArrayElementIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstarrayelementindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstarrayelementindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -782,7 +782,7 @@
       ]
     },
     "Layout/FirstArrayElementLineBreak": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstarrayelementlinebreak)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstarrayelementlinebreak)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -793,7 +793,7 @@
       ]
     },
     "Layout/FirstHashElementIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirsthashelementindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirsthashelementindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -811,7 +811,7 @@
       ]
     },
     "Layout/FirstHashElementLineBreak": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirsthashelementlinebreak)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirsthashelementlinebreak)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -822,7 +822,7 @@
       ]
     },
     "Layout/FirstMethodArgumentLineBreak": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstmethodargumentlinebreak)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstmethodargumentlinebreak)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -838,7 +838,7 @@
       ]
     },
     "Layout/FirstMethodParameterLineBreak": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstmethodparameterlinebreak)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstmethodparameterlinebreak)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -849,7 +849,7 @@
       ]
     },
     "Layout/FirstParameterIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutfirstparameterindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutfirstparameterindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -865,7 +865,7 @@
       ]
     },
     "Layout/HashAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layouthashalignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layouthashalignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -887,15 +887,15 @@
       ]
     },
     "Layout/HeredocArgumentClosingParenthesis": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutheredocargumentclosingparenthesis)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutheredocargumentclosingparenthesis)",
       "$ref": "#/definitions/cop"
     },
     "Layout/HeredocIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutheredocindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutheredocindentation)",
       "$ref": "#/definitions/cop"
     },
     "Layout/IndentationConsistency": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutindentationconsistency)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutindentationconsistency)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -908,7 +908,7 @@
       ]
     },
     "Layout/IndentationStyle": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutindentationstyle)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutindentationstyle)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -924,7 +924,7 @@
       ]
     },
     "Layout/IndentationWidth": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutindentationwidth)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutindentationwidth)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -943,11 +943,11 @@
       ]
     },
     "Layout/InitialIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutinitialindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutinitialindentation)",
       "$ref": "#/definitions/cop"
     },
     "Layout/LeadingCommentSpace": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutleadingcommentspace)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutleadingcommentspace)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -961,11 +961,11 @@
       ]
     },
     "Layout/LeadingEmptyLines": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutleadingemptylines)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutleadingemptylines)",
       "$ref": "#/definitions/cop"
     },
     "Layout/LineContinuationLeadingSpace": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutlinecontinuationleadingspace)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutlinecontinuationleadingspace)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -978,7 +978,7 @@
       ]
     },
     "Layout/LineContinuationSpacing": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutlinecontinuationspacing)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutlinecontinuationspacing)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -991,7 +991,7 @@
       ]
     },
     "Layout/LineEndStringConcatenationIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutlineendstringconcatenationindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutlineendstringconcatenationindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1007,7 +1007,7 @@
       ]
     },
     "Layout/LineLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutlinelength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutlinelength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1032,7 +1032,7 @@
       ]
     },
     "Layout/MultilineArrayBraceLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinearraybracelayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinearraybracelayout)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1045,7 +1045,7 @@
       ]
     },
     "Layout/MultilineArrayLineBreaks": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinearraylinebreaks)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinearraylinebreaks)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1056,7 +1056,7 @@
       ]
     },
     "Layout/MultilineAssignmentLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilineassignmentlayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilineassignmentlayout)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1069,11 +1069,11 @@
       ]
     },
     "Layout/MultilineBlockLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilineblocklayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilineblocklayout)",
       "$ref": "#/definitions/cop"
     },
     "Layout/MultilineHashBraceLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinehashbracelayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinehashbracelayout)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1086,7 +1086,7 @@
       ]
     },
     "Layout/MultilineHashKeyLineBreaks": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinehashkeylinebreaks)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinehashkeylinebreaks)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1097,7 +1097,7 @@
       ]
     },
     "Layout/MultilineMethodArgumentLineBreaks": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinemethodargumentlinebreaks)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinemethodargumentlinebreaks)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1108,7 +1108,7 @@
       ]
     },
     "Layout/MultilineMethodCallBraceLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinemethodcallbracelayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinemethodcallbracelayout)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1121,7 +1121,7 @@
       ]
     },
     "Layout/MultilineMethodCallIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinemethodcallindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinemethodcallindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1137,7 +1137,7 @@
       ]
     },
     "Layout/MultilineMethodDefinitionBraceLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinemethoddefinitionbracelayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinemethoddefinitionbracelayout)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1150,7 +1150,7 @@
       ]
     },
     "Layout/MultilineMethodParameterLineBreaks": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutmultilinemethodparameterlinebreaks)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilinemethodparameterlinebreaks)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1161,7 +1161,7 @@
       ]
     },
     "Layout/MultilineOperationIndentation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layout/multilineoperationindentation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layout/multilineoperationindentation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1177,7 +1177,7 @@
       ]
     },
     "Layout/ParameterAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutparameteralignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutparameteralignment)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1193,7 +1193,7 @@
       ]
     },
     "Layout/RedundantLineBreak": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutredundantlinebreak)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutredundantlinebreak)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1204,35 +1204,35 @@
       ]
     },
     "Layout/RescueEnsureAlignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutrescueensurealignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutrescueensurealignment)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SingleLineBlockChain": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutsinglelineblockchain)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutsinglelineblockchain)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAfterColon": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceaftercolon)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceaftercolon)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAfterComma": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceaftercomma)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceaftercomma)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAfterMethodName": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceaftermethodname)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceaftermethodname)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAfterNot": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceafternot)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceafternot)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAfterSemicolon": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceaftersemicolon)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceaftersemicolon)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAroundBlockParameters": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacearoundblockparameters)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacearoundblockparameters)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1245,7 +1245,7 @@
       ]
     },
     "Layout/SpaceAroundEqualsInParameterDefault": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacearoundequalsinparameterdefault)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacearoundequalsinparameterdefault)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1258,15 +1258,15 @@
       ]
     },
     "Layout/SpaceAroundKeyword": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacearoundkeyword)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacearoundkeyword)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAroundMethodCallOperator": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacearoundmethodcalloperator)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacearoundmethodcalloperator)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceAroundOperators": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacearoundoperators)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacearoundoperators)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1283,7 +1283,7 @@
       ]
     },
     "Layout/SpaceBeforeBlockBraces": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforeblockbraces)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforeblockbraces)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1295,19 +1295,19 @@
       ]
     },
     "Layout/SpaceBeforeBrackets": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforebrackets)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforebrackets)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceBeforeComma": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforecomma)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforecomma)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceBeforeComment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforecomment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforecomment)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceBeforeFirstArg": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforefirstarg)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforefirstarg)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1318,11 +1318,11 @@
       ]
     },
     "Layout/SpaceBeforeSemicolon": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspacebeforesemicolon)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspacebeforesemicolon)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceInLambdaLiteral": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinlambdaliteral)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinlambdaliteral)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1335,7 +1335,7 @@
       ]
     },
     "Layout/SpaceInsideArrayLiteralBrackets": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidearrayliteralbrackets)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidearrayliteralbrackets)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1351,11 +1351,11 @@
       ]
     },
     "Layout/SpaceInsideArrayPercentLiteral": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidearraypercentliteral)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidearraypercentliteral)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceInsideBlockBraces": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsideblockbraces)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsideblockbraces)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1374,7 +1374,7 @@
       ]
     },
     "Layout/SpaceInsideHashLiteralBraces": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidehashliteralbraces)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidehashliteralbraces)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1390,7 +1390,7 @@
       ]
     },
     "Layout/SpaceInsideParens": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsideparens)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsideparens)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1403,15 +1403,15 @@
       ]
     },
     "Layout/SpaceInsidePercentLiteralDelimiters": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidepercentliteraldelimiters)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidepercentliteraldelimiters)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceInsideRangeLiteral": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsiderangeliteral)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsiderangeliteral)",
       "$ref": "#/definitions/cop"
     },
     "Layout/SpaceInsideReferenceBrackets": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidereferencebrackets)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidereferencebrackets)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1427,7 +1427,7 @@
       ]
     },
     "Layout/SpaceInsideStringInterpolation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layoutspaceinsidestringinterpolation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutspaceinsidestringinterpolation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1440,7 +1440,7 @@
       ]
     },
     "Layout/TrailingEmptyLines": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layouttrailingemptylines)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layouttrailingemptylines)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1453,7 +1453,7 @@
       ]
     },
     "Layout/TrailingWhitespace": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout.html#layouttrailingwhitespace)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layouttrailingwhitespace)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1466,11 +1466,11 @@
       ]
     },
     "Lint/AmbiguousAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/AmbiguousBlockAssociation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousblockassociation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousblockassociation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1490,15 +1490,15 @@
       ]
     },
     "Lint/AmbiguousOperator": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousoperator)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousoperator)",
       "$ref": "#/definitions/cop"
     },
     "Lint/AmbiguousOperatorPrecedence": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousoperatorprecedence)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousoperatorprecedence)",
       "$ref": "#/definitions/cop"
     },
     "Lint/AmbiguousRange": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousrange)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousrange)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1511,15 +1511,15 @@
       ]
     },
     "Lint/AmbiguousRegexpLiteral": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintambiguousregexpliteral)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousregexpliteral)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ArrayLiteralInRegexp": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintarrayliteralinregexp)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintarrayliteralinregexp)",
       "$ref": "#/definitions/cop"
     },
     "Lint/AssignmentInCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintassignmentincondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintassignmentincondition)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1530,23 +1530,23 @@
       ]
     },
     "Lint/BigDecimalNew": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintbigdecimalnew)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintbigdecimalnew)",
       "$ref": "#/definitions/cop"
     },
     "Lint/BinaryOperatorWithIdenticalOperands": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintbinaryoperatorwithidenticaloperands)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintbinaryoperatorwithidenticaloperands)",
       "$ref": "#/definitions/cop"
     },
     "Lint/BooleanSymbol": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintbooleansymbol)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintbooleansymbol)",
       "$ref": "#/definitions/cop"
     },
     "Lint/CircularArgumentReference": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintcircularargumentreference)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintcircularargumentreference)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ConstantDefinitionInBlock": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintconstantdefinitioninblock)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintconstantdefinitioninblock)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1561,15 +1561,15 @@
       ]
     },
     "Lint/ConstantOverwrittenInRescue": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintconstantoverwritteninrescue)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintconstantoverwritteninrescue)",
       "$ref": "#/definitions/cop"
     },
     "Lint/onstantReassignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintonstantreassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintonstantreassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ConstantResolution": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintconstantresolution)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintconstantresolution)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1589,11 +1589,11 @@
       ]
     },
     "Lint/CopDirectiveSyntax": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintcopdirectivesyntax)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintcopdirectivesyntax)",
       "$ref": "#/definitions/cop"
     },
     "Lint/Debugger": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintdebugger)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdebugger)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1613,11 +1613,11 @@
       ]
     },
     "Lint/DeprecatedClassMethods": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintdeprecatedclassmethods)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdeprecatedclassmethods)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DeprecatedConstants": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintdeprecatedconstants)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdeprecatedconstants)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1643,15 +1643,15 @@
       ]
     },
     "Lint/DeprecatedOpenSSLConstant": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintdeprecatedopensslconstant)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdeprecatedopensslconstant)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DisjunctiveAssignmentInConstructor": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintdisjunctiveassignmentinconstructor)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdisjunctiveassignmentinconstructor)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateBranch": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatebranch)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatebranch)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1664,55 +1664,55 @@
       ]
     },
     "Lint/DuplicateCaseCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatecasecondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatecasecondition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateElsifCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicateelsifcondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicateelsifcondition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateHashKey": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatehashkey)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatehashkey)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateMagicComment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatemagiccomment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatemagiccomment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateMatchPattern": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatematchpattern)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatematchpattern)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateMethods": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatemethods)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatemethods)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateRegexpCharacterClassElement": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicateregexpcharacterclasselement)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicateregexpcharacterclasselement)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateRequire": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicaterequire)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicaterequire)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateRescueException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicaterescueexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicaterescueexception)",
       "$ref": "#/definitions/cop"
     },
     "Lint/DuplicateSetElement": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintduplicatesetelement)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatesetelement)",
       "$ref": "#/definitions/cop"
     },
     "Lint/EachWithObjectArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linteachwithobjectargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linteachwithobjectargument)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ElseLayout": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintelselayout)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintelselayout)",
       "$ref": "#/definitions/cop"
     },
     "Lint/EmptyBlock": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyblock)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyblock)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1724,7 +1724,7 @@
       ]
     },
     "Lint/EmptyClass": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyclass)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyclass)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1735,7 +1735,7 @@
       ]
     },
     "Lint/EmptyConditionalBody": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyconditionalbody)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyconditionalbody)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1746,15 +1746,15 @@
       ]
     },
     "Lint/EmptyEnsure": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyensure)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyensure)",
       "$ref": "#/definitions/cop"
     },
     "Lint/EmptyExpression": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyexpression)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyexpression)",
       "$ref": "#/definitions/cop"
     },
     "Lint/EmptyFile": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyfile)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyfile)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1765,7 +1765,7 @@
       ]
     },
     "Lint/EmptyInPattern": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyinpattern)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyinpattern)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1776,11 +1776,11 @@
       ]
     },
     "Lint/EmptyInterpolation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptyinterpolation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptyinterpolation)",
       "$ref": "#/definitions/cop"
     },
     "Lint/EmptyWhen": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintemptywhen)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintemptywhen)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1791,59 +1791,59 @@
       ]
     },
     "Lint/EnsureReturn": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintensurereturn)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintensurereturn)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ErbNewArguments": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linterbnewarguments)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linterbnewarguments)",
       "$ref": "#/definitions/cop"
     },
     "Lint/FlipFlop": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintflipflop)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintflipflop)",
       "$ref": "#/definitions/cop"
     },
     "Lint/FloatComparison": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintfloatcomparison)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintfloatcomparison)",
       "$ref": "#/definitions/cop"
     },
     "Lint/FloatOutOfRange": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintfloatoutofrange)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintfloatoutofrange)",
       "$ref": "#/definitions/cop"
     },
     "Lint/FormatParameterMismatch": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintformatparametermismatch)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintformatparametermismatch)",
       "$ref": "#/definitions/cop"
     },
     "Lint/HashCompareByIdentity": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linthashcomparebyidentity)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linthashcomparebyidentity)",
       "$ref": "#/definitions/cop"
     },
     "Lint/HashNewWithKeywordArgumentsAsDefault": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linthashnewwithkeywordargumentsasdefault)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linthashnewwithkeywordargumentsasdefault)",
       "$ref": "#/definitions/cop"
     },
     "Lint/HeredocMethodCallPosition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintheredocmethodcallposition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintheredocmethodcallposition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/IdentityComparison": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintidentitycomparison)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintidentitycomparison)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ImplicitStringConcatenation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintimplicitstringconcatenation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintimplicitstringconcatenation)",
       "$ref": "#/definitions/cop"
     },
     "Lint/IncompatibleIoSelectWithFiberScheduler": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintincompatibleioselectwithfiberscheduler)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintincompatibleioselectwithfiberscheduler)",
       "$ref": "#/definitions/cop"
     },
     "Lint/IneffectiveAccessModifier": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintineffectiveaccessmodifier)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintineffectiveaccessmodifier)",
       "$ref": "#/definitions/cop"
     },
     "Lint/InheritException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintinheritexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintinheritexception)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1856,35 +1856,35 @@
       ]
     },
     "Lint/InterpolationCheck": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintinterpolationcheck)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintinterpolationcheck)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ItWithoutArgumentsInBlock": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintitwithoutargumentsinblock)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintitwithoutargumentsinblock)",
       "$ref": "#/definitions/cop"
     },
     "Lint/LambdaWithoutLiteralBlock": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintlambdawithoutliteralblock)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintlambdawithoutliteralblock)",
       "$ref": "#/definitions/cop"
     },
     "Lint/LiteralAsCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintliteralascondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintliteralascondition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/LiteralAssignmentInCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintliteralassignmentincondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintliteralassignmentincondition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/LiteralInInterpolation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintliteralininterpolation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintliteralininterpolation)",
       "$ref": "#/definitions/cop"
     },
     "Lint/Loop": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintloop)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintloop)",
       "$ref": "#/definitions/cop"
     },
     "Lint/MissingCopEnableDirective": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintmissingcopenabledirective)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmissingcopenabledirective)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1895,7 +1895,7 @@
       ]
     },
     "Lint/MissingSuper": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintmissingsuper)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmissingsuper)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1908,19 +1908,19 @@
       ]
     },
     "Lint/MixedCaseRange": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintmixedcaserange)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmixedcaserange)",
       "$ref": "#/definitions/cop"
     },
     "Lint/MixedRegexpCaptureTypes": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintmixedregexpcapturetypes)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmixedregexpcapturetypes)",
       "$ref": "#/definitions/cop"
     },
     "Lint/MultipleComparison": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintmultiplecomparison)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmultiplecomparison)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NestedMethodDefinition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnestedmethoddefinition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnestedmethoddefinition)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1940,31 +1940,31 @@
       ]
     },
     "Lint/NestedPercentLiteral": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnestedpercentliteral)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnestedpercentliteral)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NextWithoutAccumulator": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnextwithoutaccumulator)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnextwithoutaccumulator)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NoReturnInBeginEndBlocks": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnoreturninbeginendblocks)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnoreturninbeginendblocks)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NonAtomicFileOperation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnonatomicfileoperation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnonatomicfileoperation)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NonDeterministicRequireOrder": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnondeterministicrequireorder)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnondeterministicrequireorder)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NonLocalExitFromIterator": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnonlocalexitfromiterator)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnonlocalexitfromiterator)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NumberConversion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnumberconversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnumberconversion)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -1987,39 +1987,39 @@
       ]
     },
     "Lint/NumberedParameterAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnumberedparameterassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnumberedparameterassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/NumericOperationWithConstantResult": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintnumericoperationwithconstantresult)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnumericoperationwithconstantresult)",
       "$ref": "#/definitions/cop"
     },
     "Lint/OrAssignmentToConstant": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintorassignmenttoconstant)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintorassignmenttoconstant)",
       "$ref": "#/definitions/cop"
     },
     "Lint/OrderedMagicComments": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintorderedmagiccomments)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintorderedmagiccomments)",
       "$ref": "#/definitions/cop"
     },
     "Lint/OutOfRangeRegexpRef": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintoutofrangeregexpref)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintoutofrangeregexpref)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ParenthesesAsGroupedExpression": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintparenthesesasgroupedexpression)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintparenthesesasgroupedexpression)",
       "$ref": "#/definitions/cop"
     },
     "Lint/PercentStringArray": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintpercentstringarray)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintpercentstringarray)",
       "$ref": "#/definitions/cop"
     },
     "Lint/PercentSymbolArray": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintpercentsymbolarray)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintpercentsymbolarray)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RaiseException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintraiseexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintraiseexception)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2032,31 +2032,31 @@
       ]
     },
     "Lint/RandOne": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrandone)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrandone)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantCopDisableDirective": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantcopdisabledirective)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantcopdisabledirective)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantCopEnableDirective": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantcopenabledirective)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantcopenabledirective)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantDirGlobSort": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantdirglobsort)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantdirglobsort)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantRegexpQuantifiers": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantregexpquantifiers)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantregexpquantifiers)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantRequireStatement": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantrequirestatement)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantrequirestatement)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantSafeNavigation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantsafenavigation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantsafenavigation)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2073,7 +2073,7 @@
       ]
     },
     "Lint/RedundantSplatExpansion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantsplatexpansion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantsplatexpansion)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2086,55 +2086,55 @@
       ]
     },
     "Lint/RedundantStringCoercion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantstringcoercion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantstringcoercion)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantTypeConversion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundanttypeconversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundanttypeconversion)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantWithIndex": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantwithindex)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantwithindex)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RedundantWithObject": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintredundantwithobject)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintredundantwithobject)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RefinementImportMethods": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrefinementimportmethods)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrefinementimportmethods)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RegexpAsCondition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintregexpascondition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintregexpascondition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RequireParentheses": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrequireparentheses)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrequireparentheses)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RequireRangeParentheses": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrequirerangeparentheses)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrequirerangeparentheses)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RequireRelativeSelfPath": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrequirerelativeselfpath)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrequirerelativeselfpath)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RescueException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrescueexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrescueexception)",
       "$ref": "#/definitions/cop"
     },
     "Lint/RescueType": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintrescuetype)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintrescuetype)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ReturnInVoidContext": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintreturninvoidcontext)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintreturninvoidcontext)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SafeNavigationChain": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsafenavigationchain)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsafenavigationchain)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2149,7 +2149,7 @@
       ]
     },
     "Lint/SafeNavigationConsistency": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsafenavigationconsistency)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsafenavigationconsistency)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2164,23 +2164,23 @@
       ]
     },
     "Lint/SafeNavigationWithEmpty": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsafenavigationwithempty)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsafenavigationwithempty)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ScriptPermission": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintscriptpermission)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintscriptpermission)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SelfAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintselfassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintselfassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SendWithMixinArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsendwithmixinargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsendwithmixinargument)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ShadowedArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintshadowedargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintshadowedargument)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2193,23 +2193,23 @@
       ]
     },
     "Lint/ShadowedException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintshadowedexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintshadowedexception)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ShadowingOuterLocalVariable": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintshadowingouterlocalvariable)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintshadowingouterlocalvariable)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SharedMutableDefault": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsharedmutabledefault)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsharedmutabledefault)",
       "$ref": "#/definitions/cop"
     },
     "Lint/StructNewOverride": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintstructnewoverride)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintstructnewoverride)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SuppressedException": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsuppressedexception)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsuppressedexception)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2225,11 +2225,11 @@
       ]
     },
     "Lint/SuppressedExceptionInNumberConversion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsuppressedexceptioninnumberconversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsuppressedexceptioninnumberconversion)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SymbolConversion": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsymbolconversion)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsymbolconversion)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2242,31 +2242,31 @@
       ]
     },
     "Lint/Syntax": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintsyntax)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsyntax)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ToEnumArguments": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linttoenumarguments)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linttoenumarguments)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ToJSON": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linttojson)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linttojson)",
       "$ref": "#/definitions/cop"
     },
     "Lint/TopLevelReturnWithArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linttoplevelreturnwithargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linttoplevelreturnwithargument)",
       "$ref": "#/definitions/cop"
     },
     "Lint/TrailingCommaInAttributeDeclaration": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linttrailingcommainattributedeclaration)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linttrailingcommainattributedeclaration)",
       "$ref": "#/definitions/cop"
     },
     "Lint/TripleQuotes": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linttriplequotes)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linttriplequotes)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UnderscorePrefixedVariableName": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunderscoreprefixedvariablename)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunderscoreprefixedvariablename)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2279,11 +2279,11 @@
       ]
     },
     "Lint/UnescapedBracketInRegexp": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunescapedbracketinregexp)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunescapedbracketinregexp)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UnexpectedBlockArity": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunexpectedblockarity)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunexpectedblockarity)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2300,19 +2300,19 @@
       ]
     },
     "Lint/UnifiedInteger": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunifiedinteger)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunifiedinteger)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UnmodifiedReduceAccumulator": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunmodifiedreduceaccumulator)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunmodifiedreduceaccumulator)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UnreachableCode": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunreachablecode)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunreachablecode)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UnreachableLoop": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunreachableloop)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunreachableloop)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2329,7 +2329,7 @@
       ]
     },
     "Lint/UnusedBlockArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunusedblockargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunusedblockargument)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2345,7 +2345,7 @@
       ]
     },
     "Lint/UnusedMethodArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintunusedmethodargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunusedmethodargument)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2367,15 +2367,15 @@
       ]
     },
     "Lint/UriEscapeUnescape": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linturiescapeunescape)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linturiescapeunescape)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UriRegexp": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#linturiregexp)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#linturiregexp)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessAccessModifier": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessaccessmodifier)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessaccessmodifier)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2399,15 +2399,15 @@
       ]
     },
     "Lint/UselessAssignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessassignment)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessConstantScoping": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessconstantscoping)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessconstantscoping)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessDefaultValueArgument": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessdefaultvalueargument)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessdefaultvalueargument)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2424,42 +2424,42 @@
       ]
     },
     "Lint/UselessDefined": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessdefined)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessdefined)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessElseWithoutRescue": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselesselsewithoutrescue)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselesselsewithoutrescue)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessMethodDefinition": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessmethoddefinition)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessmethoddefinition)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessNumericOperation": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessnumericoperation)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessnumericoperation)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessOr": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessor)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessor)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessRescue": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselessrescue)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessrescue)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessRuby2Keywords": {
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessSetterCall": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselesssettercall)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselesssettercall)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessTimes": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintuselesstimes)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselesstimes)",
       "$ref": "#/definitions/cop"
     },
     "Lint/Void": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint.html#lintvoid)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintvoid)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2472,7 +2472,7 @@
       ]
     },
     "Metrics/AbcSize": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsabcsize)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsabcsize)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2503,7 +2503,7 @@
       ]
     },
     "Metrics/BlockLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsblocklength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsblocklength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2535,7 +2535,7 @@
       ]
     },
     "Metrics/BlockNesting": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsblocknesting)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsblocknesting)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2555,7 +2555,7 @@
       ]
     },
     "Metrics/ClassLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsclasslength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsclasslength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2577,7 +2577,7 @@
       ]
     },
     "Metrics/CollectionLiteralLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricscollectionliterallength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricscollectionliterallength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2591,7 +2591,7 @@
       ]
     },
     "Metrics/CyclomaticComplexity": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricscyclomaticcomplexity)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricscyclomaticcomplexity)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2615,7 +2615,7 @@
       ]
     },
     "Metrics/MethodLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsmethodlength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsmethodlength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2647,7 +2647,7 @@
       ]
     },
     "Metrics/ModuleLength": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsmodulelength)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsmodulelength)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2669,7 +2669,7 @@
       ]
     },
     "Metrics/ParameterLists": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsparameterlists)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsparameterlists)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2690,7 +2690,7 @@
       ]
     },
     "Metrics/PerceivedComplexity": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics.html#metricsperceivedcomplexity)",
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_metrics#metricsperceivedcomplexity)",
       "allOf": [
         { "$ref": "#/definitions/cop" },
         {
@@ -2714,6 +2714,419 @@
       ]
     },
     "Migration/DepartmentName": {
+      "$ref": "#/definitions/cop"
+    },
+    "Naming/AccessorMethodName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingaccessormethodname)",
+      "$ref": "#/definitions/cop"
+    },
+    "Naming/AsciiIdentifiers": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingasciiidentifiers)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AsciiConstants": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Naming/BinaryOperatorParameterName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingbinaryoperatorparametername)",
+      "$ref": "#/definitions/cop"
+    },
+    "Naming/BlockForwarding": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingblockforwarding)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["anonymous", "explicit"]
+            },
+            "BlockForwardingName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Naming/BlockParameterName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingblockparametername)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinNameLength": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "AllowNamesEndingInNumbers": {
+              "type": "boolean"
+            },
+            "AllowedNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/ClassAndModuleCamelCase": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingclassandmodulecamelcase)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "AllowedNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/ConstantName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingconstantname)",
+      "$ref": "#/definitions/cop"
+    },
+    "Naming/FileName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingfilename)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "ExpectMatchingDefinition": {
+              "type": "boolean"
+            },
+            "CheckDefinitionPathHierarchy": {
+              "type": "boolean"
+            },
+            "CheckDefinitionPathHierarchyRoots": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "Regex": {
+              "type": "string"
+            },
+            "IgnoreExecutableScripts": {
+              "type": "boolean"
+            },
+            "AllowedAcronyms": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^[A-Z0-9]+$" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/HeredocDelimiterCase": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingheredocdelimitercase)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["lowercase", "uppercase"]
+            }
+          }
+        }
+      ]
+    },
+    "Naming/HeredocDelimiterNaming": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingheredocdelimiternaming)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "ForbiddenDelimiters": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/InclusiveLanguage": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#naminginclusivelanguage)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "CheckIdentifiers": {
+              "type": "boolean"
+            },
+            "CheckConstants": {
+              "type": "boolean"
+            },
+            "CheckVariables": {
+              "type": "boolean"
+            },
+            "CheckStrings": {
+              "type": "boolean"
+            },
+            "CheckSymbols": {
+              "type": "boolean"
+            },
+            "CheckComments": {
+              "type": "boolean"
+            },
+            "CheckFilepaths": {
+              "type": "boolean"
+            },
+            "FlaggedTerms": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "Regex": {
+                    "type": "string"
+                  },
+                  "Suggestions": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": { "type": "string" }
+                  },
+                  "WholeWord": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["Suggestions"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/MemoizedInstanceVariableName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingmemoizedinstancevariablename)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyleForLeadingUnderscores": {
+              "enum": ["disallowed", "required", "optional"]
+            }
+          }
+        }
+      ]
+    },
+    "Naming/MethodName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingmethodname)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["snake_case", "camelCase"]
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenIdentifiers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/MethodParameterName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingmethodparametername)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "MinNameLength": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "AllowNamesEndingInNumbers": {
+              "type": "boolean"
+            },
+            "AllowedNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/PredicateMethod": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingpredicatemethod)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "Mode": {
+              "enum": ["conservative", "aggressive"]
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/PredicatePrefix": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingpredicateprefix)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "NamePrefix": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenPrefixes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "MethodDefinitionMacros": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "UseSorbetSigs": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "Naming/RescuedExceptionsVariableName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingrescuedexceptionsvariablename)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "PreferredName": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "Naming/VariableName": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingvariablename)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["snake_case", "camelCase"]
+            },
+            "AllowedIdentifiers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenIdentifiers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "ForbiddenPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Naming/VariableNumber": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_naming#namingvariablenumber)",
+      "allOf": [
+        { "$ref": "#/definitions/cop" },
+        {
+          "properties": {
+            "EnforcedStyle": {
+              "enum": ["snake_case", "normalcase", "non_integer"]
+            },
+            "CheckMethodNames": {
+              "type": "boolean"
+            },
+            "CheckSymbols": {
+              "type": "boolean"
+            },
+            "AllowedIdentifiers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "Security/CompoundHash": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securitycompoundhash)",
+      "$ref": "#/definitions/cop"
+    },
+    "Security/Eval": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securityeval)",
+      "$ref": "#/definitions/cop"
+    },
+    "Security/IoMethods": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securityiomethods)",
+      "$ref": "#/definitions/cop"
+    },
+    "Security/JSONLoad": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securityjsonload)",
+      "$ref": "#/definitions/cop"
+    },
+    "Security/MarshalLoad": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securitymarshalload)",
+      "$ref": "#/definitions/cop"
+    },
+    "Security/YAMLLoad": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_security#securityyamlload)",
       "$ref": "#/definitions/cop"
     }
   },
