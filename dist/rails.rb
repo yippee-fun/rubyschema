@@ -24,18 +24,26 @@ json_schemas = {
 }.freeze
 
 yaml_schemas.each do |pattern, schema_url|
-  schema_comment = "# yaml-language-server: $schema=#{schema_url}\n"
+  schema_comment = "# yaml-language-server: $schema=#{schema_url}"
 
   Dir.glob(pattern).each do |file_path|
-    source = File.read(file_path)
+    source = File.read(file_path).split("\n")
 
-    if source.start_with?(schema_comment)
-      skipped_files << file_path
-      next
+    source.reject! do |line|
+      line.start_with? "# yaml-language-server: $schema="
     end
 
-    source.gsub!(/^# yaml-language-server: \$schema=.*\n/, "")
-    File.write(file_path, schema_comment + source)
+    unless source.include?("%YAML 1.1")
+      if (position = source.index("---"))
+        source.insert(position, "%YAML 1.1")
+      else
+        source.unshift("%YAML 1.1", "---")
+      end
+    end
+
+    source.unshift(schema_comment)
+
+    File.write(file_path, source.join("\n"))
     updated_files << file_path
   rescue => e
     failed_files << { file: file_path, error: e.message }
