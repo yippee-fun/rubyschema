@@ -14,34 +14,25 @@
       "type": "object",
       "properties": {
         "adapter": {
-          "anyOf": [
-            { "enum": ["postgresql", "mysql2", "sqlite3"] },
-            { "type": "string" }
-          ]
+          "type": "string",
+          "examples": ["postgresql", "mysql2", "sqlite3"]
         },
         "url": {
           "type": "string"
         },
         "host": {
-          "anyOf": [
-            { "enum": ["localhost", "127.0.0.1"] },
-            { "type": "string" }
-          ]
+          "type": "string",
+          "examples": ["localhost", "127.0.0.1"]
         },
         "port": {
-          "anyOf": [
-            {
-              "enum": [3306, 5432]
-            },
-            { "type": "integer" },
-            { "$ref": "#/definitions/erb" }
-          ]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "examples": [3306, 5432]
         },
         "migrations_paths": {
           "type": "string"
         },
         "retry_deadline": {
-          "type": ["integer", "string"]
+          "anyOf": [{ "type": "integer" }, { "$ref": "definitions/erb" }]
         },
         "query_cache": {
           "description": "Enable or disable query caching.",
@@ -57,7 +48,7 @@
           "type": "string"
         },
         "pool": {
-          "description": "A connection pool synchronizes thread access to a limited number of database connections. This value sets the maximum number of connections that can be open to the database at the same time.\n\nIn most cases, this should be set to at least the number of threads your server manages.",
+          "markdownDescription": "A connection pool synchronizes thread access to a limited number of database connections. This value sets the maximum number of connections that can be open to the database at the same time.\n\nIn most cases, this should be set to at least the number of threads your server manages.",
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "timeout": {
@@ -78,7 +69,8 @@
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "encoding": {
-          "anyOf": [{ "enum": ["unicode", "utf8mb4"] }, { "type": "string" }]
+          "type": "string",
+          "examples": ["unicode", "utf8mb4"]
         }
       },
       "additionalProperties": {
