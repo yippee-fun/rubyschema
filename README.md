@@ -11,7 +11,7 @@ Just add the `yaml-language-server` comment to the top of your YAML files.
 To install all Rails schemas, run:
 
 ```
-bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails/install_schemas.rb
+bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
 ```
 
 #### `database.yml`
