@@ -72,6 +72,14 @@ Planned
 # yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json
 ```
 
+### I18n
+
+#### `locales/{language}.yml`
+
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/i18n/locale.json
+```
+
 ## Contributing
 
 If you find an issue with a schema, for example it says that something is invalid when it isn’t, please open an issue with an example.
