@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/rails/recurring.json",
+  "title": "SolidQueue Recurring Configuration",
+  "type": "object",
+  "definitions": {
+    "environment": {
+      "markdownDescription": "[Docs](https://guides.rubyonrails.org/active_job_basics.html#recurring-tasks)",
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/definitions/task" },
+          { "$ref": "#/definitions/job" }
+        ]
+      }
+    },
+    "schedule": {
+      "type": "string",
+      "markdownDescription": "Natural langauge cron schedule such as \"every 5 minutes\" or \"every day at 5pm\".\n\n[Fugit Docs](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)",
+      "examples": [
+        "every day",
+        "every hour",
+        "every minute",
+        "every day at 5pm"
+      ]
+    },
+    "priority": {
+      "title": "Example",
+      "examples": [0, 1, 2, 3, 4, 5],
+      "markdownDescription": "Numeric priority value (any positive integer) used when enqueuing the job. The smaller the value, the higher the priority. `0` is the highest priority.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "task": {
+      "properties": {
+        "command": {
+          "type": "string",
+          "markdownDescription": "Ruby code that will be evaluated in the context of a job (`SolidQueue::RecurringJob`)."
+        },
+        "schedule": {
+          "$ref": "#/definitions/schedule"
+        },
+        "priority": {
+          "$ref": "#/definitions/priority"
+        },
+        "queue": {
+          "type": "string"
+        }
+      },
+      "required": ["command", "schedule"],
+      "additionalProperties": false
+    },
+    "job": {
+      "properties": {
+        "class": {
+          "type": "string",
+          "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$"
+        },
+        "args": {
+          "type": ["array", "object"]
+        },
+        "schedule": {
+          "$ref": "#/definitions/schedule"
+        },
+        "priority": {
+          "$ref": "#/definitions/priority"
+        },
+        "queue": {
+          "type": "string"
+        }
+      },
+      "required": ["class", "schedule"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "production": { "$ref": "#/definitions/environment" }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}

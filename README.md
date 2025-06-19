@@ -28,7 +28,9 @@ bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails/install
 
 #### `recurring.yml`
 
-Planned
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/rails/recurring.json
+```
 
 #### `queue.yml`
 

@@ -9,6 +9,7 @@ yaml_schemas = {
   "./config/deploy.yml" => "https://www.rubyschema.org/kamal/deploy.json",
   "./config/storage.yml" => "https://www.rubyschema.org/rails/storage.json",
   "./config/database.yml" => "https://www.rubyschema.org/rails/database.json",
+  "./config/recurring.yml" => "https://www.rubyschema.org/rails/recurring.json",
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
 }.freeze
