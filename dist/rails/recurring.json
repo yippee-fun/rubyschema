@@ -15,17 +15,10 @@
     },
     "schedule": {
       "type": "string",
-      "markdownDescription": "Natural langauge cron schedule such as \"every 5 minutes\" or \"every day at 5pm\".\n\n[Fugit Docs](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)",
-      "examples": [
-        "every day",
-        "every hour",
-        "every minute",
-        "every day at 5pm"
-      ]
+      "markdownDescription": "Natural langauge cron schedule such as \"every 5 minutes\" or \"every day at 5pm\".\n\n[Fugit Docs](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)"
     },
     "priority": {
       "title": "Example",
-      "examples": [0, 1, 2, 3, 4, 5],
       "markdownDescription": "Numeric priority value (any positive integer) used when enqueuing the job. The smaller the value, the higher the priority. `0` is the highest priority.",
       "type": "integer",
       "minimum": 0
