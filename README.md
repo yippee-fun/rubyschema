@@ -42,7 +42,9 @@ Planned
 
 #### `cable.yml`
 
-Planned
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/rails/cable.json
+```
 
 ### Rubocop
 

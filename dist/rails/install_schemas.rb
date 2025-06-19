@@ -6,6 +6,7 @@ failed_files = []
 
 yaml_schemas = {
   "./.rubocop.yml" => "https://www.rubyschema.org/rubocop.json",
+  "./config/cable.yml" => "https://www.rubyschema.org/kamal/cable.json",
   "./config/deploy.yml" => "https://www.rubyschema.org/kamal/deploy.json",
   "./config/storage.yml" => "https://www.rubyschema.org/rails/storage.json",
   "./config/database.yml" => "https://www.rubyschema.org/rails/database.json",

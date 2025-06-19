@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/rails/cable.json",
+  "title": "",
+  "type": "object",
+  "definitions": {
+    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
+    "environment": {
+      "title": "Environment",
+      "anyOf": [
+        { "$ref": "#/definitions/redis" },
+        { "$ref": "#/definitions/async" },
+        { "$ref": "#/definitions/test" },
+        { "$ref": "#/definitions/solid_cable" },
+        {
+          "type": "object",
+          "properties": {
+            "adapter": {
+              "type": "string",
+              "not": {
+                "enum": ["redis", "async", "test", "solid_cable"]
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "redis"
+        },
+        "url": {
+          "type": "string"
+        },
+        "channel_prefix": {
+          "type": "string"
+        },
+        "ssl_params": {
+          "markdownDescription": "Parameters passed to [`OpenSSL::SSL::SSLContext#set_params`](https://docs.ruby-lang.org/en/master/OpenSSL/SSL/SSLContext.html#method-i-set_params).",
+          "type": "object",
+          "properties": {
+            "ciphers": {},
+            "ciphersuites": {},
+            "ecdh_curves": {},
+            "max_version": {},
+            "min_version": {},
+            "security_level": {},
+            "session_cache_mode": {},
+            "session_cache_size": {},
+            "ssl_version": {},
+            "tmp_dh": {}
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": ["adapter", "url"],
+      "additionalProperties": false
+    },
+    "async": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "async"
+        }
+      },
+      "additionalProperties": false
+    },
+    "test": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "test"
+        }
+      },
+      "additionalProperties": false
+    },
+    "solid_cable": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "solid_cable"
+        },
+        "connects_to": {
+          "type": "object"
+        },
+        "polling_interval": {
+          "type": "string",
+          "examples": ["0.1 seconds"]
+        },
+        "message_retention": {
+          "type": "string",
+          "examples": ["1.day"]
+        },
+        "autotrim": {
+          "type": "boolean",
+          "default": true
+        },
+        "silence_polling": {
+          "type": "boolean",
+          "default": true
+        },
+        "use_skip_locked": {
+          "type": "boolean"
+        },
+        "trim_batch_size": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}
