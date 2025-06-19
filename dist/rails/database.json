@@ -32,7 +32,7 @@
           "type": "string"
         },
         "retry_deadline": {
-          "anyOf": [{ "type": "integer" }, { "$ref": "definitions/erb" }]
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
         },
         "query_cache": {
           "description": "Enable or disable query caching.",
