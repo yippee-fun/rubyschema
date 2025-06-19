@@ -10,6 +10,9 @@
       "pattern": "^<%=.*%>$"
     },
     "environment": {
+      "additionalProperties": { "$ref": "#/definitions/database" }
+    },
+    "database": {
       "description": "Guide: https://guides.rubyonrails.org/configuring.html#configuring-a-database",
       "type": "object",
       "properties": {
@@ -72,27 +75,39 @@
           "type": "string",
           "examples": ["unicode", "utf8mb4"]
         }
-      },
-      "additionalProperties": {
-        "$ref": "#/definitions/environment"
       }
     }
   },
   "properties": {
     "default": {
-      "$ref": "#/definitions/environment"
+      "anyOf": [
+        { "$ref": "#/definitions/environment" },
+        { "$ref": "#/definitions/database" }
+      ]
     },
     "production": {
-      "$ref": "#/definitions/environment"
+      "anyOf": [
+        { "$ref": "#/definitions/environment" },
+        { "$ref": "#/definitions/database" }
+      ]
     },
     "development": {
-      "$ref": "#/definitions/environment"
+      "anyOf": [
+        { "$ref": "#/definitions/environment" },
+        { "$ref": "#/definitions/database" }
+      ]
     },
     "test": {
-      "$ref": "#/definitions/environment"
+      "anyOf": [
+        { "$ref": "#/definitions/environment" },
+        { "$ref": "#/definitions/database" }
+      ]
     }
   },
   "additionalProperties": {
-    "$ref": "#/definitions/environment"
+    "anyOf": [
+      { "$ref": "#/definitions/environment" },
+      { "$ref": "#/definitions/database" }
+    ]
   }
 }
