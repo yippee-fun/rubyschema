@@ -18,18 +18,27 @@ bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/database.json
+
+%YAML 1.1
+---
 ```
 
 #### `storage.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/storage.json
+
+%YAML 1.1
+---
 ```
 
 #### `recurring.yml`
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/recurring.json
+
+%YAML 1.1
+---
 ```
 
 #### `queue.yml`
@@ -44,6 +53,9 @@ Planned
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rails/cable.json
+
+%YAML 1.1
+---
 ```
 
 ### Rubocop
@@ -52,6 +64,9 @@ Planned
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rubocop.json
+
+%YAML 1.1
+---
 ```
 
 ### Vite
@@ -70,6 +85,9 @@ Planned
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json
+
+%YAML 1.1
+---
 ```
 
 ### I18n
@@ -78,6 +96,9 @@ Planned
 
 ```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/i18n/locale.json
+
+%YAML 1.1
+---
 ```
 
 ## Contributing
