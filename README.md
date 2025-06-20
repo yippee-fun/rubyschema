@@ -6,7 +6,7 @@ Most YAML configs need to be _just so_ in order to work properly yet they are of
 
 Despite all this, YAML is the primary language for Ruby Gem configs and there’s nothing you or I can do about it.
 
-The good news is, modern text editors support language servers and there’s a fantastic language server for YAML files. All we need to do is tell the language server which version of YAML we’re using (1.1) and give it a data schema, specified as a JSON schema.
+The good news is, modern text editors support language servers and there’s a fantastic language server for YAML files. All we need to do is tell the language server which version of YAML we’re using (1.1) and give it a data schema.
 
 Ruby schema is a collection of JSON schemas for common Ruby gems. With these schemas, we can now enjoy auto-complete, validation and inline documentation right in our YAML files.
 
