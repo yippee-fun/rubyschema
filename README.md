@@ -20,6 +20,8 @@ To install all the Ruby schemas in a Rails, you can run:
 bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
 ```
 
+You can run it again for updates as new schemas are released.
+
 #### `database.yml`
 
 ```yml
