@@ -215,6 +215,7 @@
     },
     "volumes": {
       "type": "array",
+      "markdownDescription": "Additional volumes to mount into the container\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#volumes)",
       "uniqueItems": true,
       "items": {
         "type": "string"
