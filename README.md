@@ -120,6 +120,17 @@ Planned
 ---
 ```
 
+### RoRvsWild
+
+#### `rorvswild.yml`
+
+```yaml
+# yaml-language-server: $schema=https://www.rubyschema.org/rorvswild.json
+
+%YAML 1.1
+---
+```
+
 ## Contributing
 
 If you find an issue with a schema, for example it says that something is invalid when it isn’t, please open an issue with an example.

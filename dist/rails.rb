@@ -11,6 +11,7 @@ yaml_schemas = {
   "./config/sidekiq.yml" => "https://www.rubyschema.org/sidekiq.yml",
   "./config/storage.yml" => "https://www.rubyschema.org/rails/storage.json",
   "./config/database.yml" => "https://www.rubyschema.org/rails/database.json",
+  "./config/rorvswild.yml" => "https://www.rubyschema.org/rorvswild.json",
   "./config/locales/**/*.yml" => "https://www.rubyschema.org/i18n/locale.json",
   "./config/recurring.yml" => "https://www.rubyschema.org/rails/recurring.json",
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
