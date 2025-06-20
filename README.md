@@ -113,6 +113,8 @@ If you find an issue with a schema, for example it says that something is invali
 
 The schemas are written in JSON Schema version 7 (since that’s the version that YAML LSP supports). They are currently committed directly to the `dist` folder, which is deployed automatically to Cloudflare.
 
+You can test the schemas locally by replacing the `$schema` URL with a relative path. In Zed, you need to run the `editor: restart language server` command each time you make changes to the schema.
+
 ## Why is it called RubySchema?
 
 I know it’s confusing. RubySchema provides JSON Schemas for YAML files. 🤯 The name reflects the purpose of providing schemas specifically for the Ruby community, where a lot of Ruby gems rely on YAML/JSON configuration files. There’s another project called [JSON Schema Store](https://www.schemastore.org) with a significantly wider scope.
