@@ -40,7 +40,20 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "type": "string"
+            "enum": [
+              "ActionController",
+              "ActionMailer",
+              "ActionView",
+              "ActiveJob",
+              "ActiveRecord",
+              "DelayedJob",
+              "Elasticsearch",
+              "Mongo",
+              "NetHttp",
+              "Redis",
+              "Resque",
+              "Sidekiq"
+            ]
           }
         }
       }
