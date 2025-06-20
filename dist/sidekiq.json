@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/sidekiq.json",
+  "title": "Sidekiq configuration",
+  "markdownDescription": "[Sidekiq Docs](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
+  "definitions": {
+    "environment": {
+      "properties": {
+        "concurrency": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queues": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": [{ "type": "string" }, { "type": "integer" }],
+                "additionalItems": false,
+                "minItems": 2
+              }
+            ]
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/environment",
+  "properties": {
+    "development": { "$ref": "#/definitions/environment" },
+    "production": { "$ref": "#/definitions/environment" },
+    "staging": { "$ref": "#/definitions/environment" }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}
