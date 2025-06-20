@@ -1,14 +1,20 @@
 # Ruby Schema
 
-Ruby schema is a collection of schemas for the YAML and JSON configuration in common Ruby gems. This gives you auto-complete and validation for these YAML files in text editors that support the YAML language server.
+YAML is an incredibly difficult language for me. Between significant whitespace, bare strings and ambiguous booleans, I find it quite impossible to follow. And although the language has improved over time, 15 years since the v1.2 spec was released, Ruby is still stuck on the 1.1 spec.
+
+Most YAML configs need to be _just so_ in order to work properly yet they are often unspecified, poorly documented and lack proper validation.
+
+Despite all this, YAML is the primary language for Ruby Gem configs and there’s nothing you or I can do about it.
+
+The good news is, modern text editors support language servers and there’s a fantastic language server for YAML files. All we need to do is tell the language server which version of YAML we’re using (1.1) and give it a data schema, specified as a JSON schema.
+
+Ruby schema is a collection of JSON schemas for common Ruby gems. With these schemas, we can now enjoy auto-complete, validation and inline documentation right in our YAML files.
 
 ![Example of auto-complete](https://github.com/user-attachments/assets/c8038624-4df5-4dd7-9fcf-787d5c8a5f71)
 
-Just add the `yaml-language-server` comment to the top of your YAML files.
-
 ### Rails
 
-To install all Rails schemas, run:
+To install all the Ruby schemas in a Rails, you can run:
 
 ```
 bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
