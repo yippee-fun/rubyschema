@@ -3,7 +3,80 @@
   "$id": "https://www.rubyschema.org/standard.json",
   "title": "Standard configuration",
   "type": "object",
+  "definitions": {
+    "standardRailsPlugin": {
+      "type": "object",
+      "properties": {
+        "standard-rails": {
+          "properties": {
+            "target_rails_version": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "otherPlugin": {
+    "type": "object",
+    "maxProperties": 1,
+    "minProperties": 1,
+    "additionalProperties": true,
+    "propertyNames": { "type": "string" }
+  },
   "properties": {
+    "fix": {
+      "type": "boolean",
+      "default": false
+    },
+    "parallel": {
+      "type": "boolean",
+      "default": false
+    },
+    "format": {
+      "markdownDescription": "Rubocop formatter.\n\n[Rubocop Docs](https://docs.rubocop.org/rubocop/formatters.html)",
+      "enum": [
+        "simple",
+        "progress",
+        "autogenconf",
+        "clang",
+        "fuubar",
+        "pacman",
+        "emacs",
+        "quiet",
+        "files",
+        "json",
+        "junit",
+        "offenses",
+        "worst",
+        "html",
+        "markdown",
+        "tap",
+        "github"
+      ]
+    },
+    "ruby_version": {
+      "type": "number"
+    },
+    "default_ignores": {
+      "type": "boolean",
+      "default": true
+    },
+    "plugins": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "type": "string" },
+          { "$ref": "#/definitions/standardRailsPlugin" },
+          { "$ref": "#/definitions/otherPlugin" }
+        ]
+      }
+    },
+    "extend_config": {
+      "type": "string"
+    },
     "ignore": {
       "type": "array",
       "uniqueItems": true,
