@@ -213,6 +213,13 @@
         "type": "string"
       }
     },
+    "volumes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
     "registry": {
       "$ref": "#/definitions/registry"
     },
