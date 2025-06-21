@@ -169,10 +169,35 @@ Planned
 #### `package.yml`
 
 ```yaml
-# yaml-language-server: $schema=https://www.rubyschema.org/packwerk/package.yml
+# yaml-language-server: $schema=https://www.rubyschema.org/packwerk/package.json
 
 %YAML 1.1
 ---
+```
+
+### Lefthook
+
+#### `lefthook.yml`
+
+```yaml
+# yaml-language-server: $schema=https://www.rubyschema.org/lefthook.json
+
+%YAML 1.1
+---
+```
+
+#### `lefthook.json`
+
+```json
+{
+  "$schema": "https://www.rubyschema.org/lefthook.json"
+}
+```
+
+#### `lefthook.toml`
+
+```toml
+#:schema https://www.rubyschema.org/lefthook.json
 ```
 
 ## Contributing

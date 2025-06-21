@@ -21,6 +21,7 @@ yaml_schemas = {
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./app/**/package.yml" => "https://www.rubyschema.org/packwerk/package.yml",
+  "./lefthook.yml" => "https://www.rubyschema.org/lefthook.json",
 }.freeze
 
 json_schemas = {
@@ -28,6 +29,11 @@ json_schemas = {
   "./tsconfig.json" => "https://www.schemastore.org/tsconfig.json",
   "./.stylelintrc" => "https://www.schemastore.org/stylelintrc.json",
   "./config/vite.json" => "https://www.rubyschema.org/vite.json",
+  "./lefthook.json" => "https://www.rubyschema.org/lefthook.json",
+}.freeze
+
+toml_schemas = {
+  "./lefthook.toml" => "https://www.rubyschema.org/lefthook.json",
 }.freeze
 
 yaml_schemas.each do |pattern, schema_url|
@@ -89,6 +95,25 @@ json_schemas.each do |pattern, schema_url|
     updated_files << file_path
   rescue JSON::ParserError => e
     failed_files << { file: file_path, error: "JSON parsing failed: #{e.message}" }
+  rescue => e
+    failed_files << { file: file_path, error: e.message }
+  end
+end
+
+toml_schemas.each do |pattern, schema_url|
+  schema_comment = "#:schema #{schema_url}"
+
+  Dir.glob(pattern).each do |file_path|
+    source = File.read(file_path).split("\n")
+
+    source.reject! do |line|
+      line.start_with? "#:schema "
+    end
+
+    source.unshift(schema_comment)
+
+    File.write(file_path, source.join("\n"))
+    updated_files << file_path
   rescue => e
     failed_files << { file: file_path, error: e.message }
   end
