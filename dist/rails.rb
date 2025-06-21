@@ -20,6 +20,7 @@ yaml_schemas = {
   "./config/locales/**/*.yml" => "https://www.rubyschema.org/i18n/locale.json",
   "./config/recurring.yml" => "https://www.rubyschema.org/rails/recurring.json",
   "./config/scout_apm.yml" => "https://www.rubyschema.org/scout_apm.json",
+  "./config/mongoid.yml" => "https://www.rubyschema.org/mongoid.yml",
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./app/**/package.yml" => "https://www.rubyschema.org/packwerk/package.yml",

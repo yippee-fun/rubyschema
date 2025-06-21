@@ -1,0 +1,282 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/mongoid.json",
+  "title": "Mongoid configuration",
+  "type": "object",
+  "definitions": {
+    "environment": {
+      "type": "object",
+      "properties": {
+        "clients": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/client"
+          }
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "allow_bson5_decimal128": {
+              "type": "boolean"
+            },
+            "allow_duplicate_index_declarations": {
+              "type": "boolean"
+            },
+            "app_name": {
+              "type": ["string", "null"]
+            },
+            "around_callbacks_for_embeds": {
+              "type": "boolean"
+            },
+            "async_query_executor": {
+              "enum": ["immediate", "global_thread_pool"]
+            },
+            "belongs_to_required_by_default": {
+              "type": "boolean"
+            },
+            "discriminator_key": {
+              "type": "string"
+            },
+            "duplicate_fields_exception": {
+              "type": "boolean"
+            },
+            "global_executor_concurrency": {
+              "type": ["integer", "null"]
+            },
+            "immutable_ids": {
+              "type": "boolean"
+            },
+            "include_root_in_json": {
+              "type": "boolean"
+            },
+            "include_type_for_serialization": {
+              "type": "boolean"
+            },
+            "join_contexts": {
+              "type": "boolean"
+            },
+            "legacy_persistence_context_behavior": {
+              "type": "boolean"
+            },
+            "legacy_readonly": {
+              "type": "boolean"
+            },
+            "log_level": {
+              "enum": ["debug", "info", "warn", "error", "fatal", "unknown"]
+            },
+            "map_big_decimal_to_decimal128": {
+              "type": "boolean"
+            },
+            "preload_models": {
+              "type": "boolean"
+            },
+            "prevent_multiple_calls_of_embedded_callbacks": {
+              "type": "boolean"
+            },
+            "raise_not_found_error": {
+              "type": "boolean"
+            },
+            "scope_overwrite_exception": {
+              "type": "boolean"
+            },
+            "use_utc": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "driver_options": {
+          "type": "object",
+          "properties": {
+            "broken_view_aggregate": {
+              "type": "boolean"
+            },
+            "broken_view_options": {
+              "type": "boolean"
+            },
+            "validate_update_replace": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "markdownDescription": "Supplies your connection URI, including the database name."
+        },
+        "database": {
+          "type": "string",
+          "markdownDescription": "Defines the name of the default database. (required)"
+        },
+        "hosts": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "options": {
+          "$ref": "#/definitions/clientOptions"
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["uri"]
+        },
+        {
+          "required": ["database", "hosts"]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "clientOptions": {
+      "type": "object",
+      "properties": {
+        "write": {
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "read": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "secondary_preferred",
+                "primary",
+                "primary_preferred",
+                "nearest"
+              ]
+            },
+            "tag_sets": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "use": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "user": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "auth_mech": {
+          "enum": [
+            "scram",
+            "scram256",
+            "mongodb_cr",
+            "mongodb_x509",
+            "gssapi",
+            "aws",
+            "plain"
+          ]
+        },
+        "auth_source": {
+          "type": "string"
+        },
+        "connect": {
+          "enum": ["direct", "replica_set", "sharded"]
+        },
+        "heartbeat_frequency": {
+          "type": "number",
+          "minimum": 0,
+          "default": 10
+        },
+        "local_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0.015
+        },
+        "server_selection_timeout": {
+          "type": "number",
+          "minimum": 0,
+          "default": 30
+        },
+        "max_pool_size": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5
+        },
+        "min_pool_size": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "wait_queue_timeout": {
+          "type": "number",
+          "minimum": 0,
+          "default": 5
+        },
+        "connect_timeout": {
+          "type": "number",
+          "minimum": 0,
+          "default": 10
+        },
+        "replica_set": {
+          "type": "string"
+        },
+        "compressors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["zstd", "snappy", "zlib"]
+          }
+        },
+        "ssl": {
+          "type": "boolean"
+        },
+        "ssl_cert": {
+          "type": "string"
+        },
+        "ssl_key": {
+          "type": "string",
+          "examples": ["/path/to/my.key"]
+        },
+        "ssl_key_pass_phrase": {
+          "type": "string"
+        },
+        "ssl_verify": {
+          "type": "boolean",
+          "default": true
+        },
+        "ssl_ca_cert": {
+          "type": "string",
+          "examples": ["/path/to/ca.cert"]
+        },
+        "truncate_logs": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}
