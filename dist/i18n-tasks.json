@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/i18n-tasks.json",
+  "title": "I18n-tasks config",
+  "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
+    "google": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "const": "google"
+        },
+        "google_translate_api_key": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["google_translate_api_key"]
+    },
+    "deepl": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "const": "deepl"
+        },
+        "deepl_api_key": {
+          "type": "string"
+        },
+        "deepl_host": {
+          "type": "string"
+        },
+        "deepl_version": {
+          "type": "string"
+        },
+        "deepl_glossary_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "deepl_options": {
+          "type": "object",
+          "properties": {
+            "formality": {
+              "anyOf": [{ "enum": ["prefer_less"] }, { "type": "string" }]
+            }
+          }
+        },
+        "deepl_locale_aliases": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["deepl_api_key"]
+    },
+    "yandex": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "const": "yandex"
+        },
+        "yandex_api_key": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["yandex_api_key"]
+    },
+    "openai": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "const": "openai"
+        },
+        "openai_api_key": {
+          "type": "string"
+        },
+        "openai_model": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["openai_api_key"]
+    },
+    "watsonx": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "const": "watsonx"
+        },
+        "watsonx_api_key": {
+          "type": "string"
+        },
+        "watsonx_project_id": {
+          "type": "string"
+        },
+        "watsonx_model": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["watsonx_api_key", "watsonx_project_id"]
+    }
+  },
+  "properties": {
+    "base_locale": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "type": "string"
+        },
+        "read": {
+          "type": "array",
+          "markdownDescription": "Locale files or `Dir.glob` patterns where translations are read from:",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "write": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              { "type": "string" },
+              {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "type": "string" },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            ]
+          }
+        },
+        "external": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "yaml": {
+          "type": "object",
+          "properties": {
+            "write": {
+              "type": "object",
+              "properties": {
+                "line_width": {
+                  "anyOf": [
+                    { "type": "integer", "minimum": -1 },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Set to `-1` in order to prevent wrapping lines at 80 characters"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "json": {
+          "type": "object",
+          "properties": {
+            "write": {
+              "type": "object",
+              "properties": {
+                "indent": {
+                  "type": "string",
+                  "default": "  "
+                },
+                "space": {
+                  "type": "string",
+                  "default": " "
+                },
+                "object_nl": {
+                  "type": "string",
+                  "default": "\n"
+                },
+                "array_nl": {
+                  "type": "string",
+                  "default": "\n"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "relative_roots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "relative_exclude_method_name_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "type": "array",
+          "markdownDescription": "Files or `File.fnmatch` patterns to exclude from search. Some files are always excluded regardless of this setting:",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "only": {
+          "type": "array",
+          "markdownDescription": "Alternatively, the only files or `File.fnmatch patterns` to search in `paths`. If specified, this settings takes priority over `exclude`, but `exclude` still applies.",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "strict": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+        },
+        "prism": {
+          "anyOf": [
+            { "enum": ["rails", "ruby"] },
+            { "$ref": "#/definitions/erb" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "translation": {
+      "oneOf": [
+        { "$ref": "#/definitions/google" },
+        { "$ref": "#/definitions/deepl" },
+        { "$ref": "#/definitions/yandex" },
+        { "$ref": "#/definitions/openai" },
+        { "$ref": "#/definitions/watsonx" }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -238,6 +238,17 @@ Planned
 ---
 ```
 
+### I18n-tasks
+
+#### `i18n-tasks.yml`
+
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/i18n-tasks.json
+
+%YAML 1.1
+---
+```
+
 ## Contributing
 
 If you find an issue with a schema, for example it says that something is invalid when it isn’t, please open an issue with an example.
