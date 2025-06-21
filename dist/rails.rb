@@ -20,6 +20,7 @@ yaml_schemas = {
   "./config/recurring.yml" => "https://www.rubyschema.org/rails/recurring.json",
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
+  "./app/**/package.yml" => "https://www.rubyschema.org/packwerk/package.yml",
 }.freeze
 
 json_schemas = {

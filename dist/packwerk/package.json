@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/packwerk/package.json",
+  "title": "Packwerk Package",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "markdownDescription": "[Docs](https://github.com/Shopify/packwerk/blob/main/USAGE.md#package-metadata)"
+    },
+    "enforce_dependencies": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ]
+    },
+    "dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "require": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "offenses_formatter": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
