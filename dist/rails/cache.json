@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/rails/cache.json",
+  "title": "Solid Cache configuration",
+  "type": "object",
+  "definitions": {
+    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "databases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "encrypt": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+        },
+        "store_options": {
+          "type": "object",
+          "properties": {
+            "max_age": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ]
+            },
+            "max_size": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ]
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}

@@ -11,6 +11,7 @@ yaml_schemas = {
   "./.honeybadger.yml" => "https://www.rubyschema.org/honeybadger.json",
   "./config/honeybadger.yml" => "https://www.rubyschema.org/honeybadger.json",
   "./config/cable.yml" => "https://www.rubyschema.org/kamal/cable.json",
+  "./config/cache.yml" => "https://www.rubyschema.org/rails/cache.json",
   "./config/deploy.yml" => "https://www.rubyschema.org/kamal/deploy.json",
   "./config/sidekiq.yml" => "https://www.rubyschema.org/sidekiq.yml",
   "./config/storage.yml" => "https://www.rubyschema.org/rails/storage.json",

@@ -55,7 +55,12 @@ Planned
 
 #### `cache.yml`
 
-Planned
+```yml
+# yaml-language-server: $schema=https://www.rubyschema.org/rails/cache.json
+
+%YAML 1.1
+---
+```
 
 #### `cable.yml`
 
@@ -113,7 +118,7 @@ Planned
 
 #### `sidekiq.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/sidekiq.json
 
 %YAML 1.1
@@ -124,7 +129,7 @@ Planned
 
 #### `rorvswild.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/rorvswild.json
 
 %YAML 1.1
@@ -135,7 +140,7 @@ Planned
 
 #### `standard.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/standard.json
 
 %YAML 1.1
@@ -146,7 +151,7 @@ Planned
 
 #### `honeybadger.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/honeybadger.json
 
 %YAML 1.1
@@ -157,7 +162,7 @@ Planned
 
 #### `shoryuken.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/shoryuken.json
 
 %YAML 1.1
@@ -168,7 +173,7 @@ Planned
 
 #### `package.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/packwerk/package.json
 
 %YAML 1.1
@@ -179,7 +184,7 @@ Planned
 
 #### `lefthook.yml`
 
-```yaml
+```yml
 # yaml-language-server: $schema=https://www.rubyschema.org/lefthook.json
 
 %YAML 1.1
