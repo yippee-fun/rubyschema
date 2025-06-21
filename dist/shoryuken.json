@@ -59,5 +59,6 @@
       ],
       "markdownDescription": "[Docs](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#cache_visibility_timeout)"
     }
-  }
+  },
+  "additionalProperties": false
 }
