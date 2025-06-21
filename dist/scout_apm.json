@@ -1,0 +1,244 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/scout_apm.json",
+  "title": "Scout APM configuration",
+  "type": "object",
+  "definitions": {
+    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
+    "constant": {
+      "type": "string",
+      "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "markdownDescription": "Name of the application",
+      "examples": ["Photos App"]
+    },
+    "key": {
+      "type": "string",
+      "markdownDescription": "The organization API key.",
+      "examples": ["<%= Rails.application.credentials.dig(:scout, :key) %>"]
+    },
+    "monitor": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Whether monitoring should be enabled.",
+      "default": false
+    },
+    "auto_instruments": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Instrument custom code with Auto Instruments.",
+      "default": false
+    },
+    "log_level": {
+      "anyOf": [
+        { "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"] },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "The logging level of the agent.",
+      "default": "INFO"
+    },
+    "detailed_middleware": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "When true, the time spent in each middleware is visible in transaction traces vs. an aggregrate across all middlewares. This adds additional overhead and is disabled by default as middleware is an uncommon bottleneck.",
+      "default": false
+    },
+    "hostname": {
+      "type": "string",
+      "markdownDescription": "Allows renaming of the node/host name"
+    },
+    "revision_sha": {
+      "type": "string",
+      "markdownDescription": "The Git SHA that corresponds to the version of the app being deployed."
+    },
+    "scm_subdirectory": {
+      "type": "string",
+      "markdownDescription": "The relative path from the base of your Git repo to the directory which contains your application code."
+    },
+    "sample_rate": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0, "maximum": 100 },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Gobal sample rate for your application. Rate should be `1` - `100` serving as a percentage of requests to capture (ex: `80` to capture 80% of requests)."
+    },
+    "endpoint_sample_rate": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0, "maximum": 100 },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Sample rate for all endpoints. `sample_endpoints` will override this rate for matching endpoints. Rate should be `1` - `100` serving as a percentage of requests to capture."
+    },
+    "job_sample_rate": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0, "maximum": 100 },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Sample rate for all jobs. sample_jobs will override this rate for matching jobs. Rate should be `1` - `100` serving as a percentage of requests to capture."
+    },
+    "ignore_endpoints": {
+      "type": "array",
+      "markdownDescription": "An Array of web endpoints that Scout should not instrument. Routes that match the prefixed path (ex: `['/health', '/status']`) will be ignored by the agent. Replaces old ignore configuration.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "ignore_jobs": {
+      "type": "array",
+      "markdownDescription": "An Array of job names that Scout should not instrument. Jobs with exact name match will be ignored by the agent.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$"
+          },
+          { "$ref": "#/definitions/erb" }
+        ]
+      }
+    },
+    "sample_endpoints": {
+      "type": "array",
+      "markdownDescription": "An Array of web endpoints that Scout should sample at the provided rate (ex: `['/busy_endpoint:50']`). Rate should be `1` - `100` serving as a percentage of requests to capture.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^.+:(100|[1-9]?[0-9])$"
+          },
+          { "$ref": "#/definitions/erb" }
+        ]
+      }
+    },
+    "sample_jobs": {
+      "type": "array",
+      "markdownDescription": "An Array of job names that Scout should sample at the provided rate (ex: `['MyJob:70']`). Rate should be `1` - `100` serving as a percentage of requests to capture.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job:(100|[1-9]?[0-9])$"
+          },
+          { "$ref": "#/definitions/erb" }
+        ]
+      }
+    },
+    "max_traces": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0 },
+        { "$ref": "#/definitions/erb" }
+      ]
+    },
+    "enable_background_jobs": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Indicates if background jobs should be monitored."
+    },
+    "collect_remote_ip": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Automatically capture end user IP addresses as part of each trace’s context."
+    },
+    "record_queue_time": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Automatically capture request queue time when a queuing request header is found."
+    },
+    "auto_instruments_ignore": {
+      "type": "array",
+      "markdownDescription": "Excludes the listed files names from being auto instrumented.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "examples": [["application_controller"]]
+    },
+    "errors_ignored_exceptions": {
+      "type": "array",
+      "markdownDescription": "Excludes certain exceptions from being reported",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/constant"
+      },
+      "examples": [
+        ["ActiveRecord::RecordNotFound", "ActionController::RoutingError"]
+      ]
+    },
+    "errors_filtered_params": {
+      "type": "array",
+      "markdownDescription": "Filtered parameters in exceptions",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "examples": [["password", "s3-key"]]
+    },
+    "log_file_path": {
+      "anyOf": [{ "type": "string" }, { "enum": ["stdout"] }],
+      "markdownDescription": "The path to the scout_apm.log log file directory. Use `stdout` to log to `STDOUT`."
+    },
+    "proxy": {
+      "type": "string",
+      "markdownDescription": "Specify the proxy URL if a proxy is required."
+    },
+    "host": {
+      "type": "string",
+      "markdownDescription": "The protocol + domain where the agent should report.",
+      "examples": ["https://scoutapm.com"]
+    },
+    "uri_reporting": {
+      "anyOf": [
+        { "enum": ["filtered_params", "path"] },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "By default Scout reports the URL and filtered query parameters with transaction traces. Sensitive parameters in the URL will be redacted. To exclude query params entirely, use path."
+    },
+    "disabled_instruments": {
+      "type": "array",
+      "markdownDescription": "An Array of instruments that Scout should not install. Each Array element should should be a string-ified, case-sensitive class name.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/constant" },
+          { "$ref": "#/definitions/erb" }
+        ]
+      },
+      "examples": [["Elasticsearch", "HttpClient"]]
+    },
+    "timeline_traces": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Send traces in both the summary and timeline formats."
+    },
+    "use_prepend": {
+      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Where supported, use Method#prepend for instrumentation."
+    },
+    "alias_method_instruments": {
+      "type": "array",
+      "markdownDescription": "If `use_prepend` is set to `true`, specify which particular instruments should still use the alias_method approach. Each Array element should should be a string-ified, case-sensitive class name.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/constant" },
+          { "$ref": "#/definitions/erb" }
+        ]
+      },
+      "examples": [["Elasticsearch", "HttpClient"]]
+    },
+    "prepend_instruments": {
+      "type": "array",
+      "markdownDescription": "If use_prepend is set to false, specify which particular instruments should use the prepend approach. Each Array element should should be a string-ified, case-sensitive class name.",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/constant" },
+          { "$ref": "#/definitions/erb" }
+        ]
+      },
+      "examples": [["Elasticsearch", "HttpClient"]]
+    }
+  },
+  "additionalProperties": false,
+  "required": ["key"]
+}

@@ -19,6 +19,7 @@ yaml_schemas = {
   "./config/rorvswild.yml" => "https://www.rubyschema.org/rorvswild.json",
   "./config/locales/**/*.yml" => "https://www.rubyschema.org/i18n/locale.json",
   "./config/recurring.yml" => "https://www.rubyschema.org/rails/recurring.json",
+  "./config/scout_apm.yml" => "https://www.rubyschema.org/scout_apm.json",
   "./.circleci/config.yml" => "https://json.schemastore.org/circleciconfig.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./app/**/package.yml" => "https://www.rubyschema.org/packwerk/package.yml",

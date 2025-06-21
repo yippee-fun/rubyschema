@@ -63,13 +63,17 @@
             "level": {
               "anyOf": [
                 { "$ref": "#/definitions/erb" },
-                { "enum": ["INFO", "WARN", "DEBUG"] }
+                {
+                  "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"]
+                }
               ],
               "markdownDescription": "The log level. Does nothing unless `logging.path` is also set."
             },
             "tty_level": {
               "anyOf": [
-                { "enum": ["INFO", "WARN", "DEBUG"] },
+                {
+                  "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"]
+                },
                 { "$ref": "#/definitions/erb" }
               ],
               "markdownDescription": "Level to log when attached to a terminal (anything < `logging.level` will always be ignored)."
