@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/shoryuken.json",
+  "title": "Shoryuken options",
+  "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    }
+  },
+  "properties": {
+    "logfile": {
+      "type": "string"
+    },
+    "pidfile": {
+      "type": "string"
+    },
+    "queues": {
+      "type": "array",
+      "markdownDescription": "[Docs](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#queues)",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": [
+              { "type": "string" },
+              {
+                "anyOf": [
+                  { "type": "integer" },
+                  { "$ref": "#/definitions/erb" }
+                ]
+              }
+            ],
+            "additionalItems": false,
+            "minItems": 2
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "delay": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Delay is the number of seconds to pause fetching from when an empty queue.\n\n[Docs](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#delay)",
+      "default": 0
+    },
+    "concurrency": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "[Docs](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#concurrency)",
+      "default": 25
+    },
+    "cache_visibility_timeout": {
+      "anyOf": [
+        { "type": ["integer", "boolean"] },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "[Docs](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#cache_visibility_timeout)"
+    }
+  }
+}

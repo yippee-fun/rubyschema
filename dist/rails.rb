@@ -7,6 +7,7 @@ failed_files = []
 yaml_schemas = {
   "./.rubocop.yml" => "https://www.rubyschema.org/rubocop.json",
   "./.standard.yml" => "https://www.rubyschema.org/standard.json",
+  "./shoryuken.yml" => "https://www.rubyschema.org/shoryuken.json",
   "./.honeybadger.yml" => "https://www.rubyschema.org/honeybadger.json",
   "./config/honeybadger.yml" => "https://www.rubyschema.org/honeybadger.json",
   "./config/cable.yml" => "https://www.rubyschema.org/kamal/cable.json",
