@@ -5,3 +5,6 @@ inherit_from:
 
 AllCops:
   TargetRubyVersion: 3.4
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
