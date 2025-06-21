@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/pghero.json",
+  "title": "Pghero Configuration",
+  "type": "object",
+  "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    }
+  },
+  "properties": {
+    "databases": {
+      "type": "object",
+      "propertyNames": { "type": "string" },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "aws_db_instance_identifier": {
+            "type": "string"
+          },
+          "gcp_database_id": {
+            "type": "string"
+          },
+          "azure_resource_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": ["url"]
+      }
+    },
+    "long_running_query_sec": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum time for long running queries",
+      "examples": [60]
+    },
+    "slow_query_ms": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum average time for slow queries",
+      "examples": [20]
+    },
+    "slow_query_calls": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum calls for slow queries",
+      "examples": [100]
+    },
+    "total_connections_threshold": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum connections for high connections warning",
+      "examples": [500]
+    },
+    "explain": {
+      "anyOf": [
+        { "type": "boolean" },
+        { "const": "analyze" },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Explain functionality"
+    },
+    "explain_timeout_sec": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Statement timeout for explain"
+    },
+    "visualize_url": {
+      "type": "string",
+      "markdownDescription": "Visualize URL for explain"
+    },
+    "time_zone": {
+      "type": "string",
+      "markdownDescription": "Time zone (defaults to app time zone)",
+      "examples": ["Pacific Time (US & Canada)"]
+    },
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string",
+      "examples": ["<%= ENV[\"PGHERO_PASSWORD\"] %>"]
+    },
+    "stats_database_url": {
+      "type": "string",
+      "examples": ["<%= ENV[\"PGHERO_STATS_DATABASE_URL\"] %>"]
+    },
+    "aws_access_key_id": {
+      "type": "string",
+      "examples": ["<%= ENV[\"AWS_ACCESS_KEY_ID\"] %>"]
+    },
+    "aws_secret_access_key": {
+      "type": "string",
+      "examples": ["<%= ENV[\"AWS_SECRET_ACCESS_KEY\"] %>"]
+    },
+    "aws_region": {
+      "anyOf": [
+        {
+          "enum": [
+            "af-south-1",
+            "ap-east-1",
+            "ap-east-2",
+            "ap-northeast-1",
+            "ap-northeast-2",
+            "ap-northeast-3",
+            "ap-south-1",
+            "ap-south-2",
+            "ap-southeast-1",
+            "ap-southeast-2",
+            "ap-southeast-3",
+            "ap-southeast-4",
+            "ap-southeast-5",
+            "ap-southeast-7",
+            "ca-central-1",
+            "ca-west-1",
+            "eu-central-1",
+            "eu-central-2",
+            "eu-north-1",
+            "eu-south-1",
+            "eu-south-2",
+            "eu-west-1",
+            "eu-west-2",
+            "eu-west-3",
+            "il-central-1",
+            "me-central-1",
+            "me-south-1",
+            "mx-central-1",
+            "sa-east-1",
+            "us-east-1",
+            "us-east-2",
+            "us-gov-east-1",
+            "us-gov-west-1",
+            "us-west-1",
+            "us-west-2"
+          ]
+        },
+        { "type": "string" }
+      ]
+    },
+    "filter_data": {
+      "type": "boolean",
+      "markdownDescription": "Filter data from queries (experimental)"
+    }
+  },
+  "additionalProperties": false
+}
