@@ -1,0 +1,496 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/honeybadger.json",
+  "title": "Honeybadger configuration",
+  "type": "object",
+  "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
+    "constant": {
+      "type": "string",
+      "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+    },
+    "environment": {
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "markdownDescription": "The API key for your Honeybadger project."
+        },
+        "env": {
+          "type": "string",
+          "markdownDescription": "The environment the app is running in. In Rails this defaults to `Rails.env`."
+        },
+        "report_data": {
+          "oneOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable/disable reporting of data. Defaults to false for `test`, `development`, and `cucumber` environments."
+        },
+        "root": {
+          "type": "string",
+          "markdownDescription": "The project's absolute root path."
+        },
+        "revision": {
+          "type": "string",
+          "markdownDescription": "The project's git revision."
+        },
+        "hostname": {
+          "type": "string",
+          "markdownDescription": "The hostname of the current box."
+        },
+        "backend": {
+          "type": "string",
+          "markdownDescription": "An alternate backend to use for reporting data."
+        },
+        "debug": {
+          "oneOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enables verbose debug logging."
+        },
+        "send_data_at_exit": {
+          "oneOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Prevent the Ruby program from exiting until all queued notices have been delivered to Honeybadger. (This can take a while in some cases; see `max_queue_size`.)"
+        },
+        "max_queue_size": {
+          "oneOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Maximum number of notices to queue for delivery at one time; new notices will be dropped if this number is exceeded."
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "level": {
+              "markdownDescription": "The log level. Does nothing unless `logging.path` is also set.",
+              "enum": ["INFO", "WARN", "DEBUG"]
+            },
+            "tty_level": {
+              "markdownDescription": "Level to log when attached to a terminal (anything < `logging.level` will always be ignored).",
+              "enum": ["INFO", "WARN", "DEBUG"]
+            }
+          },
+          "additionalProperties": false,
+          "required": ["path"]
+        },
+        "connection": {
+          "type": "object",
+          "properties": {
+            "secure": {
+              "markdownDescription": "Use SSL when sending data.",
+              "type": "boolean",
+              "default": true
+            },
+            "host": {
+              "markdownDescription": "The host to use when sending data.",
+              "type": "string",
+              "default": "api.honeybadger.io"
+            },
+            "port": {
+              "markdownDescription": "The port to use when sending data.",
+              "type": "integer",
+              "default": 443
+            },
+            "http_open_timeout": {
+              "markdownDescription": "The HTTP open timeout (in seconds) when connecting to the server.",
+              "type": "integer",
+              "default": 2
+            },
+            "http_read_timeout": {
+              "markdownDescription": "The HTTP read timeout (in seconds) when connecting to the server.",
+              "type": "integer",
+              "default": 5
+            },
+            "proxy_host": {
+              "markdownDescription": "The proxy host to use when sending data.",
+              "type": "string"
+            },
+            "proxy_port": {
+              "markdownDescription": "The proxy port to use when sending data.",
+              "type": "integer"
+            },
+            "proxy_user": {
+              "markdownDescription": "The proxy user to use when sending data.",
+              "type": "string"
+            },
+            "proxy_pass": {
+              "markdownDescription": "The proxy password to use when sending data.",
+              "type": "string"
+            }
+          }
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "filter_keys": {
+              "markdownDescription": " A list of keys to filter when sending request data. In Rails, this also includes existing params filters.",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "default": ["password", "password_confirmation"]
+            },
+            "disable_session": {
+              "markdownDescription": "Prevent session from being sent with request data.",
+              "type": "boolean",
+              "default": false
+            },
+            "disable_params": {
+              "markdownDescription": "Prevent params from being sent with request data.",
+              "type": "boolean",
+              "default": false
+            },
+            "disable_environment": {
+              "markdownDescription": "Prevent Rack environment from being sent with request data.",
+              "type": "boolean",
+              "default": false
+            },
+            "disable_url": {
+              "markdownDescription": "Prevent url from being sent with request data (Rack environment may still contain it in some cases).",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "user_informer": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "markdownDescription": "Enable the UserInformer middleware. The user informer displays information about a Honeybadger error to your end-users when you display a 500 error page. This typically includes the error id which can be used to reference the error inside your Honeybadger account. [Learn more](https://docs.honeybadger.io/lib/ruby/getting-started/collecting-user-feedback/)",
+              "type": "boolean",
+              "default": true
+            },
+            "info": {
+              "markdownDescription": "Replacement string for HTML comment in templates.",
+              "type": "string"
+            }
+          }
+        },
+        "feedback": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "markdownDescription": "Enable the UserFeedback middleware. Feedback displays a comment form to your-end user when they encounter an error. When the user creates a comment, it is added to the error in Honeybadger, and a notification is sent. [Learn More](https://docs.honeybadger.io/lib/ruby/getting-started/collecting-user-feedback/)",
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "exceptions": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "markdownDescription": "Enable error reporting functionality.",
+              "type": "boolean",
+              "default": true
+            },
+            "ignore": {
+              "markdownDescription": "A list of exception class names to ignore (appends to defaults).",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/constant"
+              }
+            },
+            "ignore_only": {
+              "markdownDescription": "A list of exception class names to ignore (overrides defaults).",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/constant"
+              }
+            },
+            "ignored_user_agents": {
+              "markdownDescription": "A list of user agents to ignore.",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "rescue_rake": {
+              "markdownDescription": "Enable rescuing exceptions in rake tasks. Default: `true` when run in background; `false` when run in terminal.",
+              "type": "boolean"
+            },
+            "notify_at_exit": {
+              "markdownDescription": "Report unhandled exception when Ruby crashes (at_exit).",
+              "type": "boolean",
+              "default": true
+            },
+            "source_radius": {
+              "markdownDescription": "The number of lines before and after the source when reporting snippets.",
+              "type": "integer",
+              "default": 2
+            },
+            "local_variables": {
+              "markdownDescription": "Enable sending local variables. Requires the [binding_of_caller](https://rubygems.org/gems/binding_of_caller) gem.",
+              "type": "boolean",
+              "default": false
+            },
+            "unwrap": {
+              "markdownDescription": "Reports #original_exception or #cause one level up from rescued exception when available.",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "breadcrumbs": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "markdownDescription": "Enable breadcrumb functionality.",
+              "type": "boolean",
+              "default": true
+            },
+            "active_support_notifications": {
+              "markdownDescription": "Configuration for automatic Active Support Instrumentation events.",
+              "type": "object"
+            },
+            "logging": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable/Disable automatic breadcrumbs from log messages.",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "active_job": {
+          "type": "object",
+          "properties": {
+            "attempt_threshold": {
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for this plugin.",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "sidekiq": {
+          "type": "object",
+          "properties": {
+            "attempt_threshold": {
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "use_component": {
+              "markdownDescription": "Automatically set the component to the class of the job. Helps with grouping.",
+              "type": "boolean",
+              "default": true
+            },
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for Sidekiq.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "collection_interval": {
+                  "markdownDescription": "The frequency, in seconds, in which Sidekiq metrics are sampled.",
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 60
+                },
+                "cluster_collection": {
+                  "markdownDescription": "Enable cluster wide metric collection. If you are using Sidekiq Enterprise, this is configured automatically.",
+                  "type": "boolean"
+                },
+                "events": {
+                  "markdownDescription": "Enable sending Sidekiq events to Insights.",
+                  "type": "boolean"
+                },
+                "metrics": {
+                  "markdownDescription": "Enable sending Sidekiq metrics to Insights.",
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "solid_queue": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for SolidQueue.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "collection_interval": {
+                  "markdownDescription": "The frequency, in seconds, in which SolidQueue metrics are sampled.",
+                  "type": "integer",
+                  "default": 60
+                },
+                "cluster_collection": {
+                  "markdownDescription": "Enable cluster wide metric collection.",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "delayed_job": {
+          "type": "object",
+          "properties": {
+            "attempt_threshold": {
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        },
+        "shoryuken": {
+          "type": "object",
+          "properties": {
+            "attempt_threshold": {
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        },
+        "sinatra": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "markdownDescription": "Enable Sinatra auto-initialization.",
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "rails": {
+          "type": "object",
+          "properties": {
+            "subscriber_ignore_sources": {
+              "markdownDescription": "sources (strings or regexes) that should be ignored when using the Rails error reporter.",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for Rails.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "events": {
+                  "markdownDescription": "Enable sending Rails events to Insights.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "metrics": {
+                  "markdownDescription": "Enable sending Rails metrics to Insights.",
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            }
+          }
+        },
+        "autotuner": {
+          "type": "object",
+          "properties": {
+            "insignts": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights data collection for Autotuner.",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "karafka": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for Karafka.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "events": {
+                  "markdownDescription": "Enable sending Karafka events to Insights.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "metrics": {
+                  "markdownDescription": "Enable sending Karafka metrics to Insights.",
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            }
+          }
+        },
+        "net_http": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "markdownDescription": "Enable automatic Insights instrumentation for `Net::HTTP`.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "full_url": {
+                  "markdownDescription": "Log the request URL instead of just the domain.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "events": {
+                  "markdownDescription": "Enable sending `Net::HTTP` events to Insights.",
+                  "type": "boolean",
+                  "default": true
+                },
+                "metrics": {
+                  "markdownDescription": "Enable sending `Net::HTTP` metrics to Insights.",
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "production": { "$ref": "#/definitions/environment" },
+    "development": { "$ref": "#/definitions/environment" }
+  },
+  "$ref": "#/definitions/environment",
+  "additionalProperties": {
+    "$ref": "#/definitions/environment",
+    "additionalProperties": false
+  }
+}
