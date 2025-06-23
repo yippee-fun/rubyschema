@@ -263,6 +263,10 @@
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecaddruntimedependency)",
       "$ref": "#/definitions/cop"
     },
+    "Gemspec/AttributeAssignment": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec.html#gemspecattributeassignment)",
+      "$ref": "#/definitions/cop"
+    },
     "Gemspec/DependencyVersion": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_gemspec#gemspecdependencyversion)",
       "allOf": [
@@ -2978,6 +2982,14 @@
               "type": "array",
               "uniqueItems": true,
               "items": { "type": "string" }
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            "AllowBangMethods": {
+              "type": "boolean"
             }
           }
         }
@@ -3470,6 +3482,10 @@
         }
       ]
     },
+    "Style/CollectionQuerying": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style.html#stylecollectionquerying)",
+      "$ref": "#/definitions/cop"
+    },
     "Style/ColonMethodCall": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylecolonmethodcall)",
       "$ref": "#/definitions/cop"
@@ -3829,6 +3845,9 @@
               "type": "array",
               "uniqueItems": true,
               "items": { "type": "string" }
+            },
+            "DefaultToNil": {
+              "type": "boolean"
             }
           }
         }
