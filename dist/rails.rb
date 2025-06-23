@@ -62,7 +62,7 @@ yaml_schemas.each do |pattern, schema_url|
 
     source.unshift(schema_comment)
 
-    File.write(file_path, source.join("\n"))
+    File.write(file_path, source.join("\n") + "\n")
     updated_files << file_path
   rescue => e
     failed_files << { file: file_path, error: e.message }
@@ -118,7 +118,7 @@ toml_schemas.each do |pattern, schema_url|
 
     source.unshift(schema_comment)
 
-    File.write(file_path, source.join("\n"))
+    File.write(file_path, source.join("\n") + "\n")
     updated_files << file_path
   rescue => e
     failed_files << { file: file_path, error: e.message }
