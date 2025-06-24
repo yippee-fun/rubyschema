@@ -30,6 +30,7 @@
           "type": "string"
         },
         "AutoCorrect": {
+          "markdownDescription": "Configure Rubocop’s autocorrection behavior. [Docs](https://docs.rubocop.org/rubocop/configuration.html#autocorrect)",
           "oneOf": [
             { "type": "boolean" },
             {
