@@ -16,14 +16,14 @@
         }
       },
       "additionalProperties": false
+    },
+    "otherPlugin": {
+      "type": "object",
+      "maxProperties": 1,
+      "minProperties": 1,
+      "additionalProperties": true,
+      "propertyNames": { "type": "string" }
     }
-  },
-  "otherPlugin": {
-    "type": "object",
-    "maxProperties": 1,
-    "minProperties": 1,
-    "additionalProperties": true,
-    "propertyNames": { "type": "string" }
   },
   "properties": {
     "fix": {
