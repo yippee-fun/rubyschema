@@ -32,7 +32,14 @@
         "AutoCorrect": {
           "oneOf": [
             { "type": "boolean" },
-            { "enum": ["always", "contextual", "disabled"] }
+            {
+              "enum": ["always", "contextual", "disabled"],
+              "markdownEnumDescriptions": [
+                "Enables autocorrection",
+                "Enables autocorrection when launched from the `rubocop` command but not via the LSP.",
+                "Disables autocorrection"
+              ]
+            }
           ]
         },
         "StyleGuide": {
