@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/rails/queue.json",
+  "title": "Rails Queue Configuration",
+  "type": "object",
+  "definitions": {
+    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
+    "environment": {
+      "type": "object",
+      "description": "Queue environment configuration",
+      "properties": {
+        "dispatchers": {
+          "$ref": "#/definitions/actors",
+          "markdownDescription": "Dispatchers select jobs scheduled to run for the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also manage concurrency-related maintenance."
+        },
+        "workers": {
+          "$ref": "#/definitions/actors",
+          "markdownDescription": "Workers pick up jobs that are ready to run. These jobs are taken from the `solid_queue_ready_executions` table."
+        }
+      },
+      "additionalProperties": false
+    },
+    "actors": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/actor" }
+    },
+    "actor": {
+      "type": "object",
+      "properties": {
+        "polling_interval": {
+          "oneOf": [
+            { "type": "number", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Time in seconds workers/dispatchers wait before checking for more jobs."
+        },
+        "batch_size": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Number of jobs dispatched in a batch."
+        },
+        "concurrency_maintenance_interval": {
+          "oneOf": [
+            { "type": "number", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Time in seconds the dispatcher waits before checking for blocked jobs that can be unblocked."
+        },
+        "queues": {
+          "oneOf": [
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
+            { "type": "string" }
+          ],
+          "markdownDescription": "List of queues workers fetch jobs from. Supports * for all queues or queue name prefixes."
+        },
+        "threads": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Maximum size of the thread pool for each worker. Determines how many jobs a worker fetches at once."
+        },
+        "processes": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Number of worker processes forked by the supervisor. Each process can dedicate a CPU core."
+        },
+        "concurrency_maintenance": {
+          "oneOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Whether the dispatcher performs concurrency maintenance work."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "production": { "$ref": "#/definitions/environment" },
+    "development": { "$ref": "#/definitions/environment" },
+    "test": { "$ref": "#/definitions/environment" }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
+}
