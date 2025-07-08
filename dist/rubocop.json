@@ -2998,6 +2998,11 @@
             },
             "AllowBangMethods": {
               "type": "boolean"
+            },
+            "WaywardPredicates": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
             }
           }
         }
