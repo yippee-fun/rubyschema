@@ -5548,7 +5548,7 @@
         { "$ref": "#/definitions/cop" },
         {
           "properties": {
-            "EnforcedStyle": {
+            "EnforcedStyleForMultiline": {
               "enum": ["comma", "consistent_comma", "no_comma"]
             }
           }
