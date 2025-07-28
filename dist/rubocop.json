@@ -626,6 +626,10 @@
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylines)",
       "$ref": "#/definitions/cop"
     },
+    "Layout/EmptyLinesAfterModuleInclusion": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaftermoduleinclusion)",
+      "$ref": "#/definitions/cop"
+    },
     "Layout/EmptyLinesAroundAccessModifier": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaroundaccessmodifier)",
       "allOf": [
@@ -2078,6 +2082,9 @@
               "type": "array",
               "uniqueItems": true,
               "items": { "type": "string" }
+            },
+            "InferNonNilReceiver": {
+              "type": "boolean"
             }
           }
         }
