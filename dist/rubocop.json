@@ -74,6 +74,12 @@
       "type": "array",
       "uniqueItems": true,
       "items": { "$ref": "#/definitions/constant" }
+    },
+    "hashAlignmentEnforcedColonStyleEnum": {
+      "enum": ["key", "separator", "table"]
+    },
+    "hashAlignmentEnforcedHashRocketStyleEnum": {
+      "enum": ["key", "separator", "table"]
     }
   },
   "properties": {
@@ -890,9 +896,25 @@
         {
           "properties": {
             "EnforcedHashRocketStyle": {
-              "enum": ["key", "separator", "table"]
+              "anyOf": [
+                { "$ref": "#/definitions/hashAlignmentEnforcedHashRocketStyleEnum" },
+                {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": { "$ref": "#/definitions/hashAlignmentEnforcedHashRocketStyleEnum" }
+                }
+              ]
             },
-            "EnforcedColonStyle": { "enum": ["key", "separator", "table"] },
+            "EnforcedColonStyle": {
+              "anyOf": [
+                { "$ref": "#/definitions/hashAlignmentEnforcedColonStyleEnum" },
+                {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": { "$ref": "#/definitions/hashAlignmentEnforcedColonStyleEnum" }
+                }
+              ]
+            },
             "EnforcedLastArgumentHashStyle": {
               "enum": [
                 "always_inspect",
@@ -2906,9 +2928,14 @@
                     "type": "string"
                   },
                   "Suggestions": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "items": { "type": "string" }
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": { "type": "string" }
+                      }
+                    ]
                   },
                   "WholeWord": {
                     "type": "boolean"
