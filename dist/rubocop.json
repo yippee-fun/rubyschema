@@ -3288,6 +3288,10 @@
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylearrayintersect)",
       "$ref": "#/definitions/cop"
     },
+    "Style/ArrayIntersectWithSingleElement": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylearrayintersectwithsingleelement)",
+      "$ref": "#/definitions/cop"
+    },
     "Style/ArrayJoin": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylearrayjoin)",
       "$ref": "#/definitions/cop"
@@ -5588,7 +5592,7 @@
         {
           "properties": {
             "EnforcedStyleForMultiline": {
-              "enum": ["comma", "consistent_comma", "no_comma"]
+              "enum": ["comma", "consistent_comma", "diff_comma", "no_comma"]
             }
           }
         }
