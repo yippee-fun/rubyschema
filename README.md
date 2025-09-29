@@ -14,7 +14,7 @@ Ruby schema is a collection of JSON schemas for common Ruby gems. With these sch
 
 ## Rails
 
-To install all the Ruby schemas in a Rails, you can run:
+To install all the Ruby schemas in a Rails app, you can run:
 
 ```
 bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
@@ -59,7 +59,8 @@ return {
                 ["https://www.rubyschema.org/rails/cache.json"] = "cache.yml",
                 ["https://www.rubyschema.org/rails/database.json"] = "database.yml",
                 ["https://www.rubyschema.org/rails/queue.json"] = "queue.yml",
-                ["https://www.rubyschema.org/rails/recurring.json"] = "recurring.yml", ["https://www.rubyschema.org/rails/storage.json"] = "storage.yml",
+                ["https://www.rubyschema.org/rails/recurring.json"] = "recurring.yml",
+                ["https://www.rubyschema.org/rails/storage.json"] = "storage.yml",
               },
             },
           },
@@ -72,7 +73,7 @@ return {
 
 ## Manual
 
-YFor YAML files, add this to the top of your file:
+For YAML files, add this to the top of your file:
 
 ```yml
 # yaml-language-server: $schema=<schema_url>
@@ -120,7 +121,7 @@ You can find a list of available schemas below or in the [dist directory](./dist
 | Lefthook | `lefthook.yml` | `https://www.rubyschema.org/lefthook.json` |
 | Lefthook | `lefthook.json` | `https://www.rubyschema.org/lefthook.json` |
 | Lefthook | `lefthook.toml` | `https://www.rubyschema.org/lefthook.json` |
-| Scout AMP | `scout_apm.yml` | `https://www.rubyschema.org/scout_apm.json` |
+| Scout APM | `scout_apm.yml` | `https://www.rubyschema.org/scout_apm.json` |
 | Mongoid | `mongoid.yml` | `https://www.rubyschema.org/mongoid.json` |
 | Pghero | `pghero.yml` | `https://www.rubyschema.org/pghero.json` |
 | I18n-tasks | `i18n-tasks.yml` | `https://www.rubyschema.org/i18n-tasks.json` |
