@@ -72,7 +72,7 @@ return {
 
 ## Manual
 
-YFor YAML files, add this to the top of your file:
+For YAML files, add this to the top of your file:
 
 ```yml
 # yaml-language-server: $schema=<schema_url>
