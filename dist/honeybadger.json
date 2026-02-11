@@ -477,7 +477,7 @@
         "autotuner": {
           "type": "object",
           "properties": {
-            "insignts": {
+            "insights": {
               "type": "object",
               "properties": {
                 "enabled": {
