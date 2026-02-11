@@ -41,7 +41,7 @@ GEM
     simpleidn (0.2.3)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-emoji (4.2.0)
 
 PLATFORMS
   arm64-darwin-24
@@ -54,4 +54,4 @@ DEPENDENCIES
   rubocop
 
 BUNDLED WITH
-   2.6.7
+   4.0.6
