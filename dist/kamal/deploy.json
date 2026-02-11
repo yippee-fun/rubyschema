@@ -40,16 +40,19 @@
         "tags": {
           "type": "object",
           "additionalProperties": {
-            "clear": {
-              "type": "object",
-              "additionalProperties": {
-                "type": ["string", "number", "boolean", "null"]
+            "type": "object",
+            "properties": {
+              "clear": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": ["string", "number", "boolean", "null"]
+                }
+              },
+              "secret": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "type": "string" }
               }
-            },
-            "secret": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": { "type": "string" }
             }
           }
         }
