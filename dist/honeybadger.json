@@ -310,8 +310,7 @@
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "The number of attempts before notifications will be sent.",
-              "type": "integer"
+              "markdownDescription": "The number of attempts before notifications will be sent."
             },
             "use_component": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
