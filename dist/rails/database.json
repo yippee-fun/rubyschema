@@ -174,31 +174,22 @@
         },
         "sslmode": {
           "markdownDescription": "PostgreSQL-specific: SSL mode for the connection.",
-          "oneOf": [
-            {
-              "const": "disable",
-              "markdownDescription": "No SSL connection attempted."
-            },
-            {
-              "const": "allow",
-              "markdownDescription": "Try non-SSL first, then SSL if that fails."
-            },
-            {
-              "const": "prefer",
-              "markdownDescription": "Try SSL first, then non-SSL if that fails (default)."
-            },
-            {
-              "const": "require",
-              "markdownDescription": "Require SSL connection. Verify that the server certificate is issued by a trusted CA."
-            },
-            {
-              "const": "verify-ca",
-              "markdownDescription": "Require SSL and verify that the server certificate is issued by a trusted certificate authority."
-            },
-            {
-              "const": "verify-full",
-              "markdownDescription": "Require SSL, verify the CA, and verify that the server certificate hostname matches the connection hostname."
-            }
+          "type": "string",
+          "enum": [
+            "disable",
+            "allow",
+            "prefer",
+            "require",
+            "verify-ca",
+            "verify-full"
+          ],
+          "markdownEnumDescriptions": [
+            "No SSL connection attempted.",
+            "Try non-SSL first, then SSL if that fails.",
+            "Try SSL first, then non-SSL if that fails (default).",
+            "Require SSL connection. Verify that the server certificate is issued by a trusted CA.",
+            "Require SSL and verify that the server certificate is issued by a trusted certificate authority.",
+            "Require SSL, verify the CA, and verify that the server certificate hostname matches the connection hostname."
           ]
         },
         "sslcert": {
@@ -223,43 +214,28 @@
         },
         "min_messages": {
           "markdownDescription": "PostgreSQL-specific: Minimum message severity level to display. Sets the `client_min_messages` session parameter.",
-          "oneOf": [
-            {
-              "const": "debug5",
-              "markdownDescription": "Most verbose debugging output."
-            },
-            {
-              "const": "debug4",
-              "markdownDescription": "Verbose debugging output."
-            },
-            {
-              "const": "debug3",
-              "markdownDescription": "Detailed debugging output."
-            },
-            {
-              "const": "debug2",
-              "markdownDescription": "Moderate debugging output."
-            },
-            {
-              "const": "debug1",
-              "markdownDescription": "Basic debugging output."
-            },
-            {
-              "const": "log",
-              "markdownDescription": "Log messages for database administrators."
-            },
-            {
-              "const": "notice",
-              "markdownDescription": "Helpful notices and informational messages."
-            },
-            {
-              "const": "warning",
-              "markdownDescription": "Warning messages about potential problems."
-            },
-            {
-              "const": "error",
-              "markdownDescription": "Only error messages (suppresses all lower severity)."
-            }
+          "type": "string",
+          "enum": [
+            "debug5",
+            "debug4",
+            "debug3",
+            "debug2",
+            "debug1",
+            "log",
+            "notice",
+            "warning",
+            "error"
+          ],
+          "markdownEnumDescriptions": [
+            "Most verbose debugging output.",
+            "Verbose debugging output.",
+            "Detailed debugging output.",
+            "Moderate debugging output.",
+            "Basic debugging output.",
+            "Log messages for database administrators.",
+            "Helpful notices and informational messages.",
+            "Warning messages about potential problems.",
+            "Only error messages (suppresses all lower severity)."
           ]
         },
         "connect_timeout": {
