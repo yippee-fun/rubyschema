@@ -1,2 +1,17 @@
 [tools]
 ruby = "latest"
+
+[tasks.setup]
+description = "Install dependencies"
+run = "bundle install"
+
+[tasks.format]
+description = "Format code with Prettier and Rubocop"
+run = [
+  "npx prettier --write .",
+  "bundle exec rubocop -A"
+]
+
+[tasks.test]
+description = "Run tests with Minitest"
+run = "bundle exec rake test"
