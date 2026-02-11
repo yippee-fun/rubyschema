@@ -6,6 +6,7 @@ failed_files = []
 
 yaml_schemas = {
   "./.circleci/config.yml"       => "https://json.schemastore.org/circleciconfig.json",
+
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./.honeybadger.yml"           => "https://www.rubyschema.org/honeybadger.json",
   "./.rubocop.yml"               => "https://www.rubyschema.org/rubocop.json",
@@ -21,6 +22,7 @@ yaml_schemas = {
   "./config/locales/**/*.yml"    => "https://www.rubyschema.org/i18n/locale.json",
   "./config/mongoid.yml"         => "https://www.rubyschema.org/mongoid.json",
   "./config/pghero.yml"          => "https://www.rubyschema.org/pghero.json",
+  "./config/queue.yml"           => "https://www.rubyschema.org/rails/queue.json",
   "./config/recurring.yml"       => "https://www.rubyschema.org/rails/recurring.json",
   "./config/rorvswild.yml"       => "https://www.rubyschema.org/rorvswild.json",
   "./config/scout_apm.yml"       => "https://www.rubyschema.org/scout_apm.json",

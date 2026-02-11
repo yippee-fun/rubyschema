@@ -1,91 +1,178 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/queue.json",
-  "title": "Rails Queue Configuration",
+  "title": "Solid Queue Configuration",
+  "markdownDescription": "Configuration for [Solid Queue](https://github.com/rails/solid_queue), the default Active Job backend in Rails 8+.\n\n[Rails Guide](https://guides.rubyonrails.org/active_job_basics.html#configuration)",
   "type": "object",
   "definitions": {
-    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
     "environment": {
       "type": "object",
-      "description": "Queue environment configuration",
+      "markdownDescription": "Environment-specific Solid Queue configuration.",
       "properties": {
         "dispatchers": {
-          "$ref": "#/definitions/actors",
-          "markdownDescription": "Dispatchers select jobs scheduled to run for the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also manage concurrency-related maintenance."
+          "type": "array",
+          "markdownDescription": "Dispatchers select jobs scheduled to run in the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also manage concurrency-related maintenance.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#dispatchers-and-workers)",
+          "items": {
+            "$ref": "#/definitions/dispatcher"
+          }
         },
         "workers": {
-          "$ref": "#/definitions/actors",
-          "markdownDescription": "Workers pick up jobs that are ready to run. These jobs are taken from the `solid_queue_ready_executions` table."
+          "type": "array",
+          "markdownDescription": "Workers pick up jobs that are ready to run from the `solid_queue_ready_executions` table.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#dispatchers-and-workers)",
+          "items": {
+            "$ref": "#/definitions/worker"
+          }
         }
       },
       "additionalProperties": false
     },
-    "actors": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": { "$ref": "#/definitions/actor" }
-    },
-    "actor": {
+    "worker": {
       "type": "object",
+      "markdownDescription": "A worker process that picks up and executes ready jobs.",
       "properties": {
-        "polling_interval": {
-          "oneOf": [
-            { "type": "number", "minimum": 0 },
-            { "$ref": "#/definitions/erb" }
-          ],
-          "markdownDescription": "Time in seconds workers/dispatchers wait before checking for more jobs."
-        },
-        "batch_size": {
-          "oneOf": [
-            { "type": "integer", "minimum": 1 },
-            { "$ref": "#/definitions/erb" }
-          ],
-          "markdownDescription": "Number of jobs dispatched in a batch."
-        },
-        "concurrency_maintenance_interval": {
-          "oneOf": [
-            { "type": "number", "minimum": 0 },
-            { "$ref": "#/definitions/erb" }
-          ],
-          "markdownDescription": "Time in seconds the dispatcher waits before checking for blocked jobs that can be unblocked."
-        },
         "queues": {
           "oneOf": [
             {
               "type": "array",
               "uniqueItems": true,
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
-            { "type": "string" }
+            {
+              "type": "string"
+            }
           ],
-          "markdownDescription": "List of queues workers fetch jobs from. Supports * for all queues or queue name prefixes."
+          "default": "*",
+          "markdownDescription": "List of queues that this worker fetches jobs from. Supports `*` for all queues or queue name prefixes with a trailing `*` (e.g. `active_storage*`). When multiple queues are listed, order matters — workers process jobs from the first queue before moving to the next.\n\n**Default:** `\"*\"`",
+          "examples": ["*", ["active_storage*", "mailers", "default"]]
         },
         "threads": {
           "oneOf": [
-            { "type": "integer", "minimum": 1 },
-            { "$ref": "#/definitions/erb" }
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
           ],
-          "markdownDescription": "Maximum size of the thread pool for each worker. Determines how many jobs a worker fetches at once."
+          "default": 3,
+          "markdownDescription": "Maximum number of threads in the worker's thread pool. Determines how many jobs a worker can execute concurrently.\n\n**Default:** `3`"
         },
         "processes": {
           "oneOf": [
-            { "type": "integer", "minimum": 1 },
-            { "$ref": "#/definitions/erb" }
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
           ],
-          "markdownDescription": "Number of worker processes forked by the supervisor. Each process can dedicate a CPU core."
+          "default": 1,
+          "markdownDescription": "Number of worker processes forked by the supervisor. Each process can dedicate a CPU core. Only applicable when running in fork mode.\n\n**Default:** `1`"
+        },
+        "polling_interval": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": 0.1,
+          "markdownDescription": "Time in seconds the worker waits before checking for more jobs when idle.\n\n**Default:** `0.1`"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dispatcher": {
+      "type": "object",
+      "markdownDescription": "A dispatcher process that moves scheduled jobs into the ready queue.",
+      "properties": {
+        "polling_interval": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": 1,
+          "markdownDescription": "Time in seconds the dispatcher waits before checking for scheduled jobs to dispatch.\n\n**Default:** `1`"
+        },
+        "batch_size": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": 500,
+          "markdownDescription": "Number of scheduled jobs dispatched per batch.\n\n**Default:** `500`"
         },
         "concurrency_maintenance": {
-          "oneOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Whether the dispatcher performs concurrency maintenance work."
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": true,
+          "markdownDescription": "Whether this dispatcher performs concurrency maintenance work (unblocking jobs whose concurrency semaphores have expired).\n\n**Default:** `true`"
+        },
+        "concurrency_maintenance_interval": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": 600,
+          "markdownDescription": "Time in seconds the dispatcher waits before checking for blocked jobs that can be unblocked. Only relevant when `concurrency_maintenance` is enabled.\n\n**Default:** `600`"
         }
       },
       "additionalProperties": false
     }
   },
   "properties": {
-    "production": { "$ref": "#/definitions/environment" },
-    "development": { "$ref": "#/definitions/environment" },
-    "test": { "$ref": "#/definitions/environment" }
+    "default": {
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Default configuration shared across all environments via YAML anchors."
+    },
+    "production": {
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Production environment configuration."
+    },
+    "development": {
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Development environment configuration."
+    },
+    "test": {
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Test environment configuration."
+    },
+    "staging": {
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Staging environment configuration."
+    }
   },
   "additionalProperties": {
     "$ref": "#/definitions/environment"

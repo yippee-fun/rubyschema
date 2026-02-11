@@ -1,0 +1,43 @@
+default: &default
+  dispatchers:
+    - polling_interval: 1
+      batch_size: 500
+  workers:
+    - queues: "*"
+      threads: 3
+      processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
+      polling_interval: 0.1
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+staging:
+  dispatchers:
+    - polling_interval: 5
+      batch_size: 200
+      concurrency_maintenance: true
+      concurrency_maintenance_interval: 300
+  workers:
+    - queues: "*"
+      threads: 5
+      processes: 2
+      polling_interval: 0.2
+
+production:
+  dispatchers:
+    - polling_interval: 1
+      batch_size: 500
+      concurrency_maintenance: true
+      concurrency_maintenance_interval: 600
+  workers:
+    - queues: [active_storage*, mailers]
+      threads: 3
+      processes: 1
+      polling_interval: 0.1
+    - queues: [default, low_priority]
+      threads: 5
+      processes: <%= ENV.fetch("JOB_CONCURRENCY", 2) %>
+      polling_interval: 1
