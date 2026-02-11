@@ -1,34 +1,36 @@
 # Ruby Schema
 
-YAML is an incredibly difficult language for me. Between significant whitespace, bare strings and ambiguous booleans, I find it quite impossible to follow. And although the language has improved over time, 15 years since the v1.2 spec was released, Ruby is still stuck on the 1.1 spec.
+Catch config mistakes before they reach production.
 
-Most YAML configs need to be _just so_ in order to work properly yet they are often unspecified, poorly documented and lack proper validation.
+RubySchema provides JSON Schemas for common config files in Ruby projects so your editor can:
 
-Despite all this, YAML is the primary language for Ruby Gem configs and there's nothing you or I can do about it.
+- validate YAML, JSON and TOML configs as you type
+- auto-complete valid keys and values
+- show inline documentation for each option
 
-The good news is, modern text editors support language servers and there's a fantastic language server for YAML files. All we need to do is tell the language server which version of YAML we're using (1.1) and give it a data schema.
+Works with any editor that supports JSON Schema via language servers (VS Code, Zed, Neovim, and more).
 
-Ruby schema is a collection of JSON schemas for common Ruby gems. With these schemas, we can now enjoy auto-complete, validation and inline documentation right in our YAML files.
+## Quick Start
 
-![Example of auto-complete](https://github.com/user-attachments/assets/c8038624-4df5-4dd7-9fcf-787d5c8a5f71)
+### Rails (10 seconds)
 
-## Rails
+Inject schema comments into supported Rails project config files:
 
-To install all the Ruby schemas in a Rails, you can run:
-
-```
+```sh
 bundle exec rails app:template LOCATION=https://www.rubyschema.org/rails.rb
 ```
 
-You can run it again for updates as new schemas are released.
+You can run it again at any time to pick up new schemas.
+
+![Example of auto-complete](https://github.com/user-attachments/assets/c8038624-4df5-4dd7-9fcf-787d5c8a5f71)
 
 ## Editor Setup
 
-Alternatively, you may configure your editor once to use the available schemas so all your Rails projects can use them.
+Prefer not to use the Rails template? Configure your editor once and use RubySchema across all projects.
 
 ### Nvim
 
-Update your LSP Config to include the custom YAML schemas for the respective files. For example, using [LazyVim](www.lazyvim.org) update or create your `plugins/lsp-config.lua`.
+Update your LSP config to include schema mappings for the files you use. For example, with [LazyVim](https://www.lazyvim.org), update or create `plugins/lsp-config.lua`.
 
 ```lua
 return {
@@ -59,7 +61,8 @@ return {
                 ["https://www.rubyschema.org/rails/cache.json"] = "cache.yml",
                 ["https://www.rubyschema.org/rails/database.json"] = "database.yml",
                 ["https://www.rubyschema.org/rails/queue.json"] = "queue.yml",
-                ["https://www.rubyschema.org/rails/recurring.json"] = "recurring.yml", ["https://www.rubyschema.org/rails/storage.json"] = "storage.yml",
+                ["https://www.rubyschema.org/rails/recurring.json"] = "recurring.yml",
+                ["https://www.rubyschema.org/rails/storage.json"] = "storage.yml",
               },
             },
           },
@@ -70,7 +73,7 @@ return {
 }
 ```
 
-## Manual
+## Manual Setup
 
 For YAML files, add this to the top of your file:
 
@@ -95,44 +98,44 @@ For TOML files, add this comment:
 #:schema <schema_url>
 ```
 
-You can find a list of available schemas below or in the [dist directory](./dist)
+You can find all available schemas below or in the [`dist` directory](./dist).
 
-## Available Schemas
+## Supported Config Files
 
-| Name          | File                     | Schema URL                                         |
-| ------------- | ------------------------ | -------------------------------------------------- |
-| Rails DB      | `database.yml`           | `https://www.rubyschema.org/rails/database.json`   |
-| ActiveStorage | `storage.yml`            | `https://www.rubyschema.org/rails/storage.json`    |
-| SolidQueue    | `recurring.yml`          | `https://www.rubyschema.org/rails/recurring.json`  |
-| SolidQueue    | `queue.yml`              | `https://www.rubyschema.org/rails/queue.json`      |
-| SolidCache    | `cache.yml`              | `https://www.rubyschema.org/rails/cache.json`      |
-| SolidCable    | `cable.yml`              | `https://www.rubyschema.org/rails/cable.json`      |
-| Rubocop       | `rubocop.yml`            | `https://www.rubyschema.org/rubocop.json`          |
-| Vite          | `vite.json`              | `https://www.rubyschema.org/vite.json`             |
-| Kamal         | `deploy.yml`             | `https://www.rubyschema.org/kamal/deploy.json`     |
-| I18n          | `locales/{language}.yml` | `https://www.rubyschema.org/i18n/locale.json`      |
-| Sidekiq       | `sidekiq.yml`            | `https://www.rubyschema.org/sidekiq.json`          |
-| RoRvsWild     | `rorvswild.yml`          | `https://www.rubyschema.org/rorvswild.json`        |
-| Standard      | `standard.yml`           | `https://www.rubyschema.org/standard.json`         |
-| Honeybadger   | `honeybadger.yml`        | `https://www.rubyschema.org/honeybadger.json`      |
-| Shoryuken     | `shoryuken.yml`          | `https://www.rubyschema.org/shoryuken.json`        |
-| Packwerk      | `package.yml`            | `https://www.rubyschema.org/packwerk/package.json` |
-| Lefthook      | `lefthook.yml`           | `https://www.rubyschema.org/lefthook.json`         |
-| Lefthook      | `lefthook.json`          | `https://www.rubyschema.org/lefthook.json`         |
-| Lefthook      | `lefthook.toml`          | `https://www.rubyschema.org/lefthook.json`         |
-| Scout AMP     | `scout_apm.yml`          | `https://www.rubyschema.org/scout_apm.json`        |
-| Mongoid       | `mongoid.yml`            | `https://www.rubyschema.org/mongoid.json`          |
-| Pghero        | `pghero.yml`             | `https://www.rubyschema.org/pghero.json`           |
-| I18n-tasks    | `i18n-tasks.yml`         | `https://www.rubyschema.org/i18n-tasks.json`       |
+| Name          | File                     | Schema URL                           |
+| ------------- | ------------------------ | ------------------------------------ |
+| Rails DB      | `database.yml`           | [`./dist/rails/database.json`](./dist/rails/database.json) |
+| ActiveStorage | `storage.yml`            | [`./dist/rails/storage.json`](./dist/rails/storage.json) |
+| SolidQueue    | `recurring.yml`          | [`./dist/rails/recurring.json`](./dist/rails/recurring.json) |
+| SolidQueue    | `queue.yml`              | [`./dist/rails/queue.json`](./dist/rails/queue.json) |
+| SolidCache    | `cache.yml`              | [`./dist/rails/cache.json`](./dist/rails/cache.json) |
+| SolidCable    | `cable.yml`              | [`./dist/rails/cable.json`](./dist/rails/cable.json) |
+| RuboCop       | `.rubocop.yml`           | [`./dist/rubocop.json`](./dist/rubocop.json) |
+| Vite          | `vite.json`              | [`./dist/vite.json`](./dist/vite.json) |
+| Kamal         | `deploy.yml`             | [`./dist/kamal/deploy.json`](./dist/kamal/deploy.json) |
+| I18n          | `locales/{language}.yml` | [`./dist/i18n/locale.json`](./dist/i18n/locale.json) |
+| Sidekiq       | `sidekiq.yml`            | [`./dist/sidekiq.json`](./dist/sidekiq.json) |
+| RoRvsWild     | `rorvswild.yml`          | [`./dist/rorvswild.json`](./dist/rorvswild.json) |
+| Standard      | `.standard.yml`          | [`./dist/standard.json`](./dist/standard.json) |
+| Honeybadger   | `honeybadger.yml`        | [`./dist/honeybadger.json`](./dist/honeybadger.json) |
+| Shoryuken     | `shoryuken.yml`          | [`./dist/shoryuken.json`](./dist/shoryuken.json) |
+| Packwerk      | `package.yml`            | [`./dist/packwerk/package.json`](./dist/packwerk/package.json) |
+| Lefthook      | `lefthook.yml`           | [`./dist/lefthook.json`](./dist/lefthook.json) |
+| Lefthook      | `lefthook.json`          | [`./dist/lefthook.json`](./dist/lefthook.json) |
+| Lefthook      | `lefthook.toml`          | [`./dist/lefthook.json`](./dist/lefthook.json) |
+| Scout APM     | `scout_apm.yml`          | [`./dist/scout_apm.json`](./dist/scout_apm.json) |
+| Mongoid       | `mongoid.yml`            | [`./dist/mongoid.json`](./dist/mongoid.json) |
+| Pghero        | `pghero.yml`             | [`./dist/pghero.json`](./dist/pghero.json) |
+| I18n-tasks    | `i18n-tasks.yml`         | [`./dist/i18n-tasks.json`](./dist/i18n-tasks.json) |
 
 ## Contributing
 
-If you find an issue with a schema, for example it says that something is invalid when it isn't, please open an issue with an example.
+If a schema marks something valid as invalid (or misses a validation), please open an issue and include a small example config.
 
-The schemas are written in JSON Schema version 7 (since that's the version that YAML LSP supports). They are currently committed directly to the `dist` folder, which is deployed automatically to Cloudflare.
+Schemas use JSON Schema draft-07 (the version supported by YAML language servers). They are committed directly in `dist/` and deployed to Cloudflare.
 
-You can test the schemas locally by replacing the `$schema` URL with a relative path. In Zed, you need to run the `editor: restart language server` command each time you make changes to the schema.
+To test locally, replace the `$schema` URL with a relative path. In Zed, run `editor: restart language server` after schema changes.
 
 ## Why is it called RubySchema?
 
-I know it's confusing. RubySchema provides JSON Schemas for YAML files. 🤯 The name reflects the purpose of providing schemas specifically for the Ruby community, where a lot of Ruby gems rely on YAML/JSON configuration files. There's another project called [JSON Schema Store](https://www.schemastore.org) with a significantly wider scope.
+It is a little confusing: RubySchema provides JSON Schemas for YAML/JSON/TOML config files. The name reflects the audience (Ruby projects), not the schema format. If you need broader, language-agnostic coverage, check [JSON Schema Store](https://www.schemastore.org).

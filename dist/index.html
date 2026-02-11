@@ -6,7 +6,7 @@
     <title>Ruby Schema</title>
     <meta
       name="description"
-      content="JSON Schemas for Ruby gem configuration files. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs."
+      content="JSON Schemas for common configuration files in Ruby projects. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs."
     />
     <style>
       :root {
@@ -50,12 +50,19 @@
         color: var(--fg);
         background: var(--bg);
         -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
 
       .container {
         max-width: 740px;
         margin: 0 auto;
         padding: 4rem 1.5rem 6rem;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 3rem 1.1rem 4.5rem;
+        }
       }
 
       /* ---- Header ---- */
@@ -65,10 +72,12 @@
       }
 
       h1 {
-        font-size: 2rem;
+        font-size: clamp(1.9rem, 5vw, 2.3rem);
         font-weight: 700;
-        letter-spacing: -0.03em;
-        margin-bottom: 1.25rem;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        text-wrap: balance;
       }
 
       h1 span {
@@ -76,10 +85,57 @@
       }
 
       .tagline {
-        font-size: 1.05rem;
+        font-size: 1.08rem;
         color: var(--dim);
         max-width: 540px;
-        line-height: 1.55;
+        line-height: 1.6;
+        text-wrap: pretty;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.35rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.58rem 0.92rem;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        transition: border-color 120ms ease, color 120ms ease,
+          background-color 120ms ease;
+      }
+
+      .btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-dim);
+        border-color: var(--accent-dim);
+      }
+
+      .btn-secondary {
+        background: var(--surface);
+        color: var(--fg);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent);
       }
 
       /* ---- Prose ---- */
@@ -88,10 +144,19 @@
         color: var(--dim);
         margin-bottom: 3.5rem;
         line-height: 1.7;
+        max-width: 66ch;
+        text-wrap: pretty;
       }
 
       .prose p + p {
         margin-top: 1rem;
+      }
+
+      .proof {
+        margin-top: 1rem;
+        font-size: 12px;
+        color: var(--dim);
+        letter-spacing: 0.02em;
       }
 
       .prose a {
@@ -111,13 +176,17 @@
         margin-bottom: 3.5rem;
       }
 
+      section[id] {
+        scroll-margin-top: 2rem;
+      }
+
       h2 {
         font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--dim);
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.05rem;
       }
 
       /* ---- Install block ---- */
@@ -141,6 +210,8 @@
       .install-hint {
         font-size: 12px;
         color: var(--dim);
+        line-height: 1.65;
+        text-wrap: pretty;
       }
 
       /* ---- Manual setup ---- */
@@ -173,6 +244,7 @@
         padding: 0.6rem 0.75rem;
         font-family: var(--mono);
         font-size: 12px;
+        line-height: 1.5;
         white-space: nowrap;
         overflow-x: auto;
       }
@@ -194,7 +266,7 @@
 
       .schema-table td {
         padding: 0.7rem 0;
-        vertical-align: baseline;
+        vertical-align: top;
       }
 
       .schema-table td:first-child {
@@ -240,6 +312,20 @@
 
       /* Responsive: hide URL column on narrow screens */
       @media (max-width: 600px) {
+        header {
+          margin-bottom: 3.25rem;
+        }
+
+        .cta-row {
+          width: 100%;
+          gap: 0.55rem;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+
         .schema-table td:last-child {
           display: none;
         }
@@ -270,27 +356,32 @@
       <header>
         <h1><span>Ruby</span>Schema</h1>
         <p class="tagline">
-          Your editor already knows how to validate YAML, JSON and TOML — it
-          just needs the right schemas.
+          Stop shipping broken config files. Add editor validation and
+          autocomplete for Ruby project configs in minutes.
         </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#quick-start">Install in Rails</a>
+          <a class="btn btn-secondary" href="#schemas">Browse Schemas</a>
+        </div>
       </header>
 
       <div class="prose">
         <p>
-          Ruby gems love configuration files. Between YAML’s ambiguous booleans,
-          invisible whitespace bugs and Ruby’s insistence on the 1.1 spec, those
-          files are a minefield. You won’t know something’s wrong until
-          production tells you.
+          RubySchema publishes JSON Schemas for popular Ruby project configuration
+          files. Your editor can catch invalid keys, suggest valid options and
+          show inline docs as you type.
         </p>
         <p>
-          RubySchema provides
-          <a href="https://json-schema.org/">JSON Schema</a> definitions for
-          popular gems so your editor can catch mistakes, suggest keys and
-          surface documentation as you type.
+          Works with the
+          <a href="https://github.com/redhat-developer/yaml-language-server"
+            >YAML language server</a
+          >, JSON Schema-aware tooling and editor integrations like VS Code,
+          Neovim and Zed.
         </p>
+        <p class="proof">21 schemas. Tested against real fixtures.</p>
       </div>
 
-      <section>
+      <section id="quick-start">
         <h2>Quick Start</h2>
         <div class="install">
           <code
@@ -302,6 +393,9 @@
           Injects schema comments into your Rails config files. Safe to re-run
           when new schemas are added.
         </p>
+        <div class="cta-row">
+          <a class="btn btn-secondary" href="/rails.rb">View rails.rb template</a>
+        </div>
       </section>
 
       <section>
@@ -322,7 +416,7 @@
         </div>
       </section>
 
-      <section>
+      <section id="schemas">
         <h2>Schemas</h2>
         <table class="schema-table">
           <tr class="group-header">
