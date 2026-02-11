@@ -34,6 +34,14 @@
             "error",
             "fatal"
           ],
+          "markdownEnumDescriptions": [
+            "Informational severity. Does not cause RuboCop to return a non-zero exit code.",
+            "Refactoring suggestion. Indicates code that could be restructured.",
+            "Convention violation. Indicates a violation of coding conventions.",
+            "Warning level. Indicates a potential problem that should be reviewed.",
+            "Error level. Indicates a problem that should be fixed.",
+            "Fatal level. Indicates a critical issue that must be fixed."
+          ],
           "markdownDescription": "Severity level for offenses detected by this cop. Cops with `info` severity will not cause RuboCop to return a non-zero exit code. [Docs](https://docs.rubocop.org/rubocop/configuration.html#severity)"
         },
         "Details": {
@@ -94,7 +102,12 @@
               "type": "string"
             },
             {
-              "enum": [".md", "", ".txt"]
+              "enum": [".md", "", ".txt"],
+              "markdownEnumDescriptions": [
+                "Markdown documentation files",
+                "No file extension (bare files)",
+                "Plain text documentation files"
+              ]
             }
           ],
           "markdownDescription": "File extension for documentation files (e.g., `.md` for Markdown, `.html` for HTML). Defaults to `.html` if not specified."
@@ -113,10 +126,20 @@
       }
     },
     "hashAlignmentEnforcedColonStyleEnum": {
-      "enum": ["key", "separator", "table"]
+      "enum": ["key", "separator", "table"],
+      "markdownEnumDescriptions": [
+        "Align hash values with the first key",
+        "Align hash values with the colon separator",
+        "Align hash values in table format"
+      ]
     },
     "hashAlignmentEnforcedHashRocketStyleEnum": {
-      "enum": ["key", "separator", "table"]
+      "enum": ["key", "separator", "table"],
+      "markdownEnumDescriptions": [
+        "Align hash values with the first key",
+        "Align hash values with the hash rocket (=>)",
+        "Align hash values in table format"
+      ]
     }
   },
   "properties": {
@@ -160,7 +183,11 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "enum": ["Exclude", "Include"]
+            "enum": ["Exclude", "Include"],
+            "markdownEnumDescriptions": [
+              "Merge `Exclude` arrays from inherited configs instead of overriding",
+              "Merge `Include` arrays from inherited configs instead of overriding"
+            ]
           },
           "markdownDescription": "Array configuration keys that should be merged with inherited values rather than overriding them"
         }
@@ -202,13 +229,25 @@
               "type": "number"
             },
             {
-              "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4]
+              "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4],
+              "markdownEnumDescriptions": [
+                "Ruby 2.7",
+                "Ruby 3.0",
+                "Ruby 3.1",
+                "Ruby 3.2",
+                "Ruby 3.3",
+                "Ruby 3.4"
+              ]
             }
           ],
           "markdownDescription": "The minimum Ruby version your code must support. Cops that detect version-specific features will adjust their behavior accordingly. If not specified, RuboCop will try to detect it from `.ruby-version`, `Gemfile.lock`, `*.gemspec`, or `.tool-versions`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version)"
         },
         "ParserEngine": {
           "enum": ["parser_whitequark", "parser_prism"],
+          "markdownEnumDescriptions": [
+            "Whitequark parser. Supports Ruby 2.0-3.4.",
+            "Prism parser. Supports Ruby 3.3+ and is typically faster."
+          ],
           "markdownDescription": "The parser backend to use. `parser_whitequark` supports Ruby 2.0-3.4, while `parser_prism` supports Ruby 3.3+ and is typically faster. Since RuboCop 1.75, the parser is chosen automatically if not specified. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-parser-engine)"
         },
         "StyleGuideBaseURL": {
@@ -227,7 +266,12 @@
               "type": "string"
             },
             {
-              "enum": [".md", "", ".txt"]
+              "enum": [".md", "", ".txt"],
+              "markdownEnumDescriptions": [
+                "Markdown documentation files",
+                "No file extension (bare files)",
+                "Plain text documentation files"
+              ]
             }
           ],
           "markdownDescription": "File extension for documentation files (e.g., `.md` for Markdown). Defaults to `.html` if not specified. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-documentation-url)"
@@ -312,6 +356,15 @@
                       "git",
                       "github",
                       "source"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "Require comments for gems with version specifiers",
+                      "Require comments for gems with restrictive version specifiers (e.g., exact versions)",
+                      "Require comments for gems sourced from Bitbucket",
+                      "Require comments for gems sourced from GitHub Gist",
+                      "Require comments for gems sourced from git repositories",
+                      "Require comments for gems sourced from GitHub",
+                      "Require comments for gems with custom source specifications"
                     ]
                   }
                 ]
@@ -330,7 +383,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["Gemfile", "gems.rb"]
+              "enum": ["Gemfile", "gems.rb"],
+              "markdownEnumDescriptions": [
+                "Use `Gemfile` as the filename",
+                "Use `gems.rb` as the filename"
+              ]
             }
           }
         }
@@ -345,7 +402,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["required", "forbidden"]
+              "enum": ["required", "forbidden"],
+              "markdownEnumDescriptions": [
+                "Require version specifiers for all gems",
+                "Forbid version specifiers for all gems"
+              ]
             },
             "AllowedGems": {
               "type": "array",
@@ -407,7 +468,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["required", "forbidden"]
+              "enum": ["required", "forbidden"],
+              "markdownEnumDescriptions": [
+                "Require version specifications for dependencies",
+                "Forbid version specifications for dependencies"
+              ]
             }
           }
         }
@@ -426,7 +491,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["Gemfile", "gems.rb", "gemspec"]
+              "enum": ["Gemfile", "gems.rb", "gemspec"],
+              "markdownEnumDescriptions": [
+                "Place development dependencies in `Gemfile`",
+                "Place development dependencies in `gems.rb`",
+                "Place development dependencies in gemspec file"
+              ]
             }
           }
         }
@@ -475,7 +545,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["indent", "outdent"]
+              "enum": ["indent", "outdent"],
+              "markdownEnumDescriptions": [
+                "Indent access modifiers one level deeper than the class/module definition",
+                "Align access modifiers with the class/module definition (no indentation)"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -493,7 +567,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["with_first_argument", "with_fixed_indentation"]
+              "enum": ["with_first_argument", "with_fixed_indentation"],
+              "markdownEnumDescriptions": [
+                "Align subsequent arguments with the first argument",
+                "Use fixed indentation for all arguments"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -511,7 +589,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["with_first_element", "with_fixed_indentation"]
+              "enum": ["with_first_element", "with_fixed_indentation"],
+              "markdownEnumDescriptions": [
+                "Align subsequent elements with the first element",
+                "Use fixed indentation for all elements"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -544,7 +626,11 @@
         {
           "properties": {
             "EnforcedStyleAlignWith": {
-              "enum": ["start_of_line", "begin"]
+              "enum": ["start_of_line", "begin"],
+              "markdownEnumDescriptions": [
+                "Align `end` with the start of the line containing `begin`",
+                "Align `end` with the `begin` keyword"
+              ]
             }
           }
         }
@@ -559,7 +645,12 @@
         {
           "properties": {
             "EnforcedStyleAlignWith": {
-              "enum": ["either", "start_of_block", "start_of_line"]
+              "enum": ["either", "start_of_block", "start_of_line"],
+              "markdownEnumDescriptions": [
+                "Allow either alignment style",
+                "Align block `end` with the start of the block expression",
+                "Align block `end` with the start of the line"
+              ]
             }
           }
         }
@@ -578,7 +669,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["case", "end"]
+              "enum": ["case", "end"],
+              "markdownEnumDescriptions": [
+                "Indent `when` clauses one level relative to `case`",
+                "Indent `when` clauses one level relative to `end`"
+              ]
             },
             "IndentOneStep": {
               "type": "boolean"
@@ -617,6 +712,22 @@
                   "private_attribute_macros",
                   "private_delegate",
                   "private_methods"
+                ],
+                "markdownEnumDescriptions": [
+                  "Module inclusion (`include`, `prepend`, `extend`)",
+                  "Constant definitions",
+                  "ActiveRecord associations",
+                  "Public attribute macros (`attr_accessor`, etc.)",
+                  "Public delegate definitions",
+                  "General macros (validations, etc.)",
+                  "Public class methods",
+                  "`initialize` method",
+                  "Public instance methods",
+                  "Protected attribute macros",
+                  "Protected instance methods",
+                  "Private attribute macros",
+                  "Private delegate definitions",
+                  "Private instance methods"
                 ]
               }
             },
@@ -637,6 +748,12 @@
                           "has_one",
                           "has_many",
                           "has_and_belongs_to_many"
+                        ],
+                        "markdownEnumDescriptions": [
+                          "ActiveRecord `belongs_to` associations",
+                          "ActiveRecord `has_one` associations",
+                          "ActiveRecord `has_many` associations",
+                          "ActiveRecord `has_and_belongs_to_many` associations"
                         ]
                       }
                     ]
@@ -651,7 +768,12 @@
                         "type": "string"
                       },
                       {
-                        "enum": ["attr_accessor", "attr_reader", "attr_writer"]
+                        "enum": ["attr_accessor", "attr_reader", "attr_writer"],
+                        "markdownEnumDescriptions": [
+                          "Attribute accessor macros (both getter and setter)",
+                          "Attribute reader macros (getter only)",
+                          "Attribute writer macros (setter only)"
+                        ]
                       }
                     ]
                   }
@@ -665,7 +787,11 @@
                         "type": "string"
                       },
                       {
-                        "enum": ["validates", "validate"]
+                        "enum": ["validates", "validate"],
+                        "markdownEnumDescriptions": [
+                          "ActiveModel `validates` declarations",
+                          "ActiveModel custom `validate` declarations"
+                        ]
                       }
                     ]
                   }
@@ -679,7 +805,12 @@
                         "type": "string"
                       },
                       {
-                        "enum": ["include", "prepend", "extend"]
+                        "enum": ["include", "prepend", "extend"],
+                        "markdownEnumDescriptions": [
+                          "Module `include` statements",
+                          "Module `prepend` statements",
+                          "Module `extend` statements"
+                        ]
                       }
                     ]
                   }
@@ -726,7 +857,11 @@
         {
           "properties": {
             "EnforcedStyleAlignWith": {
-              "enum": ["start_of_line", "def"]
+              "enum": ["start_of_line", "def"],
+              "markdownEnumDescriptions": [
+                "Align `end` with the start of the line containing `def`",
+                "Align `end` with the `def` keyword"
+              ]
             }
           }
         }
@@ -741,7 +876,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["leading", "trailing"]
+              "enum": ["leading", "trailing"],
+              "markdownEnumDescriptions": [
+                "Place dots at the beginning of continuation lines",
+                "Place dots at the end of lines being continued"
+              ]
             }
           }
         }
@@ -832,7 +971,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["around", "only_before"]
+              "enum": ["around", "only_before"],
+              "markdownEnumDescriptions": [
+                "Require blank lines both before and after access modifiers",
+                "Require blank lines only before access modifiers"
+              ]
             }
           }
         }
@@ -877,7 +1020,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["empty_lines", "no_empty_lines"]
+              "enum": ["empty_lines", "no_empty_lines"],
+              "markdownEnumDescriptions": [
+                "Require empty lines inside block bodies",
+                "Forbid empty lines inside block bodies"
+              ]
             }
           }
         }
@@ -899,6 +1046,14 @@
                 "no_empty_lines",
                 "beginning_only",
                 "ending_only"
+              ],
+              "markdownEnumDescriptions": [
+                "Require empty lines at the beginning and end of class bodies",
+                "Require empty lines except for namespace classes",
+                "Require empty lines with special handling for certain constructs",
+                "Forbid empty lines at the beginning and end of class bodies",
+                "Require empty lines only at the beginning of class bodies",
+                "Require empty lines only at the end of class bodies"
               ]
             }
           }
@@ -927,6 +1082,12 @@
                 "empty_lines_except_namespace",
                 "empty_lines_special",
                 "no_empty_lines"
+              ],
+              "markdownEnumDescriptions": [
+                "Require empty lines at the beginning and end of module bodies",
+                "Require empty lines except for namespace modules",
+                "Require empty lines with special handling for certain constructs",
+                "Forbid empty lines at the beginning and end of module bodies"
               ]
             }
           }
@@ -942,7 +1103,12 @@
         {
           "properties": {
             "EnforcedStyleAlignWith": {
-              "enum": ["keyword", "variable", "start_of_line"]
+              "enum": ["keyword", "variable", "start_of_line"],
+              "markdownEnumDescriptions": [
+                "Align `end` with the opening keyword (if, while, etc.)",
+                "Align `end` with the variable in variable assignments",
+                "Align `end` with the start of the line"
+              ]
             }
           }
         }
@@ -957,7 +1123,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["native", "lf", "crlf"]
+              "enum": ["native", "lf", "crlf"],
+              "markdownEnumDescriptions": [
+                "Use platform-native line endings (LF on Unix, CRLF on Windows)",
+                "Use Unix-style line endings (LF)",
+                "Use Windows-style line endings (CRLF)"
+              ]
             }
           }
         }
@@ -998,6 +1169,12 @@
                 "consistent_relative_to_receiver",
                 "special_for_inner_method_call",
                 "special_for_inner_method_call_in_parentheses"
+              ],
+              "markdownEnumDescriptions": [
+                "Use consistent indentation for all arguments",
+                "Use consistent indentation relative to the receiver",
+                "Special handling for inner method calls",
+                "Special handling for inner method calls in parentheses"
               ]
             },
             "IndentationWidth": {
@@ -1020,6 +1197,11 @@
                 "special_inside_parentheses",
                 "consistent",
                 "align_brackets"
+              ],
+              "markdownEnumDescriptions": [
+                "Special indentation rules inside parentheses",
+                "Consistent indentation for all elements",
+                "Align elements with the opening bracket"
               ]
             },
             "IndentationWidth": {
@@ -1060,6 +1242,11 @@
                 "special_inside_parentheses",
                 "consistent",
                 "align_braces"
+              ],
+              "markdownEnumDescriptions": [
+                "Special indentation rules inside parentheses",
+                "Consistent indentation for all elements",
+                "Align elements with the opening brace"
               ]
             },
             "IndentationWidth": {
@@ -1130,7 +1317,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["consistent", "align_parentheses"]
+              "enum": ["consistent", "align_parentheses"],
+              "markdownEnumDescriptions": [
+                "Use consistent indentation for all parameters",
+                "Align parameters with the opening parenthesis"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -1181,6 +1372,12 @@
                 "always_ignore",
                 "ignore_implicit",
                 "ignore_explicit"
+              ],
+              "markdownEnumDescriptions": [
+                "Always inspect hash alignment in last argument",
+                "Always ignore hash alignment in last argument",
+                "Ignore hash alignment for implicit hashes in last argument",
+                "Ignore hash alignment for explicit hashes in last argument"
               ]
             }
           }
@@ -1295,7 +1492,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["leading", "trailing"]
+              "enum": ["leading", "trailing"],
+              "markdownEnumDescriptions": [
+                "Place whitespace before the backslash in line continuations",
+                "Place whitespace after the backslash in line continuations"
+              ]
             }
           }
         }
@@ -1310,7 +1511,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require a space after the backslash in line continuations",
+                "Disallow spaces after the backslash in line continuations"
+              ]
             }
           }
         }
@@ -1325,7 +1530,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["aligned", "indented"]
+              "enum": ["aligned", "indented"],
+              "markdownEnumDescriptions": [
+                "Align continued string parts with the first part",
+                "Indent continued string parts relative to the first part"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -1393,7 +1602,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["symmetrical", "new_line", "same_line"]
+              "enum": ["symmetrical", "new_line", "same_line"],
+              "markdownEnumDescriptions": [
+                "Opening and closing brackets must be on the same relative position (both on own lines or both on same line as content)",
+                "Closing bracket must be on its own line",
+                "Closing bracket must be on the same line as the last element"
+              ]
             }
           }
         }
@@ -1423,7 +1637,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["same_line", "new_line"]
+              "enum": ["same_line", "new_line"],
+              "markdownEnumDescriptions": [
+                "Allow the right-hand side to start on the same line as the assignment operator",
+                "Require the right-hand side to start on a new line after the assignment operator"
+              ]
             }
           }
         }
@@ -1442,7 +1660,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["symmetrical", "new_line", "same_line"]
+              "enum": ["symmetrical", "new_line", "same_line"],
+              "markdownEnumDescriptions": [
+                "Opening and closing braces must be on the same relative position (both on own lines or both on same line as content)",
+                "Closing brace must be on its own line",
+                "Closing brace must be on the same line as the last element"
+              ]
             }
           }
         }
@@ -1487,7 +1710,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["symmetrical", "new_line", "same_line"]
+              "enum": ["symmetrical", "new_line", "same_line"],
+              "markdownEnumDescriptions": [
+                "Opening and closing parentheses must be on the same relative position (both on own lines or both on same line as content)",
+                "Closing parenthesis must be on its own line",
+                "Closing parenthesis must be on the same line as the last argument"
+              ]
             }
           }
         }
@@ -1502,7 +1730,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["aligned", "indented", "indented_relative_to_receiver"]
+              "enum": ["aligned", "indented", "indented_relative_to_receiver"],
+              "markdownEnumDescriptions": [
+                "Align method arguments with the first argument",
+                "Indent method arguments with a fixed indentation",
+                "Indent method arguments relative to the receiver object"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -1520,7 +1753,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["symmetrical", "new_line", "same_line"]
+              "enum": ["symmetrical", "new_line", "same_line"],
+              "markdownEnumDescriptions": [
+                "Opening and closing parentheses must be on the same relative position (both on own lines or both on same line as parameters)",
+                "Closing parenthesis must be on its own line",
+                "Closing parenthesis must be on the same line as the last parameter"
+              ]
             }
           }
         }
@@ -1550,7 +1788,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["aligned", "indented"]
+              "enum": ["aligned", "indented"],
+              "markdownEnumDescriptions": [
+                "Align continued operations with the first operation",
+                "Indent continued operations with a fixed indentation"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -1568,7 +1810,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["with_first_parameter", "with_fixed_indentation"]
+              "enum": ["with_first_parameter", "with_fixed_indentation"],
+              "markdownEnumDescriptions": [
+                "Align parameters with the first parameter",
+                "Use a fixed indentation for all parameters"
+              ]
             },
             "IndentationWidth": {
               "type": ["integer", "null"]
@@ -1629,7 +1875,11 @@
         {
           "properties": {
             "EnforcedStyleInsidePipes": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside the pipes surrounding block parameters: `|  param  |`",
+                "Disallow spaces inside the pipes surrounding block parameters: `|param|`"
+              ]
             }
           }
         }
@@ -1644,7 +1894,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces around = in default parameter values: `def foo(bar = 1)`",
+                "Disallow spaces around = in default parameter values: `def foo(bar=1)`"
+              ]
             }
           }
         }
@@ -1670,10 +1924,18 @@
               "type": "boolean"
             },
             "EnforcedStyleForExponentOperator": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces around exponent operator: `2 ** 3`",
+                "Disallow spaces around exponent operator: `2**3`"
+              ]
             },
             "EnforcedStyleForRationalLiterals": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces around / in rational literals: `1 / 3r`",
+                "Disallow spaces around / in rational literals: `1/3r`"
+              ]
             }
           }
         }
@@ -1737,7 +1999,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["require_no_space", "require_space"]
+              "enum": ["require_no_space", "require_space"],
+              "markdownEnumDescriptions": [
+                "Disallow space between lambda arrow and parameters: `->(x) {}`",
+                "Require space between lambda arrow and parameters: `-> (x) {}`"
+              ]
             }
           }
         }
@@ -1752,10 +2018,18 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space", "compact"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require a space before opening brace in blocks: `array.each {}`",
+                "Disallow a space before opening brace in blocks: `array.each{}`"
+              ]
             },
-            "EnforcedStyleForEmptyBrackets": {
-              "enum": ["space", "no_space"]
+            "EnforcedStyleForEmptyBraces": {
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require a space before empty braces: `foo {}`",
+                "Disallow a space before empty braces: `foo{}`"
+              ]
             }
           }
         }
@@ -1774,10 +2048,18 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside block braces: `{ |x| x + 1 }`",
+                "Disallow spaces inside block braces: `{|x| x + 1}`"
+              ]
             },
             "EnforcedStyleForEmptyBraces": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require space inside empty braces: `{ }`",
+                "Disallow space inside empty braces: `{}`"
+              ]
             },
             "SpaceBeforeBlockParameters": {
               "type": "boolean"
@@ -1795,10 +2077,19 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space", "compact"]
+              "enum": ["space", "no_space", "compact"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside hash braces: `{ a: 1, b: 2 }`",
+                "Disallow spaces inside hash braces: `{a: 1, b: 2}`",
+                "Allow spaces for alignment but not for single-line hashes: compact style"
+              ]
             },
-            "EnforcedStyleForEmptyBraces": {
-              "enum": ["space", "no_space"]
+            "EnforcedStyleForEmptyBrackets": {
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require space inside empty braces: `{ }`",
+                "Disallow space inside empty braces: `{}`"
+              ]
             }
           }
         }
@@ -1813,7 +2104,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space", "compact"]
+              "enum": ["space", "no_space", "compact"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside parentheses: `( 1 + 2 )`",
+                "Disallow spaces inside parentheses: `(1 + 2)`",
+                "Allow spaces for alignment but not for single-line expressions: compact style"
+              ]
             }
           }
         }
@@ -1836,10 +2132,18 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside reference brackets: `array[ 0 ]`",
+                "Disallow spaces inside reference brackets: `array[0]`"
+              ]
             },
             "EnforcedStyleForEmptyBrackets": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require space inside empty brackets: `[ ]`",
+                "Disallow space inside empty brackets: `[]`"
+              ]
             }
           }
         }
@@ -1854,7 +2158,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"]
+              "enum": ["space", "no_space"],
+              "markdownEnumDescriptions": [
+                "Require spaces inside string interpolation: `\"#{ var }\"`",
+                "Disallow spaces inside string interpolation: `\"#{var}\"`"
+              ]
             }
           }
         }
@@ -1869,7 +2177,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["final_newline", "final_blank_line"]
+              "enum": ["final_newline", "final_blank_line"],
+              "markdownEnumDescriptions": [
+                "Require exactly one newline at the end of the file",
+                "Require one blank line (two newlines) at the end of the file"
+              ]
             }
           }
         }
@@ -2342,7 +2654,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["standard_error", "runtime_error"]
+              "enum": ["standard_error", "runtime_error"],
+              "markdownEnumDescriptions": [
+                "Prefer inheriting from StandardError when creating custom exceptions",
+                "Prefer inheriting from RuntimeError when creating custom exceptions"
+              ]
             }
           }
         }
@@ -2776,7 +3092,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["strict", "consistent"]
+              "enum": ["strict", "consistent"],
+              "markdownEnumDescriptions": [
+                "Always enforce the preferred symbol syntax (e.g., :symbol over :'symbol')",
+                "Allow quoted symbols when all symbols in a collection use quotes for consistency"
+              ]
             }
           }
         }
@@ -3349,7 +3669,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["anonymous", "explicit"]
+              "enum": ["anonymous", "explicit"],
+              "markdownEnumDescriptions": [
+                "Use anonymous block forwarding: `def foo(&); bar(&); end`",
+                "Use explicit block parameter name: `def foo(&block); bar(&block); end`"
+              ]
             },
             "BlockForwardingName": {
               "type": "string"
@@ -3462,7 +3786,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["lowercase", "uppercase"]
+              "enum": ["lowercase", "uppercase"],
+              "markdownEnumDescriptions": [
+                "Prefer lowercase heredoc delimiters: `<<~html`",
+                "Prefer uppercase heredoc delimiters: `<<~HTML`"
+              ]
             }
           }
         }
@@ -3558,7 +3886,12 @@
         {
           "properties": {
             "EnforcedStyleForLeadingUnderscores": {
-              "enum": ["disallowed", "required", "optional"]
+              "enum": ["disallowed", "required", "optional"],
+              "markdownEnumDescriptions": [
+                "Disallow leading underscores in memoized instance variable names",
+                "Require leading underscores in memoized instance variable names",
+                "Allow either with or without leading underscores in memoized instance variable names"
+              ]
             }
           }
         }
@@ -3573,7 +3906,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["snake_case", "camelCase"]
+              "enum": ["snake_case", "camelCase"],
+              "markdownEnumDescriptions": [
+                "Enforce snake_case for method names: `def my_method`",
+                "Enforce camelCase for method names: `def myMethod`"
+              ]
             },
             "AllowedPatterns": {
               "type": "array",
@@ -3642,7 +3979,11 @@
         {
           "properties": {
             "Mode": {
-              "enum": ["conservative", "aggressive"]
+              "enum": ["conservative", "aggressive"],
+              "markdownEnumDescriptions": [
+                "Only check methods with is_, has_, or have_ prefixes",
+                "Check all methods that return boolean values for proper ? suffix"
+              ]
             },
             "AllowedMethods": {
               "type": "array",
@@ -3740,7 +4081,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["snake_case", "camelCase"]
+              "enum": ["snake_case", "camelCase"],
+              "markdownEnumDescriptions": [
+                "Enforce snake_case for variable names: `my_variable`",
+                "Enforce camelCase for variable names: `myVariable`"
+              ]
             },
             "AllowedIdentifiers": {
               "type": "array",
@@ -3783,7 +4128,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["snake_case", "normalcase", "non_integer"]
+              "enum": ["snake_case", "normalcase", "non_integer"],
+              "markdownEnumDescriptions": [
+                "Enforce snake_case for variables with numbers: `variable_1`",
+                "Enforce numbers directly after name: `variable1`",
+                "Disallow integer suffixes in variable names"
+              ]
             },
             "CheckMethodNames": {
               "type": "boolean"
@@ -3842,7 +4192,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["inline", "group"]
+              "enum": ["inline", "group"],
+              "markdownEnumDescriptions": [
+                "Require inline access modifiers: `private def foo`",
+                "Require grouped access modifiers: `private` on its own line followed by methods"
+              ]
             },
             "AllowModifiersOnSymbols": {
               "type": "boolean"
@@ -3866,7 +4220,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["separated", "grouped"]
+              "enum": ["separated", "grouped"],
+              "markdownEnumDescriptions": [
+                "Require separate accessor declarations: `attr_reader :foo` and `attr_reader :bar` on different lines",
+                "Allow grouping accessors: `attr_reader :foo, :bar` on one line"
+              ]
             }
           }
         }
@@ -3881,7 +4239,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["prefer_alias", "prefer_alias_method"]
+              "enum": ["prefer_alias", "prefer_alias_method"],
+              "markdownEnumDescriptions": [
+                "Prefer the `alias` keyword: `alias new_name old_name`",
+                "Prefer the `alias_method` method: `alias_method :new_name, :old_name`"
+              ]
             }
           }
         }
@@ -3900,7 +4262,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["always", "conditionals"]
+              "enum": ["always", "conditionals"],
+              "markdownEnumDescriptions": [
+                "Always disallow `and`/`or` keywords in favor of `&&`/`||`",
+                "Only disallow `and`/`or` in conditionals, allow in control flow (e.g., `do_something or raise 'error'`)"
+              ]
             }
           }
         }
@@ -4001,7 +4367,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["percent_q", "bare_percent"]
+              "enum": ["percent_q", "bare_percent"],
+              "markdownEnumDescriptions": [
+                "Prefer explicit percent literal: `%q(string)`",
+                "Prefer bare percent literal: `%(string)`"
+              ]
             }
           }
         }
@@ -4038,6 +4408,12 @@
                 "semantic",
                 "braces_for_chaining",
                 "always_braces"
+              ],
+              "markdownEnumDescriptions": [
+                "Use braces for single-line blocks, do...end for multi-line blocks",
+                "Use braces for functional methods (map, select), do...end for procedural methods (each, tap)",
+                "Use braces when chaining methods, do...end otherwise",
+                "Always use braces for blocks"
               ]
             },
             "ProceduralMethods": {
@@ -4129,13 +4505,27 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["nested", "compact"]
+              "enum": ["nested", "compact"],
+              "markdownEnumDescriptions": [
+                "Prefer nested style: `class Foo\n  class Bar\n  end\nend`",
+                "Prefer compact style: `class Foo::Bar`"
+              ]
             },
             "EnforcedStyleForClasses": {
-              "enum": [null, "nested", "compact"]
+              "enum": [null, "nested", "compact"],
+              "markdownEnumDescriptions": [
+                "Use the general EnforcedStyle setting",
+                "Prefer nested style for classes only",
+                "Prefer compact style for classes only"
+              ]
             },
             "EnforcedStyleForModules": {
-              "enum": [null, "nested", "compact"]
+              "enum": [null, "nested", "compact"],
+              "markdownEnumDescriptions": [
+                "Use the general EnforcedStyle setting",
+                "Prefer nested style for modules only",
+                "Prefer compact style for modules only"
+              ]
             }
           }
         }
@@ -4150,7 +4540,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["is_a?", "kind_of?"]
+              "enum": ["is_a?", "kind_of?"],
+              "markdownEnumDescriptions": [
+                "Prefer `is_a?` for type checking: `obj.is_a?(String)`",
+                "Prefer `kind_of?` for type checking: `obj.kind_of?(String)`"
+              ]
             }
           }
         }
@@ -4195,7 +4589,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["def_self", "self_class"]
+              "enum": ["def_self", "self_class"],
+              "markdownEnumDescriptions": [
+                "Prefer `def self.method_name` style for class methods",
+                "Prefer `class << self` style for class methods"
+              ]
             }
           }
         }
@@ -4278,7 +4676,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["backticks", "percent_x", "mixed"]
+              "enum": ["backticks", "percent_x", "mixed"],
+              "markdownEnumDescriptions": [
+                "Prefer backticks for command literals: `` `ls` ``",
+                "Prefer %x() syntax for command literals: `%x(ls)`",
+                "Allow both backticks and %x() syntax"
+              ]
             },
             "AllowInnerBackticks": {
               "type": "boolean"
@@ -4334,7 +4737,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["assign_to_condition", "assign_inside_condition"]
+              "enum": ["assign_to_condition", "assign_inside_condition"],
+              "markdownEnumDescriptions": [
+                "Assign the result of the condition: `x = if condition then a else b end`",
+                "Assign inside each branch: `if condition then x = a else x = b end`"
+              ]
             },
             "SingleLineConditionsOnly": {
               "type": "boolean"
@@ -4487,7 +4894,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["allowed_in_returns", "forbidden"]
+              "enum": ["allowed_in_returns", "forbidden"],
+              "markdownEnumDescriptions": [
+                "Allow double negation in return statements for boolean coercion: `return !!value`",
+                "Always disallow double negation, use explicit boolean conversion methods instead"
+              ]
             }
           }
         }
@@ -4518,7 +4929,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["class_definition", "class_new"]
+              "enum": ["class_definition", "class_new"],
+              "markdownEnumDescriptions": [
+                "Prefer standard class definition syntax: `class Foo; end`",
+                "Prefer Class.new syntax: `Foo = Class.new`"
+              ]
             }
           }
         }
@@ -4533,7 +4948,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["empty", "nil", "both"]
+              "enum": ["empty", "nil", "both"],
+              "markdownEnumDescriptions": [
+                "Warn only about empty else branches",
+                "Warn only about else branches with explicit nil",
+                "Warn about both empty and nil else branches"
+              ]
             },
             "AllowComments": {
               "type": "boolean"
@@ -4563,7 +4983,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["compact", "expanded"]
+              "enum": ["compact", "expanded"],
+              "markdownEnumDescriptions": [
+                "Prefer compact single-line empty methods: `def foo; end`",
+                "Prefer expanded multi-line empty methods: `def foo\\nend`"
+              ]
             }
           }
         }
@@ -4608,6 +5032,13 @@
                 "disallow",
                 "require_single_line",
                 "require_always"
+              ],
+              "markdownEnumDescriptions": [
+                "Allow endless method syntax only for single-line methods",
+                "Allow endless method syntax for all methods",
+                "Disallow endless method syntax entirely",
+                "Require endless method syntax for single-line methods",
+                "Require endless method syntax for all methods"
               ]
             }
           }
@@ -4647,7 +5078,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["scientific", "engineering", "integral"]
+              "enum": ["scientific", "engineering", "integral"],
+              "markdownEnumDescriptions": [
+                "Use scientific notation: `1.23e4`",
+                "Use engineering notation (exponents divisible by 3): `12.3e3`",
+                "Use integral notation (no decimal point): `123e2`"
+              ]
             }
           }
         }
@@ -4704,7 +5140,13 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["left_coerce", "right_coerce", "single_coerce", "fdiv"]
+              "enum": ["left_coerce", "right_coerce", "single_coerce", "fdiv"],
+              "markdownEnumDescriptions": [
+                "Convert left operand to float: `a.to_f / b`",
+                "Convert right operand to float: `a / b.to_f`",
+                "Convert either operand to float (whichever is simpler)",
+                "Use fdiv method for float division: `a.fdiv(b)`"
+              ]
             }
           }
         }
@@ -4719,7 +5161,11 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["each", "for"]
+              "enum": ["each", "for"],
+              "markdownEnumDescriptions": [
+                "Prefer `each` for iteration: `array.each { |item| }`",
+                "Prefer `for` loops for iteration: `for item in array`"
+              ]
             }
           }
         }
@@ -4734,7 +5180,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["format", "sprintf", "percent"]
+              "enum": ["format", "sprintf", "percent"],
+              "markdownEnumDescriptions": [
+                "Prefer `format` method: `format('%d', 42)`",
+                "Prefer `sprintf` method: `sprintf('%d', 42)`",
+                "Prefer % operator: `'%d' % 42`"
+              ]
             }
           }
         }
@@ -4749,14 +5200,23 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["annotated", "template", "unannotated"]
+              "enum": ["annotated", "template", "unannotated"],
+              "markdownEnumDescriptions": [
+                "Prefer annotated tokens: `format('%{name}', name: 'John')`",
+                "Prefer template tokens: `format('%<name>s', name: 'John')`",
+                "Allow unannotated tokens: `format('%s', 'John')`"
+              ]
             },
             "MaxUnannotatedPlaceholdersAllowed": {
               "type": "integer",
               "minimum": 0
             },
             "Mode": {
-              "enum": ["conservative", "aggressive"]
+              "enum": ["conservative", "aggressive"],
+              "markdownEnumDescriptions": [
+                "Only check format strings with multiple placeholders",
+                "Check all format strings regardless of placeholder count"
+              ]
             },
             "AllowedMethods": {
               "type": "array",
@@ -4785,7 +5245,12 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["always", "always_true", "never"]
+              "enum": ["always", "always_true", "never"],
+              "markdownEnumDescriptions": [
+                "Always require frozen_string_literal comment (true or false)",
+                "Always require frozen_string_literal: true specifically",
+                "Never require frozen_string_literal comment"
+              ]
             }
           }
         }
