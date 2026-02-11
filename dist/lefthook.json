@@ -386,15 +386,36 @@
       "markdownDescription": "Whether hide spinner and other interactive things."
     },
     "output": {
-      "enum": [
-        "meta",
-        "summary",
-        "success",
-        "failure",
-        "execution",
-        "execution_out",
-        "execution_info",
-        "skips"
+      "anyOf": [
+        {
+          "enum": [
+            false,
+            "meta",
+            "summary",
+            "success",
+            "failure",
+            "execution",
+            "execution_out",
+            "execution_info",
+            "skips"
+          ]
+        },
+        {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "meta",
+              "summary",
+              "success",
+              "failure",
+              "execution",
+              "execution_out",
+              "execution_info",
+              "skips"
+            ]
+          }
+        }
       ]
     },
     "rc": {
