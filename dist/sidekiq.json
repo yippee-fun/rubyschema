@@ -32,7 +32,7 @@
       "additionalProperties": false
     }
   },
-  "$ref": "#/definitions/environment",
+  "allOf": [{ "$ref": "#/definitions/environment" }],
   "properties": {
     "development": { "$ref": "#/definitions/environment" },
     "production": { "$ref": "#/definitions/environment" },
