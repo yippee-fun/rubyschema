@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/sidekiq.json",
   "title": "Sidekiq configuration",
   "markdownDescription": "[Sidekiq Docs](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
