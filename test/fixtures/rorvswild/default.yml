@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/rorvswild.json
+%YAML 1.1
+---
+
 production:
   api_key: "abc123"
   ignore_requests:

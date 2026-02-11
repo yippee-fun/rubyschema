@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/pghero.json
+%YAML 1.1
+---
+
 databases:
   primary:
     url: <%= ENV["PGHERO_DATABASE_URL"] %>

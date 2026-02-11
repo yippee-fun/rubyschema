@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../../dist/packwerk/package.json
+%YAML 1.1
+---
+
 enforce_dependencies: strict
 dependencies:
   - components/billing

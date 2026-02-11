@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/lefthook.json
+%YAML 1.1
+---
+
 assert_lefthook_installed: true
 colors: auto
 min_version: "1.4.0"

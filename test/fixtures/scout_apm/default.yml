@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/scout_apm.json
+%YAML 1.1
+---
+
 name: Photos App
 key: "<%= Rails.application.credentials.dig(:scout, :key) %>"
 monitor: true

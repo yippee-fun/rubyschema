@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/honeybadger.json
+%YAML 1.1
+---
+
 api_key: "abc123"
 env: production
 report_data: true

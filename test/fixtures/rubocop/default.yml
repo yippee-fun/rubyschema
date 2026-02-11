@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../dist/rubocop.json
+%YAML 1.1
+---
+
 inherit_from: .rubocop_todo.yml
 
 inherit_gem:

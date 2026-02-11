@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=../../../../dist/kamal/deploy.json
+%YAML 1.1
+---
+
 service: myapp
 image: myapp/web
 registry:

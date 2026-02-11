@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=../../../../dist/rails/database.json
+%YAML 1.1
+---
 default: &default
   adapter: postgresql
   encoding: unicode
