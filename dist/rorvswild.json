@@ -81,6 +81,12 @@
       }
     }
   },
+  "properties": {
+    "production": { "$ref": "#/definitions/environment" },
+    "development": { "$ref": "#/definitions/environment" },
+    "test": { "$ref": "#/definitions/environment" },
+    "staging": { "$ref": "#/definitions/environment" }
+  },
   "additionalProperties": {
     "$ref": "#/definitions/environment"
   }

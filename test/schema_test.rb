@@ -31,6 +31,14 @@ class SchemaTest < Minitest::Test
         "#{relative} must set $id to https://www.rubyschema.org/#{relative}"
     end
 
+    define_method(:"test_#{name.tr('/', '_')}_uses_markdown_description") do
+      schema_data = JSON.parse(schema_path.read)
+      paths = find_description_keys(schema_data)
+
+      assert paths.empty?,
+        "#{relative} uses 'description' instead of 'markdownDescription' at:\n#{paths.map { |p| "  - #{p}" }.join("\n")}"
+    end
+
     fixtures_dir = FIXTURES_DIR.join(name)
     next unless fixtures_dir.directory?
 
@@ -52,5 +60,28 @@ class SchemaTest < Minitest::Test
         assert errors.empty?, "#{fixture_relative} failed validation against #{relative}:\n#{errors.map { |e| "  - #{e['error']} at #{e['data_pointer']}" }.join("\n")}"
       end
     end
+  end
+
+  private
+
+  def find_description_keys(obj, path = "")
+    paths = []
+
+    case obj
+    when Hash
+      if obj.key?("description") && !%w[$schema $id].include?(path.split("/").last)
+        paths << "#{path}/description"
+      end
+
+      obj.each do |key, value|
+        paths.concat(find_description_keys(value, "#{path}/#{key}"))
+      end
+    when Array
+      obj.each_with_index do |value, index|
+        paths.concat(find_description_keys(value, "#{path}/#{index}"))
+      end
+    end
+
+    paths
   end
 end

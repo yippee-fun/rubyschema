@@ -198,7 +198,6 @@
       "type": "object",
       "properties": {
         "Exclude": {
-          "description": "A list of globs for file paths that should be excluded.",
           "type": "array",
           "uniqueItems": true,
           "items": {
@@ -207,7 +206,6 @@
           "markdownDescription": "File patterns (globs) to exclude from all cops. Files matching these patterns will not be inspected. To apply exclusions when specific files are passed as arguments, use `--force-exclusion`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#includingexcluding-files)"
         },
         "Include": {
-          "description": "A list of globs for file paths that should be included.",
           "type": "array",
           "uniqueItems": true,
           "items": {
@@ -1441,7 +1439,7 @@
             },
             "AllowedPatterns": {
               "type": "array",
-              "description": "Allowed regular expression patterns",
+              "markdownDescription": "Allowed regular expression patterns.",
               "uniqueItems": true,
               "items": {
                 "type": "string"

@@ -609,7 +609,6 @@
   },
   "$ref": "#/definitions/environment",
   "additionalProperties": {
-    "$ref": "#/definitions/environment",
-    "additionalProperties": false
+    "$ref": "#/definitions/environment"
   }
 }
