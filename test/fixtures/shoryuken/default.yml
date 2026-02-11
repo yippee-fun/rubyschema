@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../dist/shoryuken.json
 %YAML 1.1
 ---
-
 logfile: log/shoryuken.log
 pidfile: tmp/pids/shoryuken.pid
 queues:

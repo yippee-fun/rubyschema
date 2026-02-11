@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../dist/mongoid.json
 %YAML 1.1
 ---
-
 development:
   clients:
     default:

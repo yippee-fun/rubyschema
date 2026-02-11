@@ -99,32 +99,31 @@ You can find a list of available schemas below or in the [dist directory](./dist
 
 ## Available Schemas
 
- | Name | File  | Schema URL |
-|------|-----------|------------|
-| Rails DB | `database.yml` | `https://www.rubyschema.org/rails/database.json` |
-| ActiveStorage | `storage.yml` | `https://www.rubyschema.org/rails/storage.json` |
-| SolidQueue  | `recurring.yml` | `https://www.rubyschema.org/rails/recurring.json` |
-| SolidQueue | `queue.yml` | `https://www.rubyschema.org/rails/queue.json` |
-| SolidCache | `cache.yml` | `https://www.rubyschema.org/rails/cache.json` |
-| SolidCable | `cable.yml` | `https://www.rubyschema.org/rails/cable.json` |
-| Rubocop | `rubocop.yml` | `https://www.rubyschema.org/rubocop.json` |
-| Vite | `vite.json` | `https://www.rubyschema.org/vite.json` |
-| Kamal | `deploy.yml` | `https://www.rubyschema.org/kamal/deploy.json` |
-| I18n | `locales/{language}.yml` | `https://www.rubyschema.org/i18n/locale.json` |
-| Sidekiq | `sidekiq.yml` | `https://www.rubyschema.org/sidekiq.json` |
-| RoRvsWild | `rorvswild.yml` | `https://www.rubyschema.org/rorvswild.json` |
-| Standard | `standard.yml` | `https://www.rubyschema.org/standard.json` |
-| Honeybadger | `honeybadger.yml` | `https://www.rubyschema.org/honeybadger.json` |
-| Shoryuken | `shoryuken.yml` | `https://www.rubyschema.org/shoryuken.json` |
-| Packwerk | `package.yml` | `https://www.rubyschema.org/packwerk/package.json` |
-| Lefthook | `lefthook.yml` | `https://www.rubyschema.org/lefthook.json` |
-| Lefthook | `lefthook.json` | `https://www.rubyschema.org/lefthook.json` |
-| Lefthook | `lefthook.toml` | `https://www.rubyschema.org/lefthook.json` |
-| Scout AMP | `scout_apm.yml` | `https://www.rubyschema.org/scout_apm.json` |
-| Mongoid | `mongoid.yml` | `https://www.rubyschema.org/mongoid.json` |
-| Pghero | `pghero.yml` | `https://www.rubyschema.org/pghero.json` |
-| I18n-tasks | `i18n-tasks.yml` | `https://www.rubyschema.org/i18n-tasks.json` |
-
+| Name          | File                     | Schema URL                                         |
+| ------------- | ------------------------ | -------------------------------------------------- |
+| Rails DB      | `database.yml`           | `https://www.rubyschema.org/rails/database.json`   |
+| ActiveStorage | `storage.yml`            | `https://www.rubyschema.org/rails/storage.json`    |
+| SolidQueue    | `recurring.yml`          | `https://www.rubyschema.org/rails/recurring.json`  |
+| SolidQueue    | `queue.yml`              | `https://www.rubyschema.org/rails/queue.json`      |
+| SolidCache    | `cache.yml`              | `https://www.rubyschema.org/rails/cache.json`      |
+| SolidCable    | `cable.yml`              | `https://www.rubyschema.org/rails/cable.json`      |
+| Rubocop       | `rubocop.yml`            | `https://www.rubyschema.org/rubocop.json`          |
+| Vite          | `vite.json`              | `https://www.rubyschema.org/vite.json`             |
+| Kamal         | `deploy.yml`             | `https://www.rubyschema.org/kamal/deploy.json`     |
+| I18n          | `locales/{language}.yml` | `https://www.rubyschema.org/i18n/locale.json`      |
+| Sidekiq       | `sidekiq.yml`            | `https://www.rubyschema.org/sidekiq.json`          |
+| RoRvsWild     | `rorvswild.yml`          | `https://www.rubyschema.org/rorvswild.json`        |
+| Standard      | `standard.yml`           | `https://www.rubyschema.org/standard.json`         |
+| Honeybadger   | `honeybadger.yml`        | `https://www.rubyschema.org/honeybadger.json`      |
+| Shoryuken     | `shoryuken.yml`          | `https://www.rubyschema.org/shoryuken.json`        |
+| Packwerk      | `package.yml`            | `https://www.rubyschema.org/packwerk/package.json` |
+| Lefthook      | `lefthook.yml`           | `https://www.rubyschema.org/lefthook.json`         |
+| Lefthook      | `lefthook.json`          | `https://www.rubyschema.org/lefthook.json`         |
+| Lefthook      | `lefthook.toml`          | `https://www.rubyschema.org/lefthook.json`         |
+| Scout AMP     | `scout_apm.yml`          | `https://www.rubyschema.org/scout_apm.json`        |
+| Mongoid       | `mongoid.yml`            | `https://www.rubyschema.org/mongoid.json`          |
+| Pghero        | `pghero.yml`             | `https://www.rubyschema.org/pghero.json`           |
+| I18n-tasks    | `i18n-tasks.yml`         | `https://www.rubyschema.org/i18n-tasks.json`       |
 
 ## Contributing
 

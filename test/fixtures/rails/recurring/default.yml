@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../../dist/rails/recurring.json
 %YAML 1.1
 ---
-
 production:
   periodic_cleanup:
     class: CleanupJob

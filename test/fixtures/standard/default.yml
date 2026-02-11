@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../dist/standard.json
 %YAML 1.1
 ---
-
 fix: false
 parallel: true
 format: progress

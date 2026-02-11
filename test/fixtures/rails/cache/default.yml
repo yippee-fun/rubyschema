@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../../dist/rails/cache.json
 %YAML 1.1
 ---
-
 development:
   databases:
     - cache_db

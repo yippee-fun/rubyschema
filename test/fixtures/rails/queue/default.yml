@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../../dist/rails/queue.json
 %YAML 1.1
 ---
-
 default: &default
   dispatchers:
     - polling_interval: 1

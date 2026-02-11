@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ruby Schema</title>
-    <meta name="description" content="JSON Schemas for Ruby gem configuration files. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs." />
+    <meta
+      name="description"
+      content="JSON Schemas for Ruby gem configuration files. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs."
+    />
     <style>
       :root {
         --bg: #fafafa;
@@ -15,7 +18,8 @@
         --accent-dim: #991a1a;
         --surface: #ffffff;
         --code-bg: #f0f0f0;
-        --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+        --mono:
+          ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -31,7 +35,13 @@
         }
       }
 
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
       body {
         font-family: var(--mono);
@@ -61,7 +71,9 @@
         margin-bottom: 1.25rem;
       }
 
-      h1 span { color: var(--accent); }
+      h1 span {
+        color: var(--accent);
+      }
 
       .tagline {
         font-size: 1.05rem;
@@ -78,7 +90,9 @@
         line-height: 1.7;
       }
 
-      .prose p + p { margin-top: 1rem; }
+      .prose p + p {
+        margin-top: 1rem;
+      }
 
       .prose a {
         color: var(--fg);
@@ -93,7 +107,9 @@
 
       /* ---- Sections ---- */
 
-      section { margin-bottom: 3.5rem; }
+      section {
+        margin-bottom: 3.5rem;
+      }
 
       h2 {
         font-size: 0.8rem;
@@ -136,7 +152,9 @@
       }
 
       @media (max-width: 600px) {
-        .setup-grid { grid-template-columns: 1fr; }
+        .setup-grid {
+          grid-template-columns: 1fr;
+        }
       }
 
       .setup-item label {
@@ -170,7 +188,9 @@
         border-bottom: 1px solid var(--border);
       }
 
-      .schema-table tr:last-child { border-bottom: none; }
+      .schema-table tr:last-child {
+        border-bottom: none;
+      }
 
       .schema-table td {
         padding: 0.7rem 0;
@@ -220,7 +240,9 @@
 
       /* Responsive: hide URL column on narrow screens */
       @media (max-width: 600px) {
-        .schema-table td:last-child { display: none; }
+        .schema-table td:last-child {
+          display: none;
+        }
       }
 
       /* ---- Footer ---- */
@@ -238,28 +260,48 @@
         text-decoration: none;
       }
 
-      footer a:hover { color: var(--accent); }
+      footer a:hover {
+        color: var(--accent);
+      }
     </style>
   </head>
   <body>
     <div class="container">
-
       <header>
         <h1><span>Ruby</span>Schema</h1>
-        <p class="tagline">Your editor already knows how to validate YAML, JSON and TOML — it just needs the right schemas.</p>
+        <p class="tagline">
+          Your editor already knows how to validate YAML, JSON and TOML — it
+          just needs the right schemas.
+        </p>
       </header>
 
       <div class="prose">
-        <p>Ruby gems love configuration files. Between YAML’s ambiguous booleans, invisible whitespace bugs and Ruby’s insistence on the 1.1 spec, those files are a minefield. You won’t know something’s wrong until production tells you.</p>
-        <p>RubySchema provides <a href="https://json-schema.org/">JSON Schema</a> definitions for popular gems so your editor can catch mistakes, suggest keys and surface documentation as you type.</p>
+        <p>
+          Ruby gems love configuration files. Between YAML’s ambiguous booleans,
+          invisible whitespace bugs and Ruby’s insistence on the 1.1 spec, those
+          files are a minefield. You won’t know something’s wrong until
+          production tells you.
+        </p>
+        <p>
+          RubySchema provides
+          <a href="https://json-schema.org/">JSON Schema</a> definitions for
+          popular gems so your editor can catch mistakes, suggest keys and
+          surface documentation as you type.
+        </p>
       </div>
 
       <section>
         <h2>Quick Start</h2>
         <div class="install">
-          <code>bin/rails app:template LOCATION=https://www.rubyschema.org/rails.rb</code>
+          <code
+            >bin/rails app:template
+            LOCATION=https://www.rubyschema.org/rails.rb</code
+          >
         </div>
-        <p class="install-hint">Injects schema comments into your Rails config files. Safe to re-run when new schemas are added.</p>
+        <p class="install-hint">
+          Injects schema comments into your Rails config files. Safe to re-run
+          when new schemas are added.
+        </p>
       </section>
 
       <section>
@@ -283,44 +325,67 @@
       <section>
         <h2>Schemas</h2>
         <table class="schema-table">
-
-          <tr class="group-header"><td colspan="3">Rails</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Rails</td>
+          </tr>
           <tr>
             <td>Database</td>
             <td>database.yml</td>
-            <td><a href="/rails/database.json">rubyschema.org/rails/database.json</a></td>
+            <td>
+              <a href="/rails/database.json"
+                >rubyschema.org/rails/database.json</a
+              >
+            </td>
           </tr>
           <tr>
             <td>Storage</td>
             <td>storage.yml</td>
-            <td><a href="/rails/storage.json">rubyschema.org/rails/storage.json</a></td>
+            <td>
+              <a href="/rails/storage.json"
+                >rubyschema.org/rails/storage.json</a
+              >
+            </td>
           </tr>
           <tr>
             <td>Cable</td>
             <td>cable.yml</td>
-            <td><a href="/rails/cable.json">rubyschema.org/rails/cable.json</a></td>
+            <td>
+              <a href="/rails/cable.json">rubyschema.org/rails/cable.json</a>
+            </td>
           </tr>
           <tr>
             <td>Cache</td>
             <td>cache.yml</td>
-            <td><a href="/rails/cache.json">rubyschema.org/rails/cache.json</a></td>
+            <td>
+              <a href="/rails/cache.json">rubyschema.org/rails/cache.json</a>
+            </td>
           </tr>
           <tr>
             <td>Queue</td>
             <td>queue.yml</td>
-            <td><a href="/rails/queue.json">rubyschema.org/rails/queue.json</a></td>
+            <td>
+              <a href="/rails/queue.json">rubyschema.org/rails/queue.json</a>
+            </td>
           </tr>
           <tr>
             <td>Recurring</td>
             <td>recurring.yml</td>
-            <td><a href="/rails/recurring.json">rubyschema.org/rails/recurring.json</a></td>
+            <td>
+              <a href="/rails/recurring.json"
+                >rubyschema.org/rails/recurring.json</a
+              >
+            </td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">Deployment &amp; CI</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Deployment &amp; CI</td>
+          </tr>
           <tr>
             <td>Kamal</td>
             <td>deploy.yml</td>
-            <td><a href="/kamal/deploy.json">rubyschema.org/kamal/deploy.json</a></td>
+            <td>
+              <a href="/kamal/deploy.json">rubyschema.org/kamal/deploy.json</a>
+            </td>
           </tr>
           <tr>
             <td>Lefthook</td>
@@ -328,7 +393,9 @@
             <td><a href="/lefthook.json">rubyschema.org/lefthook.json</a></td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">Code Quality</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Code Quality</td>
+          </tr>
           <tr>
             <td>RuboCop</td>
             <td>.rubocop.yml</td>
@@ -342,10 +409,16 @@
           <tr>
             <td>Packwerk</td>
             <td>package.yml</td>
-            <td><a href="/packwerk/package.json">rubyschema.org/packwerk/package.json</a></td>
+            <td>
+              <a href="/packwerk/package.json"
+                >rubyschema.org/packwerk/package.json</a
+              >
+            </td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">Background Jobs</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Background Jobs</td>
+          </tr>
           <tr>
             <td>Sidekiq</td>
             <td>sidekiq.yml</td>
@@ -357,11 +430,15 @@
             <td><a href="/shoryuken.json">rubyschema.org/shoryuken.json</a></td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">Monitoring</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Monitoring</td>
+          </tr>
           <tr>
             <td>Honeybadger</td>
             <td>honeybadger.yml</td>
-            <td><a href="/honeybadger.json">rubyschema.org/honeybadger.json</a></td>
+            <td>
+              <a href="/honeybadger.json">rubyschema.org/honeybadger.json</a>
+            </td>
           </tr>
           <tr>
             <td>RoRvsWild</td>
@@ -379,19 +456,27 @@
             <td><a href="/pghero.json">rubyschema.org/pghero.json</a></td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">I18n</td></tr>
+          <tr class="group-header">
+            <td colspan="3">I18n</td>
+          </tr>
           <tr>
             <td>Locale files</td>
             <td>locales/*.yml</td>
-            <td><a href="/i18n/locale.json">rubyschema.org/i18n/locale.json</a></td>
+            <td>
+              <a href="/i18n/locale.json">rubyschema.org/i18n/locale.json</a>
+            </td>
           </tr>
           <tr>
             <td>i18n-tasks</td>
             <td>i18n-tasks.yml</td>
-            <td><a href="/i18n-tasks.json">rubyschema.org/i18n-tasks.json</a></td>
+            <td>
+              <a href="/i18n-tasks.json">rubyschema.org/i18n-tasks.json</a>
+            </td>
           </tr>
 
-          <tr class="group-header"><td colspan="3">Other</td></tr>
+          <tr class="group-header">
+            <td colspan="3">Other</td>
+          </tr>
           <tr>
             <td>Mongoid</td>
             <td>mongoid.yml</td>
@@ -402,14 +487,13 @@
             <td>vite.json</td>
             <td><a href="/vite.json">rubyschema.org/vite.json</a></td>
           </tr>
-
         </table>
       </section>
 
       <footer>
-        <a href="https://github.com/yippee-fun/rubyschema">GitHub</a> &middot; by <a href="https://joel.drapper.me">Joel Drapper</a>
+        <a href="https://github.com/yippee-fun/rubyschema">GitHub</a> &middot;
+        by <a href="https://joel.drapper.me">Joel Drapper</a>
       </footer>
-
     </div>
   </body>
 </html>
