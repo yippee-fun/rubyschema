@@ -2,11 +2,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/packwerk/package.json",
   "title": "Packwerk Package",
+  "markdownDescription": "Configuration for a Packwerk package, a modular unit that enforces dependency boundaries in Ruby applications. Place `package.yml` in any folder to define it as a package. Used to prevent your codebase from becoming a \"ball of mud\" by enforcing explicit dependencies.\n\n[Packwerk Documentation](https://github.com/Shopify/packwerk/blob/main/USAGE.md)",
   "type": "object",
   "properties": {
     "metadata": {
       "type": "object",
-      "markdownDescription": "[Docs](https://github.com/Shopify/packwerk/blob/main/USAGE.md#package-metadata)"
+      "markdownDescription": "Custom metadata about package ownership and stewardship. Not validated by Packwerk, so can contain any information. Commonly includes team ownership, Slack channels, or other organizational data.\n\n**Example:**\n```yaml\nmetadata:\n  stewards:\n    - \"@Shopify/sales\"\n  slack_channels:\n    - \"#sales\"\n```\n\n[Package Metadata Documentation](https://github.com/Shopify/packwerk/blob/main/USAGE.md#package-metadata)"
     },
     "enforce_dependencies": {
       "anyOf": [
@@ -18,11 +19,16 @@
             "strict"
           ]
         }
+      ],
+      "markdownDescription": "Enable dependency boundary enforcement for this package. When enabled, references to constants in undeclared dependencies cause violations. **Default:** `false`\n\n- `true`: Enforce dependencies, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce dependency boundaries\n\n**Example:**\n```yaml\nenforce_dependencies: true\ndependencies:\n  - components/platform\n```",
+      "markdownEnumDescriptions": [
+        "Strict mode - prevents new violations from being added to package_todo.yml. New violations will cause errors instead of being recorded."
       ]
     },
     "dependencies": {
       "type": "array",
       "uniqueItems": true,
+      "markdownDescription": "List of packages that this package is allowed to depend on. Package paths are relative to the project root. Only checked when `enforce_dependencies` is enabled.\n\n**Example:**\n```yaml\ndependencies:\n  - components/platform\n  - components/shared\n```",
       "items": {
         "type": "string"
       }
@@ -30,12 +36,14 @@
     "require": {
       "type": "array",
       "uniqueItems": true,
+      "markdownDescription": "List of Ruby files or gems to load when Packwerk processes this package. Use for custom checkers, validators, or formatters specific to this package.\n\n**Example:**\n```yaml\nrequire:\n  - ./path/to/custom_checker.rb\n  - my_gem\n```",
       "items": {
         "type": "string"
       }
     },
     "offenses_formatter": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Identifier for a custom offenses formatter to use when checking this package. The formatter must implement `Packwerk::OffensesFormatter` and be loaded via the `require` directive.\n\n**Example:**\n```yaml\noffenses_formatter: my_custom_formatter\n```"
     }
   },
   "additionalProperties": false

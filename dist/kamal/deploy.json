@@ -2,15 +2,19 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/kamal/deploy.json",
   "title": "Kamal Deployment Configuration",
+  "markdownDescription": "Configuration for Kamal, a deployment tool that enables zero-downtime deploys, rolling restarts, and container management on any server with Docker. Originally built for Rails apps but works with any containerized web application.\n\n[Kamal Documentation](https://kamal-deploy.org/docs/configuration/overview/)",
   "definitions": {
     "registry": {
       "type": "object",
+      "markdownDescription": "Docker registry configuration for pushing and pulling images.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/docker-registry/)",
       "properties": {
         "server": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The registry server URL. Defaults to Docker Hub if not specified.\n\n**Example:**\n```yaml\nregistry:\n  server: ghcr.io\n```"
         },
         "username": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "⚠️ Registry username for authentication. Use environment variables or secrets for sensitive data.\n\n**Example:**\n```yaml\nregistry:\n  username: myuser\n```"
         },
         "password": {
           "anyOf": [
@@ -20,36 +24,43 @@
               "uniqueItems": true,
               "items": { "type": "string" }
             }
-          ]
+          ],
+          "markdownDescription": "⚠️ Registry password for authentication. Can be a string or array of environment variable names.\n\n**Security:** Always use environment variables or the secrets file for passwords.\n\n**Example:**\n```yaml\nregistry:\n  password:\n    - KAMAL_REGISTRY_PASSWORD\n```"
         }
       }
     },
     "env": {
+      "markdownDescription": "Environment variables configuration for containers.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/environment-variables/)",
       "properties": {
         "clear": {
           "type": "object",
+          "markdownDescription": "Environment variables that are stored in plain text (not encrypted).\n\n**Example:**\n```yaml\nenv:\n  clear:\n    RAILS_ENV: production\n    LOG_LEVEL: info\n```",
           "additionalProperties": {
             "type": ["string", "number", "boolean", "null"]
           }
         },
         "secret": {
           "type": "array",
+          "markdownDescription": "⚠️ List of environment variable names that should be loaded from the secrets file. These are sensitive values like API keys and passwords.\n\n**Example:**\n```yaml\nenv:\n  secret:\n    - DATABASE_URL\n    - SECRET_KEY_BASE\n```",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
         "tags": {
           "type": "object",
+          "markdownDescription": "Environment variables specific to server tags, allowing different values per server group.\n\n**Example:**\n```yaml\nenv:\n  tags:\n    production:\n      clear:\n        RAILS_ENV: production\n```",
           "additionalProperties": {
             "type": "object",
             "properties": {
               "clear": {
                 "type": "object",
+                "markdownDescription": "Plain text environment variables for this tag.",
                 "additionalProperties": {
                   "type": ["string", "number", "boolean", "null"]
                 }
               },
               "secret": {
                 "type": "array",
+                "markdownDescription": "Secret environment variable names for this tag.",
                 "uniqueItems": true,
                 "items": { "type": "string" }
               }
@@ -60,66 +71,84 @@
     },
     "proxy": {
       "type": "object",
+      "markdownDescription": "Configuration for kamal-proxy, which provides zero-downtime deployments by running on ports 80 and 443 and forwarding requests to application containers.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/proxy/)",
       "allOf": [
         {
           "properties": {
             "app_port": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "markdownDescription": "The port the application container is exposed on.\n\n**Default:** `80`\n\n**Example:**\n```yaml\nproxy:\n  app_port: 3000\n```"
             },
             "ssl": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Enable automatic HTTPS via Let's Encrypt. Requires deploying to one server with the host option set and port 443 open.\n\n**Default:** `false`\n\n**Note:** When enabled, kamal-proxy will stop forwarding headers unless you explicitly set `forward_headers: true`.\n\n**Example:**\n```yaml\nproxy:\n  ssl: true\n```"
             },
             "ssl_redirect": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Whether to redirect all HTTP requests to HTTPS when SSL is enabled. Set to `false` to pass HTTP traffic through to your application.\n\n**Default:** `true`\n\n**Example:**\n```yaml\nproxy:\n  ssl_redirect: false\n```"
             },
             "forward_headers": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Whether to forward the `X-Forwarded-For` and `X-Forwarded-Proto` headers. Set to `true` if behind a trusted proxy.\n\n**Default:** `false` when SSL is enabled, `true` otherwise.\n\n**Example:**\n```yaml\nproxy:\n  forward_headers: true\n```"
             },
             "response_timeout": {
-              "type": "integer"
+              "type": "integer",
+              "markdownDescription": "How long to wait for requests to complete before timing out, in seconds.\n\n**Default:** `30`\n\n**Example:**\n```yaml\nproxy:\n  response_timeout: 10\n```"
             },
             "healthcheck": {
               "type": "object",
+              "markdownDescription": "Configure healthcheck behavior during deployments. The proxy will hit the healthcheck endpoint once per interval until the app is up.\n\n**Defaults:** path `/up`, interval `1` second, timeout `5` seconds\n\n**Example:**\n```yaml\nproxy:\n  healthcheck:\n    interval: 3\n    path: /health\n    timeout: 3\n```",
               "properties": {
                 "interval": {
-                  "type": "integer"
+                  "type": "integer",
+                  "markdownDescription": "Seconds between healthcheck attempts during deployment.\n\n**Default:** `1`"
                 },
                 "path": {
-                  "type": "string"
+                  "type": "string",
+                  "markdownDescription": "The HTTP path to check for application readiness.\n\n**Default:** `/up`"
                 },
                 "timeout": {
-                  "type": "integer"
+                  "type": "integer",
+                  "markdownDescription": "Timeout in seconds for each healthcheck request.\n\n**Default:** `5`"
                 }
               }
             },
             "buffering": {
               "type": "object",
+              "markdownDescription": "Configure request and response body buffering in the proxy.\n\n**Defaults:** Enabled with 1GB max request body, unlimited response size, 1MB memory buffer.\n\n**Example:**\n```yaml\nproxy:\n  buffering:\n    requests: true\n    max_request_body: 40000000\n    memory: 2000000\n```",
               "properties": {
                 "requests": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "markdownDescription": "Whether to buffer request bodies.\n\n**Default:** `true`"
                 },
                 "responses": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "markdownDescription": "Whether to buffer response bodies.\n\n**Default:** `true`"
                 },
                 "max_request_body": {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "markdownDescription": "Maximum request body size to buffer, in bytes. Set to 0 for unlimited.\n\n**Default:** `1000000000` (1GB)"
                 },
                 "max_response_body": {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "markdownDescription": "Maximum response body size to buffer, in bytes. Set to 0 for unlimited.\n\n**Default:** `0` (unlimited)"
                 },
                 "memory": {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "markdownDescription": "Memory limit for buffering in bytes. Content larger than this is written to disk.\n\n**Default:** `1000000` (1MB)"
                 }
               }
             },
             "logging": {
               "type": "object",
+              "markdownDescription": "Configure request logging for the proxy.\n\n**Default:** Logs `Cache-Control`, `Last-Modified`, and `User-Agent` request headers.\n\n**Example:**\n```yaml\nproxy:\n  logging:\n    request_headers:\n      - Cache-Control\n      - X-Forwarded-Proto\n```",
               "properties": {
                 "request_headers": {
                   "type": "array",
+                  "markdownDescription": "List of request header names to log.",
                   "uniqueItems": true,
                   "items": {
                     "type": "string"
@@ -127,6 +156,7 @@
                 },
                 "response_headers": {
                   "type": "array",
+                  "markdownDescription": "List of response header names to log.",
                   "uniqueItems": true,
                   "items": {
                     "type": "string"
@@ -141,7 +171,8 @@
             {
               "properties": {
                 "host": {
-                  "type": "string"
+                  "type": "string",
+                  "markdownDescription": "The hostname that will be used to serve the app. The proxy will only route requests to this host to your app.\n\n**Example:**\n```yaml\nproxy:\n  host: foo.example.com\n```"
                 }
               },
               "required": ["host"]
@@ -150,6 +181,7 @@
               "properties": {
                 "hosts": {
                   "type": "array",
+                  "markdownDescription": "Multiple hostnames that will be used to serve the app.\n\n**Example:**\n```yaml\nproxy:\n  hosts:\n    - foo.example.com\n    - bar.example.com\n```",
                   "uniqueItems": true,
                   "items": {
                     "type": "string"
@@ -191,12 +223,15 @@
     },
     "logging": {
       "type": "object",
+      "markdownDescription": "Docker logging driver configuration. Can be specified at root level or per role.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/logging/)",
       "properties": {
         "driver": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The Docker logging driver to use. Passed to Docker via `--log-driver`.\n\n**Common drivers:** `json-file`, `journald`, `syslog`, `fluentd`, `awslogs`\n\n**Example:**\n```yaml\nlogging:\n  driver: json-file\n```"
         },
         "options": {
           "type": "object",
+          "markdownDescription": "Logging options passed to the driver via `--log-opt`.\n\n**Example:**\n```yaml\nlogging:\n  driver: json-file\n  options:\n    max-size: 100m\n    max-file: \"3\"\n```",
           "additionalProperties": true
         }
       },
@@ -205,13 +240,16 @@
   },
   "properties": {
     "service": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "The service name used as the container name prefix.\n\n**Example:**\n```yaml\nservice: myapp\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#the-service-name)"
     },
     "image": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "The Docker image name that will be pushed to the configured registry.\n\n**Example:**\n```yaml\nimage: my-image\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#the-docker-image-name)"
     },
     "labels": {
       "type": "object",
+      "markdownDescription": "Additional labels to add to the container. Labels are key-value pairs used for metadata.\n\n**Example:**\n```yaml\nlabels:\n  my-label: my-value\n  environment: production\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#labels)",
       "additionalProperties": {
         "type": "string"
       }
@@ -228,46 +266,57 @@
       "$ref": "#/definitions/registry"
     },
     "servers": {
+      "markdownDescription": "The servers to deploy to. Can be a simple list of IP addresses/hostnames (assigned to 'web' role) or an object defining custom roles.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/servers/)",
       "oneOf": [
         { "$ref": "#/definitions/hosts" },
         {
           "type": "object",
           "properties": {
             "hosts": {
-              "$ref": "#/definitions/hosts"
+              "$ref": "#/definitions/hosts",
+              "markdownDescription": "List of server IP addresses or hostnames. Servers can be tagged for custom environment variables.\n\n**Example:**\n```yaml\nservers:\n  hosts:\n    - 172.0.0.1\n    - 172.0.0.2: experiments\n```"
             },
             "cmd": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Custom command to run in the container for this role.\n\n**Example:**\n```yaml\nservers:\n  cmd: bin/jobs\n```"
             },
             "options": {
               "type": "object",
+              "markdownDescription": "Docker run options for containers in this role.\n\n**Example:**\n```yaml\nservers:\n  options:\n    memory: 2g\n    cpus: 2\n```",
               "properties": {
                 "memory": {
-                  "type": "string"
+                  "type": "string",
+                  "markdownDescription": "Memory limit for the container (e.g., `512m`, `2g`)."
                 },
                 "cpus": {
-                  "type": "integer"
+                  "type": "integer",
+                  "markdownDescription": "Number of CPUs to allocate to the container."
                 }
               }
             },
             "logging": {
-              "$ref": "#/definitions/logging"
+              "$ref": "#/definitions/logging",
+              "markdownDescription": "Docker logging configuration for this role."
             },
             "proxy": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Whether to enable kamal-proxy for this role. The proxy is enabled by default on the primary role.\n\n**Default:** `false` (except for primary role)\n\n**Example:**\n```yaml\nservers:\n  web2:\n    proxy: true\n```"
             },
             "labels": {
               "type": "array",
+              "markdownDescription": "Server labels for this role, used to select which servers from the `hosts` list should be used.\n\n**Example:**\n```yaml\nservers:\n  labels:\n    - experiments\n```",
               "uniqueItems": true,
               "items": {
                 "type": "string"
               }
             },
             "env": {
-              "type": "object"
+              "type": "object",
+              "markdownDescription": "Role-specific environment variables."
             },
             "asset_path": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Role-specific asset path for asset bridging."
             }
           }
         }
@@ -277,80 +326,107 @@
       "$ref": "#/definitions/env"
     },
     "asset_path": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Path for asset bridging across deployments to avoid 404s during deploys. File names must change when contents change (e.g., content hash in filename). Kamal will map a volume containing both old and new asset files.\n\n**Format:** `/path/to/assets` or `/path/to/assets:ro` (with mount options)\n\n**Default:** `nil`\n\n**Example:**\n```yaml\nasset_path: /rails/public/assets\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#asset-path)"
     },
     "hooks_path": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Path to hooks directory for custom deploy scripts.\n\n**Default:** `.kamal/hooks`\n\n**Example:**\n```yaml\nhooks_path: /user_home/kamal/hooks\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#hooks-path)"
     },
     "error_pages_path": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Directory relative to the app root containing error pages for the proxy to serve. Files should be named `4xx.html` or `5xx.html`.\n\n**Example:**\n```yaml\nerror_pages_path: public\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#error-pages)"
     },
     "require_destination": {
-      "type": "boolean"
+      "type": "boolean",
+      "markdownDescription": "Whether deployments require a destination to be specified with the `-d` flag.\n\n**Default:** `false`\n\n**Example:**\n```yaml\nrequire_destination: true\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#require-destinations)"
     },
     "primary_role": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "The primary role name. Defaults to `web`, but can be changed if you have no web role.\n\n**Default:** `web`\n\n**Example:**\n```yaml\nprimary_role: workers\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#primary-role)"
     },
     "allow_empty_roles": {
-      "type": "boolean"
+      "type": "boolean",
+      "markdownDescription": "Whether roles with no servers are allowed.\n\n**Default:** `false`\n\n**Example:**\n```yaml\nallow_empty_roles: true\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#allowing-empty-roles)"
     },
     "retain_containers": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "markdownDescription": "How many old containers and images to retain on the server.\n\n**Default:** `5`\n\n**Example:**\n```yaml\nretain_containers: 3\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#retain-containers)"
     },
     "minimum_version": {
-      "type": "number"
+      "type": "number",
+      "markdownDescription": "The minimum version of Kamal required to deploy this configuration.\n\n**Default:** `nil`\n\n**Example:**\n```yaml\nminimum_version: 1.3.0\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#minimum-version)"
     },
     "readiness_delay": {
-      "type": "integer"
+      "type": "integer",
+      "markdownDescription": "Seconds to wait for a container to boot after it is running. Only applies to containers without a proxy or healthcheck.\n\n**Default:** `7`\n\n**Example:**\n```yaml\nreadiness_delay: 4\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#readiness-delay)"
     },
     "deploy_timeout": {
-      "type": "integer"
+      "type": "integer",
+      "markdownDescription": "How long to wait for a container to become ready, in seconds.\n\n**Default:** `30`\n\n**Example:**\n```yaml\ndeploy_timeout: 10\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#deploy-timeout)"
     },
     "drain_timeout": {
-      "type": "integer"
+      "type": "integer",
+      "markdownDescription": "How long to wait for a container to drain connections, in seconds.\n\n**Default:** `30`\n\n**Example:**\n```yaml\ndrain_timeout: 10\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#drain-timeout)"
     },
     "run_directory": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Directory to store Kamal runtime files on the host.\n\n**Default:** `.kamal`\n\n**Example:**\n```yaml\nrun_directory: /etc/kamal\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#run-directory)"
     },
     "ssh": {
       "type": "object",
+      "markdownDescription": "SSH connection configuration for connecting to remote servers.\n\n**Default:** Connects as `root` on port `22`\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/ssh/)",
       "properties": {
         "user": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The SSH user to connect as.\n\n**Default:** `root`\n\n**Example:**\n```yaml\nssh:\n  user: app\n```"
         },
         "port": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The SSH port to connect to.\n\n**Default:** `22`\n\n**Example:**\n```yaml\nssh:\n  port: \"2222\"\n```"
         },
         "proxy": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Proxy host for SSH connections, in the form `user@host` or `user@host:port`.\n\n**Example:**\n```yaml\nssh:\n  proxy: root@proxy-host\n```"
         },
         "proxy_command": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Custom proxy command for SSH connections. Required for older versions of SSH.\n\n**Example:**\n```yaml\nssh:\n  proxy_command: \"ssh -W %h:%p user@proxy\"\n```"
         },
         "log_level": {
-          "enum": ["debug", "fatal"]
+          "enum": ["debug", "fatal"],
+          "markdownDescription": "SSH log level. Set to `debug` if you are having SSH connection issues.\n\n**Default:** `fatal`",
+          "markdownEnumDescriptions": [
+            "Show detailed SSH connection logs for troubleshooting",
+            "Only show fatal SSH errors"
+          ]
         },
         "keys_only": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Use only private keys from the `keys` and `key_data` parameters, ignoring ssh-agent identities. Useful when ssh-agent offers many identities or you need to force a single key.\n\n**Default:** `false`\n\n**Example:**\n```yaml\nssh:\n  keys_only: true\n```"
         },
         "keys": {
           "type": "array",
+          "markdownDescription": "Array of private key file paths for authentication.\n\n**Example:**\n```yaml\nssh:\n  keys:\n    - ~/.ssh/id.pem\n```",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
         "key_data": {
           "type": "array",
+          "markdownDescription": "⚠️ Array of secret names containing private keys in PEM format. Keys are loaded from the secrets file.\n\n**Example:**\n```yaml\nssh:\n  key_data:\n    - SSH_PRIVATE_KEY\n```",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
         "config": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Whether to load OpenSSH config files (`~/.ssh/config`, `/etc/ssh_config`). Set to `false` to ignore config files, or provide path(s) to specific config files.\n\n**Default:** `true`\n\n**Example:**\n```yaml\nssh:\n  config: false\n```"
         }
       }
     },
     "builder": {
       "type": "object",
+      "markdownDescription": "Configuration for building Docker images with `docker build`.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/builders/)",
       "properties": {
         "arch": {
           "anyOf": [
@@ -360,101 +436,135 @@
               "uniqueItems": true,
               "items": { "enum": ["amd64", "arm64"] }
             }
+          ],
+          "markdownDescription": "The CPU architecture(s) to build for. Can be a single value or an array.\n\n**Example:**\n```yaml\nbuilder:\n  arch:\n    - amd64\n    - arm64\n```",
+          "markdownEnumDescriptions": [
+            "Build for AMD/Intel 64-bit processors",
+            "Build for ARM 64-bit processors (Apple Silicon, AWS Graviton, etc.)"
           ]
         },
         "remote": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Connection string for a remote builder. Used for builds that don't match the local architecture.\n\n**Example:**\n```yaml\nbuilder:\n  remote: ssh://docker@docker-builder\n```"
         },
         "local": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Whether to use local builder for local architecture builds. Set to `false` to always use remote builder.\n\n**Default:** `true`\n\n**Example:**\n```yaml\nbuilder:\n  local: false\n```"
         },
         "cache": {
           "type": "object",
+          "markdownDescription": "Build cache configuration to speed up builds. Type must be `gha` (GitHub Actions) or `registry`.\n\n**Example:**\n```yaml\nbuilder:\n  cache:\n    type: registry\n    image: kamal-app-build-cache\n```",
           "properties": {
             "type": {
-              "enum": ["gha", "registry"]
+              "enum": ["gha", "registry"],
+              "markdownDescription": "The cache backend type.",
+              "markdownEnumDescriptions": [
+                "Use GitHub Actions cache (for CI/CD workflows)",
+                "Use container registry for cache storage"
+              ]
             },
             "options": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Additional cache options passed to Docker build.\n\n**Example:** `mode=max`"
             },
             "image": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Registry image name for cache storage. Only used with `registry` cache type.\n\n**Example:** `kamal-app-build-cache`"
             }
           }
         },
         "context": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Build context directory. If not set, a clean Git clone is used.\n\n**Default:** Git clone (ensures clean build)\n\n**Example:**\n```yaml\nbuilder:\n  context: .\n```"
         },
         "dockerfile": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The Dockerfile to use for building.\n\n**Default:** `Dockerfile`\n\n**Example:**\n```yaml\nbuilder:\n  dockerfile: Dockerfile.production\n```"
         },
         "target": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The build target/stage in a multi-stage Dockerfile.\n\n**Example:**\n```yaml\nbuilder:\n  target: production\n```"
         },
         "args": {
           "type": "object",
+          "markdownDescription": "Build arguments passed to `docker build` with `--build-arg`.\n\n**Example:**\n```yaml\nbuilder:\n  args:\n    RUBY_VERSION: 3.3\n    ENVIRONMENT: production\n```",
           "additionalProperties": {
             "type": "string"
           }
         },
         "secrets": {
           "type": "array",
+          "markdownDescription": "⚠️ Build secrets loaded from `.kamal/secrets` file. Use with `RUN --mount=type=secret` in Dockerfile.\n\n**Example:**\n```yaml\nbuilder:\n  secrets:\n    - GITHUB_TOKEN\n```",
           "uniqueItems": true,
           "items": {
             "type": "string"
           }
         },
         "ssh": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "SSH agent socket or keys to expose to the build for private Git repositories.\n\n**Example:**\n```yaml\nbuilder:\n  ssh: default=$SSH_AUTH_SOCK\n```"
         },
         "driver": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The build driver to use. Can also use Docker Build Cloud with `cloud org-name/builder-name`.\n\n**Default:** `docker-container`\n\n**Example:**\n```yaml\nbuilder:\n  driver: docker\n```"
         },
         "provenance": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Configure provenance attestations for the build result.\n\n**Example:**\n```yaml\nbuilder:\n  provenance: mode=max\n```"
         },
         "sbom": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Enable Software Bill of Materials (SBOM) generation for the build.\n\n**Example:**\n```yaml\nbuilder:\n  sbom: true\n```"
         }
       }
     },
     "accessories": {
       "type": "object",
+      "markdownDescription": "Additional services to run alongside your application (databases, Redis, etc.). Managed separately from the main service without zero-downtime deployments.\n\n**Commands:** `kamal accessory boot <name>`, `kamal accessory --help`\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/accessories/)",
       "additionalProperties": {
         "type": "object",
         "allOf": [
           {
             "properties": {
               "service": {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "Service name used in the service label.\n\n**Default:** `<main-service>-<accessory>`\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    service: mysql\n```"
               },
               "image": {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "The Docker image to use for this accessory.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    image: mysql:8.0\n```"
               },
               "registry": {
-                "$ref": "#/definitions/registry"
+                "$ref": "#/definitions/registry",
+                "markdownDescription": "Custom registry configuration for this accessory. Defaults to Docker Hub if not specified."
               },
               "cmd": {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "Custom command to run in the container.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    cmd: bin/mysqld\n```"
               },
               "port": {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "Port mapping in Docker format. ⚠️ Be careful about security when exposing ports publicly.\n\n**Format:** `host:container` or `ip:host:container`\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    port: \"127.0.0.1:3306:3306\"\n```"
               },
               "labels": {
                 "type": "object",
+                "markdownDescription": "Docker labels for this accessory container.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    labels:\n      app: myapp\n```",
                 "additionalProperties": {
                   "type": "string"
                 }
               },
               "options": {
                 "type": "object",
+                "markdownDescription": "Additional Docker run options passed as `--<name> <value>`.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    options:\n      restart: always\n      cpus: 2\n```",
                 "additionalProperties": true
               },
               "env": {
-                "$ref": "#/definitions/env"
+                "$ref": "#/definitions/env",
+                "markdownDescription": "Environment variables for this accessory."
               },
               "files": {
                 "type": "array",
+                "markdownDescription": "Files to mount into the container. Files are uploaded from local repo to host, then mounted. ERB files are evaluated before copying.\n\n**Format:** `local:remote` or `local:remote:options`\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    files:\n      - config/my.cnf:/etc/mysql/my.cnf\n      - config/secret.key:/etc/mysql/secret.key:ro\n```",
                 "uniqueItems": true,
                 "items": {
                   "type": "string"
@@ -462,6 +572,7 @@
               },
               "directories": {
                 "type": "array",
+                "markdownDescription": "Directories to mount into the container. Created on the host before mounting.\n\n**Format:** `local:remote` or `local:remote:options`\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    directories:\n      - mysql-data:/var/lib/mysql\n      - mysql-logs:/var/log/mysql:ro\n```",
                 "uniqueItems": true,
                 "items": {
                   "type": "string"
@@ -469,16 +580,19 @@
               },
               "volumes": {
                 "type": "array",
+                "markdownDescription": "Additional volumes to mount. Not created or copied before mounting.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    volumes:\n      - /path/to/mysql-logs:/var/log/mysql\n```",
                 "uniqueItems": true,
                 "items": {
                   "type": "string"
                 }
               },
               "network": {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "The Docker network to attach the accessory to.\n\n**Default:** `kamal`\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    network: custom\n```"
               },
               "proxy": {
-                "$ref": "#/definitions/proxy"
+                "$ref": "#/definitions/proxy",
+                "markdownDescription": "Run this accessory behind kamal-proxy for HTTP/HTTPS access."
               }
             }
           },
@@ -487,7 +601,8 @@
               {
                 "properties": {
                   "host": {
-                    "type": "string"
+                    "type": "string",
+                    "markdownDescription": "Single host to run this accessory on.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    host: mysql-db1\n```"
                   }
                 },
                 "required": ["host"]
@@ -496,6 +611,7 @@
                 "properties": {
                   "hosts": {
                     "type": "array",
+                    "markdownDescription": "Multiple hosts to run this accessory on.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    hosts:\n      - mysql-db1\n      - mysql-db2\n```",
                     "uniqueItems": true,
                     "items": { "type": "string" }
                   }
@@ -505,7 +621,8 @@
               {
                 "properties": {
                   "role": {
-                    "type": "string"
+                    "type": "string",
+                    "markdownDescription": "Run on servers in this role.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    role: mysql\n```"
                   }
                 },
                 "required": ["role"]
@@ -514,6 +631,7 @@
                 "properties": {
                   "roles": {
                     "type": "array",
+                    "markdownDescription": "Run on servers in these roles.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    roles:\n      - mysql\n      - database\n```",
                     "uniqueItems": true,
                     "items": { "type": "string" }
                   }
@@ -523,7 +641,8 @@
               {
                 "properties": {
                   "tag": {
-                    "type": "string"
+                    "type": "string",
+                    "markdownDescription": "Run on servers with this tag.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    tag: writer\n```"
                   }
                 },
                 "required": ["tag"]
@@ -532,6 +651,7 @@
                 "properties": {
                   "tags": {
                     "type": "array",
+                    "markdownDescription": "Run on servers with these tags.\n\n**Example:**\n```yaml\naccessories:\n  mysql:\n    tags:\n      - writer\n      - reader\n```",
                     "uniqueItems": true,
                     "items": { "type": "string" }
                   }
@@ -548,23 +668,28 @@
     },
     "boot": {
       "type": "object",
+      "markdownDescription": "Control how containers are booted during deployment to avoid restarting all hosts simultaneously.\n\n**Default:** Boot all hosts in parallel\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/booting/)",
       "properties": {
         "limit": {
           "anyOf": [
             { "type": "integer" },
             { "type": "string", "pattern": "^\\d+%$" }
-          ]
+          ],
+          "markdownDescription": "Number or percentage of hosts to boot at a time.\n\n**Format:** Integer (e.g., `3`) or percentage string (e.g., `25%`)\n\n**Example:**\n```yaml\nboot:\n  limit: 25%\n```"
         },
         "wait": {
-          "type": "integer"
+          "type": "integer",
+          "markdownDescription": "Seconds to wait between booting each group of hosts.\n\n**Example:**\n```yaml\nboot:\n  wait: 10\n```"
         }
       }
     },
     "logging": {
-      "$ref": "#/definitions/logging"
+      "$ref": "#/definitions/logging",
+      "markdownDescription": "Docker logging configuration for containers.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/logging/)"
     },
     "aliases": {
       "type": "object",
+      "markdownDescription": "Command aliases for shortcuts to common Kamal operations. Alias names can only contain lowercase letters, numbers, dashes, and underscores.\n\n**Example:**\n```yaml\naliases:\n  console: app exec -i --reuse \"bin/rails console\"\n  uname: app exec -p -q -r web \"uname -a\"\n```\n\n**Usage:** `kamal console`\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/aliases/)",
       "additionalProperties": {
         "type": "string"
       }

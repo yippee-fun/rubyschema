@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/i18n-tasks.json",
   "title": "I18n-tasks config",
+  "markdownDescription": "Configuration for i18n-tasks, a gem for managing translations in Ruby i18n projects. Helps find missing and unused translations, pre-fill keys, and maintain translation files. Typically located at `config/i18n-tasks.yml`.\n\n[i18n-tasks Documentation](https://github.com/glebm/i18n-tasks)",
   "definitions": {
     "erb": {
       "type": "string",
@@ -11,10 +12,12 @@
       "type": "object",
       "properties": {
         "backend": {
-          "const": "google"
+          "const": "google",
+          "markdownDescription": "Use Google Translate API for automatic translation.\n\n[Get API Key](https://console.cloud.google.com/apis/credentials)"
         },
         "google_translate_api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Google Translate API key. Get it from [Google API Console](https://console.cloud.google.com/apis/credentials).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `GOOGLE_TRANSLATE_API_KEY`\n\n**Example:**\n```yaml\ngoogle_translate_api_key: <%= ENV['GOOGLE_TRANSLATE_API_KEY'] %>\n```"
         }
       },
       "additionalProperties": false,
@@ -24,34 +27,42 @@
       "type": "object",
       "properties": {
         "backend": {
-          "const": "deepl"
+          "const": "deepl",
+          "markdownDescription": "Use DeepL Pro API for high-quality automatic translation.\n\n[Get API Key](https://www.deepl.com/pro)"
         },
         "deepl_api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "DeepL Pro API authentication key. Get it from [DeepL Pro](https://www.deepl.com/pro).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `DEEPL_AUTH_KEY`\n\n**Example:**\n```yaml\ndeepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```"
         },
         "deepl_host": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "DeepL API host URL. Use this for DeepL Pro API servers or custom endpoints.\n\n**Env Var:** `DEEPL_HOST`\n\n**Default:** `https://api.deepl.com` (Free) or `https://api-free.deepl.com` (Pro)\n\n**Example:**\n```yaml\ndeepl_host: https://api.deepl.com\n```"
         },
         "deepl_version": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "DeepL API version to use.\n\n**Env Var:** `DEEPL_VERSION`\n\n**Default:** `v2`"
         },
         "deepl_glossary_ids": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "List of DeepL glossary IDs to use for translations. Glossaries ensure consistent terminology across translations.\n\n**Example:**\n```yaml\ndeepl_glossary_ids:\n  - f28106eb-0e06-489e-82c6-8215d6f95089\n  - 2c6415be-1852-4f54-9e1b-d800463496b4\n```\n\n[DeepL Glossaries Documentation](https://www.deepl.com/docs-api/glossaries)",
           "items": { "type": "string" }
         },
         "deepl_options": {
           "type": "object",
+          "markdownDescription": "Additional options for DeepL API calls.",
           "properties": {
             "formality": {
-              "anyOf": [{ "enum": ["prefer_less"] }, { "type": "string" }]
+              "anyOf": [{ "enum": ["prefer_less"] }, { "type": "string" }],
+              "markdownDescription": "Control formality level of translations.\n\n**Options:**\n- `prefer_less` - Less formal\n- `prefer_more` - More formal\n- `default` - Default formality\n\n**Example:**\n```yaml\nformality: prefer_less\n```"
             }
           }
         },
         "deepl_locale_aliases": {
           "type": "object",
           "propertyNames": { "type": "string" },
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": { "type": "string" },
+          "markdownDescription": "Map internal locale codes to DeepL-supported locale codes. Useful when your app uses simplified locale codes.\n\n**Example:**\n```yaml\ndeepl_locale_aliases:\n  en: en-us  # Map 'en' to 'en-us'\n  pt: pt-br  # Map 'pt' to 'pt-br'\n```"
         }
       },
       "additionalProperties": false,
@@ -61,10 +72,12 @@
       "type": "object",
       "properties": {
         "backend": {
-          "const": "yandex"
+          "const": "yandex",
+          "markdownDescription": "Use Yandex Translate API for automatic translation.\n\n[Get API Key](https://tech.yandex.com/translate)"
         },
         "yandex_api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Yandex Translate API key. Get it from [Yandex](https://tech.yandex.com/translate).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `YANDEX_API_KEY`\n\n**Example:**\n```yaml\nyandex_api_key: <%= ENV['YANDEX_API_KEY'] %>\n```"
         }
       },
       "additionalProperties": false,
@@ -74,13 +87,16 @@
       "type": "object",
       "properties": {
         "backend": {
-          "const": "openai"
+          "const": "openai",
+          "markdownDescription": "Use OpenAI API for AI-powered translation.\n\n[Get API Key](https://platform.openai.com/api-keys)"
         },
         "openai_api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "OpenAI API key. Get it from [OpenAI](https://platform.openai.com/api-keys).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `OPENAI_API_KEY`\n\n**Example:**\n```yaml\nopenai_api_key: <%= ENV['OPENAI_API_KEY'] %>\n```"
         },
         "openai_model": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "OpenAI model to use for translations.\n\n**Env Var:** `OPENAI_MODEL`\n\n**Default:** `gpt-3.5-turbo`\n\n**Example:**\n```yaml\nopenai_model: gpt-4\n```"
         }
       },
       "additionalProperties": false,
@@ -90,16 +106,20 @@
       "type": "object",
       "properties": {
         "backend": {
-          "const": "watsonx"
+          "const": "watsonx",
+          "markdownDescription": "Use IBM watsonx AI for translation.\n\n[Get Started with watsonx](https://www.ibm.com/watsonx)"
         },
         "watsonx_api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "IBM watsonx API key. Get it from [IBM watsonx](https://www.ibm.com/watsonx).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `WATSONX_API_KEY`\n\n**Example:**\n```yaml\nwatsonx_api_key: <%= ENV['WATSONX_API_KEY'] %>\n```"
         },
         "watsonx_project_id": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "IBM watsonx project ID. Required for watsonx API authentication.\n\n**Env Var:** `WATSONX_PROJECT_ID`\n\n**Example:**\n```yaml\nwatsonx_project_id: <%= ENV['WATSONX_PROJECT_ID'] %>\n```"
         },
         "watsonx_model": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "IBM watsonx model to use for translations.\n\n**Env Var:** `WATSONX_MODEL`\n\n**Example:**\n```yaml\nwatsonx_model: ibm/granite-13b-instruct-v2\n```"
         }
       },
       "additionalProperties": false,
@@ -108,24 +128,28 @@
   },
   "properties": {
     "base_locale": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "The base (default) locale for your application. This is the locale from which translations will be derived.\n\n**Default:** `en`\n\n**Example:**\n```yaml\nbase_locale: en\n```"
     },
     "locales": {
       "type": "array",
       "uniqueItems": true,
+      "markdownDescription": "List of supported locales for translation. By default, i18n-tasks infers locales from the paths to data files.\n\n**Example:**\n```yaml\nlocales: [en, es, fr, de]\n```",
       "items": {
         "type": "string"
       }
     },
     "data": {
       "type": "object",
+      "markdownDescription": "Configuration for reading and writing locale data files. Supports multiple file patterns and organization strategies.",
       "properties": {
         "adapter": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Data adapter for reading/writing translation files. The default adapter supports YAML and JSON files.\n\n**Default:** `file_system`\n\nFor custom storage (e.g., database, MongoDB), implement a custom adapter."
         },
         "read": {
           "type": "array",
-          "markdownDescription": "Locale files or `Dir.glob` patterns where translations are read from:",
+          "markdownDescription": "Locale files or `Dir.glob` patterns where translations are read from. Supports wildcards for scanning multiple directories.\n\n**Default:** `['config/locales/%{locale}.yml']`\n\n**Example:**\n```yaml\nread:\n  - 'config/locales/**/%{locale}.yml'\n  - 'config/locales/%{locale}.yml'\n```",
           "uniqueItems": true,
           "items": {
             "type": "string"
@@ -134,6 +158,7 @@
         "write": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "File patterns for writing translations. Supports key-based routing to organize translations into multiple files.\n\n**Routers:**\n- `pattern_router` - Routes keys based on patterns (e.g., `models.*` → `models.%{locale}.yml`)\n- `conservative_router` (default) - Keeps keys where found\n- `isolating_router` - Each YAML file is independent with similar keys\n\n**Example:**\n```yaml\nwrite:\n  - ['{models,views}.*', 'config/locales/\\\\1.%{locale}.yml']\n  - 'config/locales/%{locale}.yml'\n```",
           "items": {
             "anyOf": [
               { "type": "string" },
@@ -150,12 +175,14 @@
         "external": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "External translation file patterns (e.g., from gems). These are read-only and won't be modified by i18n-tasks.\n\n**Example:**\n```yaml\nexternal:\n  - 'vendor/gems/**/config/locales/%{locale}.yml'\n```",
           "items": {
             "type": "string"
           }
         },
         "yaml": {
           "type": "object",
+          "markdownDescription": "YAML-specific write configuration for controlling file formatting.",
           "properties": {
             "write": {
               "type": "object",
@@ -165,7 +192,7 @@
                     { "type": "integer", "minimum": -1 },
                     { "$ref": "#/definitions/erb" }
                   ],
-                  "markdownDescription": "Set to `-1` in order to prevent wrapping lines at 80 characters"
+                  "markdownDescription": "Maximum line width for YAML values before wrapping. Set to `-1` to prevent wrapping long lines at 80 characters.\n\n**Default:** `80`\n\n**Example:**\n```yaml\nyaml:\n  write:\n    line_width: -1  # Never wrap lines\n```"
                 }
               },
               "additionalProperties": false
@@ -175,25 +202,30 @@
         },
         "json": {
           "type": "object",
+          "markdownDescription": "JSON-specific write configuration for controlling file formatting.",
           "properties": {
             "write": {
               "type": "object",
               "properties": {
                 "indent": {
                   "type": "string",
-                  "default": "  "
+                  "default": "  ",
+                  "markdownDescription": "Indentation string for nested JSON objects.\n\n**Default:** `\"  \"` (2 spaces)"
                 },
                 "space": {
                   "type": "string",
-                  "default": " "
+                  "default": " ",
+                  "markdownDescription": "Space character after colons in JSON.\n\n**Default:** `\" \"` (1 space)"
                 },
                 "object_nl": {
                   "type": "string",
-                  "default": "\n"
+                  "default": "\n",
+                  "markdownDescription": "Newline character after JSON objects.\n\n**Default:** `\"\\n\"`"
                 },
                 "array_nl": {
                   "type": "string",
-                  "default": "\n"
+                  "default": "\n",
+                  "markdownDescription": "Newline character after JSON arrays.\n\n**Default:** `\"\\n\"`"
                 }
               },
               "additionalProperties": false
@@ -206,10 +238,12 @@
     },
     "search": {
       "type": "object",
+      "markdownDescription": "Configuration for scanning code to find translation key usages. i18n-tasks uses AST scanners for `.rb` and `.html.erb` files, and regexp scanners for other files.",
       "properties": {
         "paths": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "Directories or file patterns to search for translation key usages.\n\n**Default:** `['app/']`\n\n**Example:**\n```yaml\npaths:\n  - app/\n  - lib/\n  - config/\n```",
           "items": {
             "type": "string"
           }
@@ -217,6 +251,7 @@
         "relative_roots": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "Directories where relative keys (e.g., `t('.title')`) are resolved relative to the file path.\n\n**Example:**\n```yaml\nrelative_roots:\n  - app/views\n  - app/controllers\n```\n\nFor `app/views/users/show.html.erb`, the key `t('.title')` resolves to `users.show.title`.",
           "items": {
             "type": "string"
           }
@@ -224,13 +259,14 @@
         "relative_exclude_method_name_paths": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "Paths where method names should be excluded from relative key resolution. Useful for preventing false positives in certain file patterns.",
           "items": {
             "type": "string"
           }
         },
         "exclude": {
           "type": "array",
-          "markdownDescription": "Files or `File.fnmatch` patterns to exclude from search. Some files are always excluded regardless of this setting:",
+          "markdownDescription": "Files or `File.fnmatch` patterns to exclude from search. Some files are always excluded regardless (e.g., `.git/`, `node_modules/`).\n\n**Example:**\n```yaml\nexclude:\n  - app/assets/**\n  - vendor/**\n  - spec/**\n```",
           "uniqueItems": true,
           "items": {
             "type": "string"
@@ -238,25 +274,28 @@
         },
         "only": {
           "type": "array",
-          "markdownDescription": "Alternatively, the only files or `File.fnmatch patterns` to search in `paths`. If specified, this settings takes priority over `exclude`, but `exclude` still applies.",
+          "markdownDescription": "The only files or `File.fnmatch` patterns to search in `paths`. If specified, this takes priority over `exclude`, though `exclude` still applies.\n\n**Example:**\n```yaml\nonly:\n  - '*.rb'\n  - '*.erb'\n```",
           "uniqueItems": true,
           "items": {
             "type": "string"
           }
         },
         "strict": {
-          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable strict mode for dynamic key inference. When `false`, dynamic keys like `t(\"cats.#{cat}.name\")` are partially recognized (wildcards for interpolated parts).\n\n**Default:** `true` (strict)\n\n- `true` - Only static keys are recognized\n- `false` - Dynamic keys are inferred with wildcards\n\n**Example:**\n```yaml\nstrict: false\n```"
         },
         "prism": {
           "anyOf": [
             { "enum": ["rails", "ruby"] },
             { "$ref": "#/definitions/erb" }
-          ]
+          ],
+          "markdownDescription": "Use Prism-based scanner for Ruby and ERB files (experimental).\n\n**Modes:**\n- `rails` - Handles Rails-specific contexts (controllers, `before_action`, model translations)\n- `ruby` - Basic Ruby parsing only\n\n**Example:**\n```yaml\nprism: rails\n```\n\nPlease run `i18n-tasks check-prism` to help test this feature."
         }
       },
       "additionalProperties": false
     },
     "translation": {
+      "markdownDescription": "Translation backend configuration for automatic translation of missing keys. Use `i18n-tasks translate-missing` to translate.\n\n**Available backends:**\n- `google` - Google Translate API\n- `deepl` - DeepL Pro API (recommended for quality)\n- `yandex` - Yandex Translate API\n- `openai` - OpenAI API\n- `watsonx` - IBM watsonx AI\n\n**Example:**\n```yaml\ntranslation:\n  backend: deepl\n  deepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```",
       "oneOf": [
         { "$ref": "#/definitions/google" },
         { "$ref": "#/definitions/deepl" },

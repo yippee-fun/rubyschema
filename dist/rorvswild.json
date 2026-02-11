@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rorvswild.json",
   "title": "RoRvsWild configuration",
+  "markdownDescription": "**RoRvsWild** is a performance and exception monitoring service for Ruby on Rails applications. It provides request tracking, background job monitoring, exception tracking, and server metrics.\n\nThis gem has **two modes:**\n- **Development mode** - Free local profiling with no account required (accessible at `http://localhost:3000/rorvswild`)\n- **Production mode** - Full monitoring with 30-day trace retention, notifications, and dashboards (requires API key from [rorvswild.com](https://www.rorvswild.com))\n\n**Configuration file:** `config/rorvswild.yml`\n\n[Documentation](https://www.rorvswild.com/docs) | [GitHub](https://github.com/BaseSecrete/rorvswild)",
   "type": "object",
   "definitions": {
     "constant": {
@@ -11,7 +12,8 @@
     "environment": {
       "properties": {
         "api_key": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Your RoRvsWild API key for authenticating with the monitoring service. Get your API key by creating an app on [rorvswild.com](https://www.rorvswild.com).\n\n**Required for production/staging monitoring.**\n\nRun `rorvswild-install YOUR_API_KEY` to automatically configure your application.\n\n**⚠️ Security:** Store this securely using environment variables (e.g., `ENV['RORVSWILD_API_KEY']`) instead of committing it directly.\n\n[Installation Guide](https://www.rorvswild.com/docs/get-started/installation)"
         },
         "ignore_requests": {
           "type": "array",
@@ -20,21 +22,24 @@
             "type": "string",
             "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*#.+$"
           },
-          "examples": [["HeartbeatController#show"]]
+          "examples": [["HeartbeatController#show"]],
+          "markdownDescription": "List of controller actions to exclude from monitoring. Use this to skip health checks, heartbeat endpoints, or internal requests that would clutter your metrics.\n\n**Format:** `ControllerName#action_name`\n\n**Examples:**\n\n```yaml\nignore_requests:\n  - HeartbeatController#show\n  - HealthController#index\n  - !ruby/regexp /SecretController/  # Ignore entire controller (YAML only)\n```\n\n**Via initializer:**\n\n```ruby\nRorVsWild.start(\n  api_key: ENV['RORVSWILD_API_KEY'],\n  ignore_requests: ['HeartbeatController#show', /SecretController/]\n)\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
         },
         "ignore_jobs": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "$ref": "#/definitions/constant"
-          }
+          },
+          "markdownDescription": "List of background job classes to exclude from monitoring. Useful for skipping frequent maintenance jobs or internal tasks.\n\n**Format:** Ruby constant names (class names)\n\n**Examples:**\n\n```yaml\nignore_jobs:\n  - SecretJob\n  - CleanupJob\n  - !ruby/regexp /Secret::/  # Ignore entire namespace (YAML only)\n```\n\n**Via initializer:**\n\n```ruby\nRorVsWild.start(\n  api_key: ENV['RORVSWILD_API_KEY'],\n  ignore_jobs: ['SecretJob', /Secret::/]\n)\n```\n\nSupports background job frameworks: ActiveJob, Sidekiq, Resque, DelayedJob.\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
         },
         "ignore_exceptions": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "$ref": "#/definitions/constant"
-          }
+          },
+          "markdownDescription": "List of exception classes to exclude from error tracking. Use this to ignore expected errors or reduce noise from known issues.\n\n**Format:** Ruby exception class names\n\n**Common use cases:**\n- Ignore 404 errors: `ActionController::RoutingError`\n- Skip validation errors: `ActiveRecord::RecordInvalid`\n- Filter business exceptions: Custom error classes\n\n**Examples:**\n\n```yaml\nignore_exceptions:\n  - ActionController::RoutingError  # 404 errors\n  - ActionController::InvalidAuthenticityToken  # CSRF failures\n  - ActiveRecord::RecordNotFound\n  - ZeroDivisionError\n  - !ruby/regexp /Secret::/  # Ignore namespace (YAML only)\n```\n\n**Via initializer:**\n\n```ruby\nRorVsWild.start(\n  api_key: ENV['RORVSWILD_API_KEY'],\n  ignore_exceptions: ['ActionController::RoutingError', /Secret::/]\n)\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
         },
         "ignore_plugins": {
           "type": "array",
@@ -54,7 +59,24 @@
               "Resque",
               "Sidekiq"
             ]
-          }
+          },
+          "markdownDescription": "Disable monitoring for specific RoRvsWild plugins. Each plugin instruments a different part of your stack.\n\n**Available plugins:**\n\n- **ActionController** - HTTP request/response tracking\n- **ActionMailer** - Email delivery monitoring\n- **ActionView** - Template rendering performance\n- **ActiveJob** - Background job execution (generic)\n- **ActiveRecord** - Database query tracking\n- **DelayedJob** - DelayedJob background processor\n- **Elasticsearch** - Elasticsearch query monitoring\n- **Mongo** - MongoDB query tracking\n- **NetHttp** - HTTP client request monitoring\n- **Redis** - Redis command tracking\n- **Resque** - Resque background processor\n- **Sidekiq** - Sidekiq background processor\n\n**Example - Disable Sidekiq monitoring:**\n\n```yaml\nignore_plugins:\n  - Sidekiq\n```\n\n**Example - Disable external HTTP tracking:**\n\n```yaml\nignore_plugins:\n  - NetHttp\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
+        },
+        "job_sampling_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "markdownDescription": "Sampling rate for background job monitoring (0.0 to 1.0). Use this to reduce monitoring costs for high-volume applications by only tracking a percentage of jobs.\n\n**⚠️ Warning:** Sampling may cause you to miss relevant performance issues or errors.\n\n**Values:**\n- `1.0` = Monitor 100% of jobs (default, no sampling)\n- `0.5` = Monitor 50% of jobs\n- `0.25` = Monitor 25% of jobs\n- `0.1` = Monitor 10% of jobs\n\n**Example:**\n\n```yaml\njob_sampling_rate: 0.5  # Track 50% of jobs\n```\n\n**Requires:** RoRvsWild gem version >= 1.7.0\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
+        },
+        "request_sampling_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "markdownDescription": "Sampling rate for HTTP request monitoring (0.0 to 1.0). Use this to reduce monitoring costs for high-traffic applications by only tracking a percentage of requests.\n\n**⚠️ Warning:** Sampling may cause you to miss relevant performance issues or errors.\n\n**Values:**\n- `1.0` = Monitor 100% of requests (default, no sampling)\n- `0.5` = Monitor 50% of requests\n- `0.25` = Monitor 25% of requests\n- `0.1` = Monitor 10% of requests\n\n**Example:**\n\n```yaml\nrequest_sampling_rate: 0.25  # Track 25% of requests\n```\n\n**Requires:** RoRvsWild gem version >= 1.7.0\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
+        },
+        "logger": {
+          "type": "string",
+          "markdownDescription": "Custom log file path for RoRvsWild's internal logging. By default, RoRvsWild uses `Rails.logger` or standard output.\n\n**Use cases:**\n- Isolate RoRvsWild logs from application logs\n- Debug monitoring issues separately\n- Route monitoring logs to a specific destination\n\n**Example - File path:**\n\n```yaml\nlogger: log/rorvswild.log\n```\n\n**Via initializer (for custom loggers like Syslog):**\n\n```ruby\nRorVsWild.start(\n  api_key: ENV['RORVSWILD_API_KEY'],\n  logger: Logger::Syslog.new\n)\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
         }
       }
     }

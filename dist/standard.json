@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/standard.json",
   "title": "Standard configuration",
+  "markdownDescription": "**Standard Ruby** is Ruby's bikeshed-proof linter and formatter. It's a RuboCop-based tool that provides an **unconfigurable configuration** for consistent Ruby code style. Standard eliminates debates about code formatting by enforcing a single, agreed-upon style across your codebase.\n\n[GitHub](https://github.com/standardrb/standard) | [Documentation](https://github.com/standardrb/standard/wiki)",
   "type": "object",
   "definitions": {
     "standardRailsPlugin": {
@@ -28,14 +29,16 @@
   "properties": {
     "fix": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "markdownDescription": "Automatically fix violations when possible (safe corrections only). When enabled, Standard will apply auto-corrections to your code during the linting process.\n\n**Default:** `false`\n\n**CLI equivalent:** `standardrb --fix`\n\nFor unsafe auto-fixes (changes that might alter behavior), use `standardrb --fix-unsafely` via the command line.\n\n[Documentation](https://github.com/standardrb/standard/wiki/Fixing-Errors)"
     },
     "parallel": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "markdownDescription": "Run Standard checks in parallel using multiple CPU cores to speed up linting of large codebases. This can significantly reduce execution time on multi-core systems.\n\n**Default:** `false`\n\n**CLI equivalent:** `standardrb --parallel`\n\n[Documentation](https://github.com/standardrb/standard)"
     },
     "format": {
-      "markdownDescription": "Rubocop formatter.\n\n[Rubocop Docs](https://docs.rubocop.org/rubocop/formatters.html)",
+      "markdownDescription": "Output formatter for displaying linting results. Choose from RuboCop's built-in formatters to customize how violations are reported.\n\n**Default:** `Standard::Formatter` (Standard's custom formatter, not configurable via YAML)\n\n**CLI equivalent:** `standardrb --format <formatter>`\n\n[RuboCop Formatters Documentation](https://docs.rubocop.org/rubocop/formatters.html)",
       "enum": [
         "simple",
         "progress",
@@ -54,14 +57,35 @@
         "markdown",
         "tap",
         "github"
+      ],
+      "markdownEnumDescriptions": [
+        "Simple text output with file names and offense descriptions",
+        "Progress bar output showing files checked (default RuboCop formatter)",
+        "Auto-generate RuboCop configuration to disable all detected cops",
+        "Clang-style output with caret indicators pointing to violations",
+        "Progress bar with detailed statistics (requires fuubar gem)",
+        "Pac-Man themed progress animation (fun alternative)",
+        "Emacs-compatible output format for integration with Emacs editor",
+        "Minimal output - only shows summary statistics",
+        "List files with violations (one per line)",
+        "JSON format for programmatic consumption and tool integration",
+        "JUnit XML format for CI/CD systems",
+        "Groups violations by offense type with counts",
+        "Shows worst offenders first - most violations to least",
+        "HTML report with styled output (outputs to HTML file)",
+        "Markdown format with code blocks and headers",
+        "TAP (Test Anything Protocol) format for test harness integration",
+        "GitHub Actions format with inline annotations on pull requests"
       ]
     },
     "ruby_version": {
-      "type": "number"
+      "type": "number",
+      "markdownDescription": "Minimum Ruby version to target for syntax and feature compatibility. Standard will only flag code that's incompatible with this version.\n\n**Default:** Automatically detected from:\n1. `.ruby-version` file\n2. `Gemfile.lock` (from `RUBY VERSION` metadata)\n3. `.tool-versions` file (asdf/mise)\n4. Current running Ruby version (`RUBY_VERSION`)\n\n**Example:** `3.0` or `2.7`\n\n[Documentation](https://github.com/standardrb/standard)"
     },
     "default_ignores": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "markdownDescription": "Use Standard's opinionated default ignore patterns for common generated files and vendor directories. When `true`, automatically excludes:\n\n```yaml\n- vendor/**/*\n- node_modules/**/*\n- .git/**/*\n- tmp/**/*\n- log/**/*\n- public/**/*\n- db/schema.rb\n- bin/**/*\n```\n\nSet to `false` to lint everything (not recommended for most projects).\n\n**Default:** `true`\n\n[Documentation](https://github.com/standardrb/standard)"
     },
     "plugins": {
       "type": "array",
@@ -72,14 +96,17 @@
           { "$ref": "#/definitions/standardRailsPlugin" },
           { "$ref": "#/definitions/otherPlugin" }
         ]
-      }
+      },
+      "markdownDescription": "Standard plugins to load for framework-specific or community rules. Plugins extend Standard with additional linting rules tailored to specific contexts.\n\n**Available official plugins:**\n\n- **`standard-rails`** - Rails best practices and conventions\n- **`standard-sorbet`** - Sorbet type checker integration\n- **`standard-thread_safety`** - Thread safety checks\n- **`standard-custom`** - Template for creating custom plugins\n\n**Examples:**\n\n```yaml\nplugins:\n  - standard-rails\n  - standard-sorbet\n```\n\n```yaml\nplugins:\n  - standard-rails:\n      target_rails_version: 7.0\n```\n\n[Plugin Documentation](https://github.com/standardrb/standard/wiki/Plugins)"
     },
     "extend_config": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Path to an additional RuboCop configuration file to merge with Standard's base config. Use this to layer custom RuboCop rules on top of Standard's defaults.\n\n**⚠️ Warning:** This defeats Standard's purpose of being unconfigurable. Only use if you absolutely need to customize specific RuboCop settings beyond Standard's scope.\n\n**Example:**\n\n```yaml\nextend_config: .rubocop_custom.yml\n```\n\nThe referenced file can contain any valid RuboCop configuration.\n\n[RuboCop Configuration Documentation](https://docs.rubocop.org/rubocop/configuration.html)"
     },
     "ignore": {
       "type": "array",
       "uniqueItems": true,
+      "markdownDescription": "File patterns to exclude from linting, or specific cops to disable for specific file patterns. Supports glob patterns and selective cop disabling.\n\n**Two formats:**\n\n**1. Ignore entire files/directories:**\n\n```yaml\nignore:\n  - 'app/models/legacy/**/*'\n  - 'spec/fixtures/**/*'\n  - 'config/deploy.rb'\n```\n\n**2. Ignore specific cops for specific files:**\n\n```yaml\nignore:\n  - 'db/schema.rb':\n    - Style/StringLiterals\n  - 'test/**/*':\n    - Metrics/MethodLength\n    - Metrics/BlockLength\n```\n\nGlob patterns follow Ruby's `File.fnmatch` syntax (`*`, `**`, `?`, `[]`).\n\n**Note:** Patterns in this list are **added to** `default_ignores` (unless `default_ignores: false`).\n\n[Documentation](https://github.com/standardrb/standard/wiki/Ignoring-Files)",
       "items": {
         "oneOf": [
           { "type": "string" },
@@ -129,6 +156,7 @@
                   "Layout/EmptyLineAfterGuardClause",
                   "Layout/EmptyLineAfterMagicComment",
                   "Layout/EmptyLineAfterMultilineCondition",
+                  "Layout/EmptyLinesAfterModuleInclusion",
                   "Layout/EmptyLineBetweenDefs",
                   "Layout/EmptyLines",
                   "Layout/EmptyLinesAroundAccessModifier",
@@ -406,6 +434,7 @@
                   "Style/ArrayCoercion",
                   "Style/ArrayFirstLast",
                   "Style/ArrayIntersect",
+                  "Style/ArrayIntersectWithSingleElement",
                   "Style/ArrayJoin",
                   "Style/AsciiComments",
                   "Style/Attr",
@@ -457,6 +486,7 @@
                   "Style/EachWithObject",
                   "Style/EmptyBlockParameter",
                   "Style/EmptyCaseCondition",
+                  "Style/EmptyClassDefinition",
                   "Style/EmptyElse",
                   "Style/EmptyHeredoc",
                   "Style/EmptyLambdaParameter",
@@ -493,6 +523,7 @@
                   "Style/HashExcept",
                   "Style/HashFetchChain",
                   "Style/HashLikeCase",
+                  "Style/HashLookupMethod",
                   "Style/HashSlice",
                   "Style/HashSyntax",
                   "Style/HashTransformKeys",
@@ -533,6 +564,7 @@
                   "Style/MixinGrouping",
                   "Style/MixinUsage",
                   "Style/ModuleFunction",
+                  "Style/ModuleMemberExistenceCheck",
                   "Style/MultilineBlockChain",
                   "Style/MultilineIfModifier",
                   "Style/MultilineIfThen",
@@ -547,6 +579,7 @@
                   "Style/NegatedIfElseCondition",
                   "Style/NegatedUnless",
                   "Style/NegatedWhile",
+                  "Style/NegativeArrayIndex",
                   "Style/NestedFileDirname",
                   "Style/NestedModifier",
                   "Style/NestedParenthesizedCalls",
@@ -621,6 +654,7 @@
                   "Style/RescueStandardError",
                   "Style/ReturnNil",
                   "Style/ReturnNilInPredicateMethodDefinition",
+                  "Style/ReverseFind",
                   "Style/SafeNavigation",
                   "Style/SafeNavigationChainLength",
                   "Style/Sample",

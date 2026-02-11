@@ -2,24 +2,29 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/sidekiq.json",
   "title": "Sidekiq configuration",
-  "markdownDescription": "[Sidekiq Docs](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
+  "markdownDescription": "Configuration for Sidekiq, a background job processor for Ruby.\n\nSidekiq uses Redis to store job and queue information. This configuration file allows you to control concurrency, queue priorities, and environment-specific settings.\n\n[Sidekiq Configuration Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
   "definitions": {
     "environment": {
+      "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).",
       "properties": {
         "concurrency": {
           "type": "integer",
+          "markdownDescription": "Number of threads Sidekiq will use to process jobs concurrently.\n\nDefault: `5`\n\n**Important:** Your database connection pool should be set to at least this value in `config/database.yml`.\n\nExample: `pool: <%= ENV['RAILS_MAX_THREADS'] || 10 %>`\n\n**Note:** Concurrency higher than 50 is not recommended.\n\n[Concurrency Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#concurrency)",
           "minimum": 0
         },
         "queues": {
           "type": "array",
+          "markdownDescription": "List of queues to process, optionally with weights for priority control.\n\nQueues can be specified as:\n- **String** (equal priority): `\"default\"`\n- **Array with weight** (weighted priority): `[\"critical\", 2]` (checked twice as often)\n\n**Execution order:**\n- Without weights: Jobs in earlier queues are processed first (strict priority)\n- With weights: Queues are checked proportionally to their weights (random priority)\n\n**Example - Strict priority (critical processed first):**\n```yaml\nqueues:\n  - critical\n  - default\n  - low\n```\n\n**Example - Weighted priority (critical checked 2x as often):**\n```yaml\nqueues:\n  - [critical, 2]\n  - default\n```\n\n**Note:** Don't mix weighted and ordered modes. Use separate Sidekiq processes if you need both.\n\n[Queues Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#queues)",
           "uniqueItems": true,
           "items": {
             "oneOf": [
               {
-                "type": "string"
+                "type": "string",
+                "markdownDescription": "Queue name without weight (equal priority with other queues).\n\nExample: `\"default\"`"
               },
               {
                 "type": "array",
+                "markdownDescription": "Queue name with weight for priority control.\n\nFormat: `[\"queue_name\", weight]`\n\nExample: `[\"critical\", 2]` means check this queue twice as often.",
                 "items": [{ "type": "string" }, { "type": "integer" }],
                 "additionalItems": false,
                 "minItems": 2

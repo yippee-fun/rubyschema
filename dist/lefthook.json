@@ -2,8 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/lefthook.json",
   "title": "Lefthook configuration",
+  "markdownDescription": "Configuration for Lefthook, a fast and powerful Git hooks manager.\n\nLefthook allows you to manage Git hooks with a simple YAML/JSON/TOML configuration file. It supports running commands in parallel, filtering files by glob patterns, and much more.\n\n[Lefthook Documentation](https://lefthook.dev/configuration/)",
   "definitions": {
     "hook": {
+      "markdownDescription": "Configuration for a specific Git hook (e.g., pre-commit, pre-push).\n\nDefines commands and scripts to run when the hook is triggered. You can configure parallel execution, file filtering, and conditional execution.\n\n[Hook Configuration Documentation](https://lefthook.dev/configuration/Hook.html)",
       "properties": {
         "files": {
           "type": "string",
@@ -40,16 +42,19 @@
         "only": { "$ref": "#/definitions/only" },
         "jobs": {
           "type": "array",
+          "markdownDescription": "List of jobs to execute for this hook.\n\nJobs provide more flexibility than commands by allowing you to nest groups, define dependencies, and control execution order.\n\n[Jobs Documentation](https://lefthook.dev/configuration/jobs.html)",
           "uniqueItems": true,
           "items": { "$ref": "#/definitions/job" }
         },
         "commands": {
           "type": "object",
+          "markdownDescription": "Named commands to execute for this hook.\n\nEach property name represents a command identifier, and its value defines the command configuration.\n\nExample:\n```yaml\ncommands:\n  lint:\n    run: eslint {staged_files}\n```\n\n[Commands Documentation](https://lefthook.dev/configuration/Commands.html)",
           "propertyNames": { "type": "string" },
           "additionalProperties": { "$ref": "#/definitions/command" }
         },
         "scripts": {
           "type": "object",
+          "markdownDescription": "Named scripts to execute for this hook.\n\nScripts are executable files stored in `.lefthook/` or `.lefthook-local/` directories. Each property name should match a script filename.\n\n[Scripts Documentation](https://lefthook.dev/configuration/Scripts.html)",
           "propertyNames": { "type": "string" },
           "additionalProperties": { "$ref": "#/definitions/script" }
         }
@@ -57,6 +62,7 @@
       "additionalProperties": false
     },
     "condition": {
+      "markdownDescription": "Condition for skipping or only running commands/scripts.\n\nCan be a simple string (`rebase`, `merge`, `merge-commit`) or an object with `ref` (branch pattern) or `run` (shell command to determine condition).\n\n[Skip/Only Documentation](https://lefthook.dev/configuration/skip.html)",
       "oneOf": [
         {
           "enum": ["rebase", "merge", "merge-commit"]
@@ -65,7 +71,8 @@
           "type": "object",
           "properties": {
             "ref": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Git branch pattern to match (supports globs).\n\nExample: `\"main\"` or `\"feature/*\"`"
             }
           },
           "additionalProperties": false,
@@ -75,7 +82,8 @@
           "type": "object",
           "properties": {
             "run": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Shell command to determine if condition is met.\n\nCommand should exit with status 0 for true, non-zero for false.\n\nExample: `\"test -f .env\"`"
             }
           },
           "additionalProperties": false,
@@ -84,6 +92,7 @@
       ]
     },
     "job": {
+      "markdownDescription": "A job defines a unit of work to execute within a hook.\n\nJobs can run commands, execute scripts, or group other jobs together. They support file filtering, conditional execution, and environment variables.\n\n[Jobs Documentation](https://lefthook.dev/configuration/jobs.html)",
       "type": "object",
       "properties": {
         "name": {
@@ -91,22 +100,28 @@
           "markdownDescription": "Name of a job. Will be printed in summary. If specified, the jobs can be merged with a jobs of the same name in a local config or extends."
         },
         "run": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Shell command to execute.\n\nSupports templates like `{staged_files}`, `{all_files}`, `{files}`, `{cmd}`, etc.\n\nExample: `\"eslint {staged_files}\"`\n\n[Run Documentation](https://lefthook.dev/configuration/run.html)"
         },
         "script": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Script filename to execute (relative to `.lefthook/` or `.lefthook-local/`).\n\nExample: `\"lint.sh\"`\n\n[Scripts Documentation](https://lefthook.dev/configuration/Scripts.html)"
         },
         "runner": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Custom command to run the script or job.\n\nExample: `\"docker run -it --rm <container> {cmd}\"`\n\n[Runner Documentation](https://lefthook.dev/configuration/runner.html)"
         },
         "group": {
           "type": "object",
+          "markdownDescription": "Group of jobs to execute together with shared configuration.\n\n[Jobs Documentation](https://lefthook.dev/configuration/jobs.html)",
           "properties": {
             "parallel": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Run jobs in this group concurrently.\n\nDefault: `false`"
             },
             "piped": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Stop running jobs if one of them fails.\n\nDefault: `false`"
             },
             "jobs": {
               "type": "array",
@@ -160,6 +175,7 @@
       "additionalProperties": false
     },
     "command": {
+      "markdownDescription": "A named command configuration.\n\nCommands are simpler than jobs but offer most of the same features. Use commands when you don't need job grouping or complex dependencies.\n\n[Commands Documentation](https://lefthook.dev/configuration/Commands.html)",
       "type": "object",
       "properties": {
         "run": {
@@ -216,6 +232,7 @@
       "required": ["run"]
     },
     "script": {
+      "markdownDescription": "A script file configuration.\n\nScripts are executable files stored in `.lefthook/` or `.lefthook-local/` directories. Scripts are simpler than commands – they don't support file filtering directly but can use environment variables.\n\n[Scripts Documentation](https://lefthook.dev/configuration/Scripts.html)",
       "type": "object",
       "properties": {
         "runner": {
@@ -257,17 +274,20 @@
     },
     "env": {
       "type": "object",
+      "markdownDescription": "Environment variables to set for the command/script.\n\nExample:\n```yaml\nenv:\n  NODE_ENV: production\n  DEBUG: \"true\"\n```\n\n[Env Documentation](https://lefthook.dev/configuration/env.html)",
       "propertyNames": { "type": "string" },
       "additionalProperties": { "type": "string" }
     },
     "tags": {
       "type": "array",
+      "markdownDescription": "Tags to categorize commands/scripts.\n\nUse `exclude_tags` in hooks to skip commands with certain tags. Useful for organizing frontend/backend, security/linting, etc.\n\n[Tags Documentation](https://lefthook.dev/configuration/tags.html)",
       "uniqueItems": true,
       "items": {
         "type": "string"
       }
     },
     "glob": {
+      "markdownDescription": "Glob pattern(s) to filter files.\n\nOnly commands will run if matching files exist. Supports glob syntax like `**/*.js`, `*.{ts,tsx}`, etc.\n\n[Glob Documentation](https://lefthook.dev/configuration/glob.html)",
       "anyOf": [
         {
           "type": "string"
@@ -287,6 +307,7 @@
       "examples": ["git diff --name-only master"]
     },
     "file_type": {
+      "markdownDescription": "File type filter.\n\nFilter files by type before passing to commands.\n\n[File Types Documentation](https://lefthook.dev/configuration/file_types.html)",
       "enum": [
         "text",
         "binary",
@@ -353,6 +374,7 @@
         { "const": false },
         {
           "type": "object",
+          "markdownDescription": "Custom color configuration using ANSI codes or hex colors.\n\nExample:\n```yaml\ncolors:\n  cyan: 14\n  gray: 244\n  green: \"#00FF00\"\n```\n\n[Colors Documentation](https://lefthook.dev/configuration/colors.html)",
           "propertyNames": { "type": "string" },
           "additionalProperties": {
             "anyOf": [
@@ -368,6 +390,7 @@
     },
     "extends": {
       "type": "array",
+      "markdownDescription": "List of configuration files to extend/merge.\n\nAllows you to compose configuration from multiple files.\n\nExample: `[\"lefthook-base.yml\", \"lefthook-team.yml\"]`\n\n[Extends Documentation](https://lefthook.dev/configuration/extends.html)",
       "uniqueItems": true,
       "items": {
         "type": "string"
@@ -379,6 +402,7 @@
     },
     "min_version": {
       "type": "string",
+      "markdownDescription": "Minimum required Lefthook version.\n\nIf the installed version is lower, Lefthook will fail with an error.\n\nExample: `\"1.5.0\"`\n\n[Min Version Documentation](https://lefthook.dev/configuration/min_version.html)",
       "pattern": "^\\d+(\\.\\d+){1,2}$"
     },
     "no_tty": {
@@ -386,6 +410,7 @@
       "markdownDescription": "Whether hide spinner and other interactive things."
     },
     "output": {
+      "markdownDescription": "Control what Lefthook outputs to the console.\n\nCan be set to `false` to suppress all output, or an array of output types to show.\n\nAvailable types: `meta`, `summary`, `success`, `failure`, `execution`, `execution_out`, `execution_info`, `skips`\n\n[Output Documentation](https://lefthook.dev/configuration/output.html)",
       "anyOf": [
         {
           "enum": [
@@ -419,10 +444,12 @@
       ]
     },
     "rc": {
-      "type": "string"
+      "type": "string",
+      "markdownDescription": "Path to a shell script that will be sourced before running hooks.\n\nUseful for setting up environment variables or loading shell functions.\n\nExample: `\".lefthookrc\"`\n\n[RC Documentation](https://lefthook.dev/configuration/rc.html)"
     },
     "remotes": {
       "type": "array",
+      "markdownDescription": "List of remote Git repositories containing shared Lefthook configurations.\n\nAllows teams to share and reuse hook configurations across multiple projects.\n\n[Remotes Documentation](https://lefthook.dev/configuration/remotes.html)",
       "uniqueItems": true,
       "items": {
         "properties": {
@@ -449,7 +476,7 @@
           },
           "configs": {
             "type": "array",
-            "markdownDescription": "An optional array of config paths from remote's root.",
+            "markdownDescription": "Array of config file paths from the remote repository's root.\n\nExample: `[\"lefthook.yml\", \"configs/pre-commit.yml\"]`\n\n[Configs Documentation](https://lefthook.dev/configuration/configs.html)",
             "uniqueItems": true,
             "items": {
               "type": "string"
@@ -475,7 +502,7 @@
     },
     "templates": {
       "type": "array",
-      "markdownDescription": "Provide custom replacement for templates in run values.",
+      "markdownDescription": "Custom template replacements for `{template_name}` placeholders in `run` commands.\n\nExample:\n```yaml\ntemplates:\n  - docker: \"docker compose run app {cmd}\"\n```\n\nThen use in commands: `run: \"{docker} npm test\"`\n\n[Templates Documentation](https://lefthook.dev/configuration/templates.html)",
       "uniqueItems": true,
       "items": {
         "type": "object",
@@ -486,10 +513,12 @@
       }
     },
     "pre-commit": {
-      "$ref": "#/definitions/hook"
+      "$ref": "#/definitions/hook",
+      "markdownDescription": "Git pre-commit hook configuration.\n\nRuns before `git commit` is finalized. Commonly used for linting, formatting, and running tests on staged files.\n\n[Pre-commit Hook](https://lefthook.dev/configuration/Hook.html)"
     },
     "pre-push": {
-      "$ref": "#/definitions/hook"
+      "$ref": "#/definitions/hook",
+      "markdownDescription": "Git pre-push hook configuration.\n\nRuns before `git push`. Commonly used for running full test suites, security audits, or build verification.\n\n[Pre-push Hook](https://lefthook.dev/configuration/Hook.html)"
     }
   },
   "additionalProperties": {

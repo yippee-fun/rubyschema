@@ -2,11 +2,13 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/cable.json",
   "title": "Rails Action Cable Configuration",
+  "markdownDescription": "Configures Action Cable subscription adapters for WebSocket connections in Rails applications. Each top-level key represents an environment (development, test, production, etc.) that specifies how Action Cable handles real-time pub/sub messaging.\n\nSee the [Rails Guide](https://guides.rubyonrails.org/action_cable_overview.html#configuration) for more information.",
   "type": "object",
   "definitions": {
     "erb": { "type": "string", "pattern": "^<%=.*%>$" },
     "environment": {
       "title": "Environment",
+      "markdownDescription": "Action Cable environment configuration. Specifies the adapter and connection details for pub/sub messaging.",
       "anyOf": [
         { "$ref": "#/definitions/redis" },
         { "$ref": "#/definitions/async" },
@@ -28,18 +30,24 @@
     },
     "redis": {
       "type": "object",
+      "markdownDescription": "Redis adapter for Action Cable. Requires a Redis server for pub/sub messaging across multiple server instances. Supports SSL/TLS connections.",
       "properties": {
         "adapter": {
-          "const": "redis"
+          "const": "redis",
+          "markdownDescription": "Adapter type for Redis-backed pub/sub messaging."
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Connection URL for the Redis server. Use `redis://` for standard connections or `rediss://` for SSL/TLS connections.\n\nExamples:\n- `redis://localhost:6379`\n- `rediss://10.10.3.153:6380` (SSL/TLS)",
+          "examples": ["redis://localhost:6379", "rediss://10.10.3.153:6380"]
         },
         "channel_prefix": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Optional prefix for channel names to avoid collisions when multiple applications share the same Redis server.\n\nExample: `appname_production` results in channels like `appname_production:chat_room_1`",
+          "examples": ["appname_production", "myapp_staging"]
         },
         "ssl_params": {
-          "markdownDescription": "Parameters passed to [`OpenSSL::SSL::SSLContext#set_params`](https://docs.ruby-lang.org/en/master/OpenSSL/SSL/SSLContext.html#method-i-set_params).",
+          "markdownDescription": "SSL/TLS parameters for secure Redis connections. Parameters are passed directly to [`OpenSSL::SSL::SSLContext#set_params`](https://docs.ruby-lang.org/en/master/OpenSSL/SSL/SSLContext.html#method-i-set_params).\n\nCommon parameters include `ca_file`, `cert`, `key`, and `verify_mode`. Use `verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>` to skip certificate verification (not recommended for production).",
           "type": "object",
           "properties": {
             "ciphers": {},
@@ -61,53 +69,69 @@
     },
     "async": {
       "type": "object",
+      "markdownDescription": "Async adapter for Action Cable. Intended for development and testing only. Runs pub/sub messaging within the same process, so it only works with a single server instance.\n\n**Not suitable for production use.**",
       "properties": {
         "adapter": {
-          "const": "async"
+          "const": "async",
+          "markdownDescription": "Adapter type for in-process async pub/sub messaging. Development and testing only."
         }
       },
       "additionalProperties": false
     },
     "test": {
       "type": "object",
+      "markdownDescription": "Test adapter for Action Cable. Used during automated testing to capture and assert on Action Cable broadcasts without requiring an external service.",
       "properties": {
         "adapter": {
-          "const": "test"
+          "const": "test",
+          "markdownDescription": "Adapter type for test environment. Captures broadcasts for testing assertions."
         }
       },
       "additionalProperties": false
     },
     "solid_cable": {
       "type": "object",
+      "markdownDescription": "Solid Cable adapter for Action Cable. A database-backed solution using Active Record for pub/sub messaging. Supports MySQL, PostgreSQL, and SQLite.\n\nRun `bin/rails solid_cable:install` to set up. See [Solid Cable](https://github.com/rails/solid_cable) for more information.",
       "properties": {
         "adapter": {
-          "const": "solid_cable"
+          "const": "solid_cable",
+          "markdownDescription": "Adapter type for database-backed pub/sub messaging using Solid Cable."
         },
         "connects_to": {
-          "type": "object"
+          "type": "object",
+          "markdownDescription": "Database connection configuration for Solid Cable. Specifies which database to use for storing messages."
         },
         "polling_interval": {
           "type": "string",
-          "examples": ["0.1 seconds"]
+          "markdownDescription": "How frequently to poll the database for new messages. Accepts ActiveSupport::Duration format.\n\nDefault: `0.1 seconds`",
+          "default": "0.1 seconds",
+          "examples": ["0.1 seconds", "0.5 seconds", "1 second"]
         },
         "message_retention": {
           "type": "string",
-          "examples": ["1.day"]
+          "markdownDescription": "How long to retain messages in the database before they're eligible for deletion. Accepts ActiveSupport::Duration format.\n\nDefault: `1 day`",
+          "default": "1 day",
+          "examples": ["1.day", "12.hours", "7.days"]
         },
         "autotrim": {
           "type": "boolean",
+          "markdownDescription": "Automatically trim old messages from the database based on `message_retention` setting.\n\nDefault: `true`",
           "default": true
         },
         "silence_polling": {
           "type": "boolean",
+          "markdownDescription": "Suppress logging of database polling queries to reduce log noise.\n\nDefault: `true`",
           "default": true
         },
         "use_skip_locked": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Use `SKIP LOCKED` in SQL queries to improve concurrency. Only supported on PostgreSQL 9.5+ and MySQL 8.0+.\n\nIf not set, Solid Cable will auto-detect support based on your database."
         },
         "trim_batch_size": {
           "type": "integer",
-          "default": 100
+          "markdownDescription": "Number of old messages to delete in a single batch during autotrim.\n\nDefault: `100`",
+          "default": 100,
+          "examples": [100, 500, 1000]
         }
       },
       "additionalProperties": false

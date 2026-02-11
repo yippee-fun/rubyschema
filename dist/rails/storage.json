@@ -239,7 +239,12 @@
           "markdownDescription": "Name of the Azure Storage container where files will be stored. Consider including the environment in the name (e.g., `my-container-<%= Rails.env %>`)."
         }
       },
-      "required": ["service", "storage_account_name", "storage_access_key", "container"],
+      "required": [
+        "service",
+        "storage_account_name",
+        "storage_access_key",
+        "container"
+      ],
       "additionalProperties": false
     },
     "mirror_service": {

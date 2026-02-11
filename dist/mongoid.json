@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/mongoid.json",
   "title": "Mongoid configuration",
+  "markdownDescription": "Configuration file for Mongoid, the MongoDB Object-Document Mapper (ODM) for Ruby. Typically located at `config/mongoid.yml` in Rails projects. Defines database connections, client options, and application-level settings for Mongoid models.\n\n[Mongoid Documentation](https://www.mongodb.com/docs/mongoid/current/)",
   "type": "object",
   "definitions": {
     "environment": {
@@ -9,93 +10,133 @@
       "properties": {
         "clients": {
           "type": "object",
+          "markdownDescription": "Defines MongoDB client connections. Each client specifies connection details and options for a database. The `default` client is required and used by models unless otherwise specified.\n\n**Example:**\n```yaml\nclients:\n  default:\n    database: my_app_development\n    hosts:\n      - localhost:27017\n```",
           "additionalProperties": {
             "$ref": "#/definitions/client"
           }
         },
         "options": {
           "type": "object",
+          "markdownDescription": "Application-level Mongoid configuration options that control ODM behavior, callbacks, validation, and serialization.",
           "properties": {
             "allow_bson5_decimal128": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Allow BSON 5 Decimal128 type. When `true`, uses BSON::Decimal128 instead of BigDecimal for `Decimal128` BSON type. **Default:** `false`"
             },
             "allow_duplicate_index_declarations": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Allow duplicate index declarations across models. When `false`, raises an error if the same index is defined multiple times. **Default:** `false`"
             },
             "app_name": {
-              "type": ["string", "null"]
+              "type": ["string", "null"],
+              "markdownDescription": "Application name sent to MongoDB server for logging and profiling. Visible in MongoDB logs and `db.currentOp()`. Useful for identifying application traffic.\n\n**Example:** `\"MyRailsApp\"`"
             },
             "around_callbacks_for_embeds": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Enable `around_*` callbacks for embedded documents. When `true`, embedded documents can use `around_save`, `around_create`, etc. **Default:** `false`"
             },
             "async_query_executor": {
-              "enum": ["immediate", "global_thread_pool"]
+              "enum": ["immediate", "global_thread_pool"],
+              "markdownDescription": "Strategy for executing queries asynchronously. **Default:** `\"immediate\"`",
+              "markdownEnumDescriptions": [
+                "Execute queries immediately in the same thread (synchronous)",
+                "Execute queries in a global thread pool for parallel execution"
+              ]
             },
             "belongs_to_required_by_default": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Require `belongs_to` associations to have a value by default. When `true`, validates presence of `belongs_to` associations unless `optional: true` is specified. **Default:** `true`"
             },
             "discriminator_key": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Field name used for Single Table Inheritance (STI) to store the model class name. **Default:** `\"_type\"`\n\n**Example:** With `discriminator_key: \"kind\"`, subclass names are stored in the `kind` field."
             },
             "duplicate_fields_exception": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Raise an exception when duplicate field names are defined in a model. When `true`, prevents accidental field redefinition. **Default:** `true`"
             },
             "global_executor_concurrency": {
-              "type": ["integer", "null"]
+              "type": ["integer", "null"],
+              "markdownDescription": "Number of threads in the global executor thread pool for async queries. Only used when `async_query_executor` is `\"global_thread_pool\"`. `null` uses Ruby's default thread pool size. **Default:** `null`"
             },
             "immutable_ids": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Prevent modification of document `_id` field after creation. When `true`, attempting to change `_id` raises an error. **Default:** `true`"
             },
             "include_root_in_json": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Include the model name as root element in JSON serialization. When `true`, `model.to_json` returns `{\"model_name\": {...}}` instead of `{...}`. **Default:** `false`"
             },
             "include_type_for_serialization": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Include the `_type` field in JSON/XML serialization. When `true`, the discriminator field is included in serialized output. **Default:** `false`"
             },
             "join_contexts": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Use join contexts for association queries (experimental). When `true`, enables more efficient association loading. **Default:** `false`"
             },
             "legacy_persistence_context_behavior": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Use legacy persistence context behavior. When `true`, models use persistence context from client configuration instead of thread-local context. **Default:** `false`"
             },
             "legacy_readonly": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Use legacy readonly behavior. When `true`, readonly documents can still be deleted. When `false`, readonly prevents all persistence operations. **Default:** `false`"
             },
             "log_level": {
-              "enum": ["debug", "info", "warn", "error", "fatal", "unknown"]
+              "enum": ["debug", "info", "warn", "error", "fatal", "unknown"],
+              "markdownDescription": "Logging level for Mongoid operations. Controls verbosity of database query logs. **Default:** `\"info\"`",
+              "markdownEnumDescriptions": [
+                "Most verbose, includes all query details",
+                "Normal verbosity, logs queries and operations",
+                "Only warnings and errors",
+                "Only errors and fatal messages",
+                "Only fatal errors",
+                "Catch-all for uncategorized messages"
+              ]
             },
             "map_big_decimal_to_decimal128": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Map Ruby `BigDecimal` to BSON `Decimal128` type. When `true`, `BigDecimal` fields are stored as `Decimal128` instead of `String`. Provides better precision for financial calculations. **Default:** `false`"
             },
             "preload_models": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Preload all model classes at application startup. When `true` (recommended for production), loads all models to avoid threading issues. **Default:** `false`"
             },
             "prevent_multiple_calls_of_embedded_callbacks": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Prevent embedded document callbacks from being called multiple times. When `true`, ensures callbacks like `after_save` only fire once per operation. **Default:** `false`"
             },
             "raise_not_found_error": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Raise `Mongoid::Errors::DocumentNotFound` when queries expecting a result find nothing. When `true`, `.find`, `.first!`, etc. raise errors instead of returning `nil`. **Default:** `true`"
             },
             "scope_overwrite_exception": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Raise an exception when a scope name conflicts with an existing method. When `true`, prevents accidental method overrides. **Default:** `false`"
             },
             "use_utc": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Store and retrieve times in UTC. When `true`, all `Time` objects are converted to UTC before storage. **Default:** `false`"
             }
           },
           "additionalProperties": false
         },
         "driver_options": {
           "type": "object",
+          "markdownDescription": "MongoDB Ruby driver compatibility options for handling MongoDB server bugs and behavior changes.",
           "properties": {
             "broken_view_aggregate": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Workaround for MongoDB view aggregation bug in older server versions. When `true`, uses alternative aggregation method for views. **Default:** `false`"
             },
             "broken_view_options": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Workaround for MongoDB view options bug in older server versions. When `true`, avoids using certain view options. **Default:** `false`"
             },
             "validate_update_replace": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "Validate update/replace operations before sending to server. When `true`, checks for invalid operators and field names. **Default:** `false`"
             }
           },
           "additionalProperties": false
@@ -117,7 +158,8 @@
           "type": "array",
           "uniqueItems": true,
           "minItems": 1,
-          "items": { "type": "string" }
+          "items": { "type": "string" },
+          "markdownDescription": "Array of MongoDB server addresses in `host:port` format. For replica sets, list all members. For standalone servers, use a single entry. Required unless `uri` is specified.\n\n**Example:** `[\"localhost:27017\"]` or `[\"mongo1:27017\", \"mongo2:27017\", \"mongo3:27017\"]`"
         },
         "options": {
           "$ref": "#/definitions/clientOptions"
@@ -138,15 +180,18 @@
       "properties": {
         "write": {
           "type": "object",
+          "markdownDescription": "Write concern options for this client. Controls acknowledgment behavior for write operations.\n\n[MongoDB Write Concern Documentation](https://www.mongodb.com/docs/manual/reference/write-concern/)",
           "properties": {
             "w": {
-              "type": "integer"
+              "type": "integer",
+              "markdownDescription": "Number of replica set members that must acknowledge writes. `0` = no acknowledgment, `1` = primary only, `2+` = primary plus N secondaries, `-1` = majority. **Default:** `1`"
             }
           },
           "additionalProperties": false
         },
         "read": {
           "type": "object",
+          "markdownDescription": "Read preference options for this client. Controls which replica set members are used for read operations.\n\n[MongoDB Read Preference Documentation](https://www.mongodb.com/docs/manual/core/read-preference/)",
           "properties": {
             "mode": {
               "enum": [
@@ -154,11 +199,19 @@
                 "primary",
                 "primary_preferred",
                 "nearest"
+              ],
+              "markdownDescription": "Read preference mode. Determines which replica set members can serve read operations. **Default:** `\"primary\"`",
+              "markdownEnumDescriptions": [
+                "Prefer secondaries, fall back to primary if no secondaries available",
+                "All reads from primary only (strongly consistent)",
+                "Prefer primary, fall back to secondary if primary unavailable",
+                "Read from member with lowest network latency"
               ]
             },
             "tag_sets": {
               "type": "array",
               "uniqueItems": true,
+              "markdownDescription": "Array of tag sets for targeting specific replica set members. Each tag set is a document of tags that must match a replica set member.\n\n**Example:** `[{\"use\": \"reporting\"}, {\"datacenter\": \"east\"}]`",
               "items": {
                 "type": "object",
                 "properties": {
@@ -173,14 +226,17 @@
           "additionalProperties": false
         },
         "user": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Username for MongoDB authentication. Use with `password` and optionally `auth_source`.\n\n⚠️ **Security:** Consider using environment variables instead of hardcoding credentials."
         },
         "password": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Password for MongoDB authentication. Use with `user` and optionally `auth_source`.\n\n⚠️ **Security:** Consider using environment variables instead of hardcoding credentials."
         },
         "roles": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "Array of role names for role-based access control. Used with certain authentication mechanisms.",
           "items": {
             "type": "string"
           }
@@ -194,83 +250,121 @@
             "gssapi",
             "aws",
             "plain"
+          ],
+          "markdownDescription": "Authentication mechanism to use. **Default:** `\"scram\"` (automatically negotiated between SCRAM-SHA-1 and SCRAM-SHA-256)",
+          "markdownEnumDescriptions": [
+            "SCRAM-SHA-1 authentication (MongoDB 3.0+)",
+            "SCRAM-SHA-256 authentication (MongoDB 4.0+, more secure)",
+            "MongoDB Challenge-Response (deprecated, pre-3.0)",
+            "X.509 certificate authentication",
+            "Kerberos/GSSAPI authentication",
+            "AWS IAM authentication (MongoDB Atlas)",
+            "LDAP PLAIN authentication"
           ]
         },
         "auth_source": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Database name for authentication. Specifies which database contains the user credentials. **Default:** `\"admin\"`\n\n**Example:** `\"admin\"` for administrative users"
         },
         "connect": {
-          "enum": ["direct", "replica_set", "sharded"]
+          "enum": ["direct", "replica_set", "sharded"],
+          "markdownDescription": "MongoDB topology connection mode. **Default:** Auto-detected based on server response",
+          "markdownEnumDescriptions": [
+            "Direct connection to a single server (standalone or specific replica set member)",
+            "Connect to a replica set (auto-discovers all members)",
+            "Connect to a sharded cluster (mongos routers)"
+          ]
         },
         "heartbeat_frequency": {
           "type": "number",
           "minimum": 0,
-          "default": 10
+          "default": 10,
+          "markdownDescription": "Interval in seconds between server heartbeat checks. Lower values detect topology changes faster but increase network traffic. **Default:** `10`"
         },
         "local_threshold": {
           "type": "number",
           "minimum": 0,
-          "default": 0.015
+          "default": 0.015,
+          "markdownDescription": "Latency window in seconds for server selection. Servers within this latency of the fastest server are eligible for selection. **Default:** `0.015` (15ms)"
         },
         "server_selection_timeout": {
           "type": "number",
           "minimum": 0,
-          "default": 30
+          "default": 30,
+          "markdownDescription": "Maximum time in seconds to wait for a suitable server to become available. Raises an error if timeout expires. **Default:** `30`"
         },
         "max_pool_size": {
           "type": "integer",
           "minimum": 0,
-          "default": 5
+          "default": 5,
+          "markdownDescription": "Maximum number of connections in the connection pool per server. Increase for high-concurrency applications. **Default:** `5`"
         },
         "min_pool_size": {
           "type": "integer",
           "minimum": 0,
-          "default": 1
+          "default": 1,
+          "markdownDescription": "Minimum number of connections to maintain in the pool per server. Connections are created up to this number even when idle. **Default:** `1`"
         },
         "wait_queue_timeout": {
           "type": "number",
           "minimum": 0,
-          "default": 5
+          "default": 5,
+          "markdownDescription": "Maximum time in seconds to wait for a connection to become available from the pool. Raises an error if timeout expires. **Default:** `5`"
         },
         "connect_timeout": {
           "type": "number",
           "minimum": 0,
-          "default": 10
+          "default": 10,
+          "markdownDescription": "Maximum time in seconds to establish a new connection to MongoDB. Raises an error if connection cannot be established. **Default:** `10`"
         },
         "replica_set": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Name of the replica set to connect to. Required when connecting to a replica set. Must match the replica set name configured in MongoDB.\n\n**Example:** `\"myReplicaSet\"`"
         },
         "compressors": {
           "type": "array",
           "uniqueItems": true,
+          "markdownDescription": "Network compression algorithms to use, in order of preference. Reduces bandwidth but increases CPU usage. Server must support the selected compressor.",
           "items": {
             "enum": ["zstd", "snappy", "zlib"]
-          }
+          },
+          "markdownEnumDescriptions": [
+            "Best compression ratio and speed (MongoDB 4.2+)",
+            "Fast compression with moderate ratio (MongoDB 3.6+)",
+            "Good compression ratio, slower (MongoDB 3.6+)"
+          ]
         },
         "ssl": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Enable SSL/TLS encryption for the connection. Required for MongoDB Atlas and recommended for production. **Default:** `false`"
         },
         "ssl_cert": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Path to the client SSL/TLS certificate file (PEM format). Required for X.509 authentication and some secure deployments.\n\n**Example:** `\"/path/to/client.pem\"`"
         },
         "ssl_key": {
           "type": "string",
-          "examples": ["/path/to/my.key"]
+          "examples": ["/path/to/my.key"],
+          "markdownDescription": "Path to the client SSL/TLS private key file (PEM format). Used with `ssl_cert` when certificate and key are in separate files.\n\n**Example:** `\"/path/to/my.key\"`"
         },
         "ssl_key_pass_phrase": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Passphrase for encrypted SSL/TLS private key. Required if `ssl_key` is password-protected.\n\n⚠️ **Security:** Use environment variables to avoid hardcoding passphrases."
         },
         "ssl_verify": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "markdownDescription": "Verify the server's SSL/TLS certificate. When `true`, validates certificate against CA certificates. Disable only for development/testing. **Default:** `true`\n\n⚠️ **Security:** Never disable in production."
         },
         "ssl_ca_cert": {
           "type": "string",
-          "examples": ["/path/to/ca.cert"]
+          "examples": ["/path/to/ca.cert"],
+          "markdownDescription": "Path to the Certificate Authority (CA) certificate file (PEM format). Used to verify the server's certificate when `ssl_verify` is `true`.\n\n**Example:** `\"/path/to/ca.cert\"`"
         },
         "truncate_logs": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "markdownDescription": "Truncate long log messages. When `true`, limits log entry length to prevent excessive logging. **Default:** `true`"
         }
       },
       "additionalProperties": false

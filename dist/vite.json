@@ -1,108 +1,117 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/vite.json",
+  "title": "Vite Ruby configuration",
+  "markdownDescription": "Configuration for Vite Ruby, a frontend build tool integration for Ruby web applications.\n\nThis JSON configuration file allows environment-specific settings (development, test, production) and configures how Vite builds and serves your frontend assets.\n\n[Vite Ruby Configuration Documentation](https://vite-ruby.netlify.app/config/)",
   "definitions": {
     "environment": {
+      "markdownDescription": "Environment-specific configuration for Vite Ruby.\n\nSettings in `all` apply to all environments. Environment-specific sections (development, test, production) override `all` settings.\n\nAll options can be overridden with environment variables prefixed with `VITE_RUBY_`.",
       "properties": {
         "autoBuild": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#autobuild)",
+          "markdownDescription": "Enable automatic on-demand builds when files change.\n\nWhen enabled, Vite Ruby tracks changes to `sourceCodeDir` and triggers builds automatically if files have changed. Useful for integration tests or when not running the dev server.\n\nDefault: `true` in development and test; `false` in production.\n\n**Env Var:** `VITE_RUBY_AUTO_BUILD`\n\n[Documentation](https://vite-ruby.netlify.app/config/#autobuild)",
           "type": "boolean"
         },
         "host": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#host)",
+          "markdownDescription": "Hostname for the Vite development server.\n\nDefault: `\"localhost\"`\n\n**Env Var:** `VITE_RUBY_HOST`\n\n[Documentation](https://vite-ruby.netlify.app/config/#host)",
           "type": "string"
         },
         "port": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#port)",
+          "markdownDescription": "Port for the Vite development server.\n\nDefault: `3036`\n\n**Env Var:** `VITE_RUBY_PORT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#port)",
           "type": "integer"
         },
         "https": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#https)",
+          "markdownDescription": "Enable TLS + HTTP/2 for the Vite development server.\n\nDefault: `false`\n\n**Env Var:** `VITE_RUBY_HTTPS`\n\n[Documentation](https://vite-ruby.netlify.app/config/#https)",
           "type": "boolean"
         },
         "buildCacheDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#buildcachedir)",
+          "markdownDescription": "Directory where the autoBuild cache is stored.\n\nUsed to detect if a build is needed when the development server is not running.\n\nDefault: `tmp/cache/vite`\n\n**Env Var:** `VITE_RUBY_BUILD_CACHE_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#buildcachedir)",
           "type": "string"
         },
         "publicDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#publicdir)",
+          "markdownDescription": "Public directory for serving static assets.\n\nThis directory should be served by Apache/NGINX or loaded into a CDN. Relative to `root`.\n\nDefault: `public`\n\n**Env Var:** `VITE_RUBY_PUBLIC_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#publicdir)",
           "type": "string"
         },
         "publicOutputDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#publicoutputdir)",
+          "markdownDescription": "Output directory for compiled assets.\n\nRelative to `publicDir`. The final output path is `publicDir/publicOutputDir`.\n\nDefault: `vite`\n\nExample: With defaults, assets are output to `public/vite/`\n\n**Env Var:** `VITE_RUBY_PUBLIC_OUTPUT_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#publicoutputdir)",
           "type": "string"
         },
         "assetsDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#assetsdir)",
+          "markdownDescription": "Directory for nested generated assets.\n\nRelative to `publicOutputDir`. Compiled JS, CSS, and other assets are placed here.\n\nDefault: `assets`\n\nExample: With defaults, compiled assets go to `public/vite/assets/`\n\n**Env Var:** `VITE_RUBY_ASSETS_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#assetsdir)",
           "type": "string"
         },
         "sourceCodeDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#sourcecodedir)",
+          "markdownDescription": "Directory containing your frontend source code.\n\nRelative to `root`. Vite Ruby creates aliases `~/` and `@/` pointing to this directory for convenient absolute imports.\n\nDefault: `app/frontend`\n\nFiles in this directory are tracked for changes when using `autoBuild`.\n\n**Env Var:** `VITE_RUBY_SOURCE_CODE_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#sourcecodedir)",
           "type": "string"
         },
         "entrypointsDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#entrypointsdir)",
+          "markdownDescription": "Directory containing entrypoint files.\n\nRelative to `sourceCodeDir`. Entrypoints are the files referenced by tag helpers in your views.\n\nDefault: `entrypoints`\n\nExample: With defaults, entrypoints are in `app/frontend/entrypoints/`\n\n**Env Var:** `VITE_RUBY_ENTRYPOINTS_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#entrypointsdir)",
           "type": "string"
         },
         "additionalEntrypoints": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#additionalentrypoints)",
+          "markdownDescription": "Additional entrypoint patterns.\n\nSpecify glob patterns for files that can be referenced using tag helpers without being in `entrypointsDir`.\n\nDefault: `[\"~/{assets,fonts,icons,images}/**/*\"]`\n\nExamples:\n- `\"~/images/**/*\"` - Reference with `vite_asset_path 'images/logo.svg'`\n- `\"app/components/**/*.js\"` - Reference with `vite_asset_path '/app/components/header.js'`\n\n**Env Var:** `VITE_RUBY_ADDITIONAL_ENTRYPOINTS`\n\n[Documentation](https://vite-ruby.netlify.app/config/#additionalentrypoints)",
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
         "assetHost": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#assethost)",
+          "markdownDescription": "Asset host URL when using a CDN.\n\nDefault: Rails `config.action_controller.asset_host` value\n\nExample: `\"https://cdn.example.com\"`\n\n**Env Var:** `VITE_RUBY_ASSET_HOST`\n\n[Documentation](https://vite-ruby.netlify.app/config/#assethost)",
           "type": "string"
         },
         "base": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#base)",
+          "markdownDescription": "Base public path for serving assets.\n\nNecessary when hosting your Ruby app in a nested path (e.g., GitHub Pages).\n\nDefault: `\"\"`\n\nExample: `\"/nested_path\"`\n\n**Env Var:** `VITE_RUBY_BASE`\n\n[Documentation](https://vite-ruby.netlify.app/config/#base)",
           "type": "string"
         },
         "devServerConnectTimeout": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#devserverconnecttimeout)",
+          "markdownDescription": "Timeout when connecting to the dev server (in seconds).\n\nDefault: `0.01`\n\nIncrease this if fallback compilation is triggered even though the dev server is running.\n\n**Env Var:** `VITE_RUBY_DEV_SERVER_CONNECT_TIMEOUT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#devserverconnecttimeout)",
           "type": "number",
           "minimum": 0
         },
         "hideBuildConsoleOutput": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#hidebuildconsoleoutput)",
+          "markdownDescription": "Skip Vite build output from logs.\n\nDefault: `false`\n\nSet to `true` to reduce noise in logs.\n\n**Env Var:** `VITE_RUBY_HIDE_BUILD_CONSOLE_OUTPUT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#hidebuildconsoleoutput)",
           "type": "boolean"
         },
         "packageManager": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#packagemanager)",
-          "enum": ["npm", "pnpm", "yarn", "bun"]
+          "markdownDescription": "Package manager to use for installing dependencies.\n\nDefault: Auto-detected from lockfiles, otherwise `\"npm\"`\n\n**Env Var:** `VITE_RUBY_PACKAGE_MANAGER`\n\n[Documentation](https://vite-ruby.netlify.app/config/#packagemanager)",
+          "enum": ["npm", "pnpm", "yarn", "bun"],
+          "markdownEnumDescriptions": [
+            "Use npm package manager",
+            "Use pnpm package manager (fast, disk-efficient)",
+            "Use Yarn package manager",
+            "Use Bun package manager (experimental, very fast)"
+          ]
         },
         "root": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#root)",
+          "markdownDescription": "Project root directory.\n\nDefault: Rails root directory\n\n**Env Var:** `VITE_RUBY_ROOT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#root)",
           "type": "string"
         },
         "skipCompatibilityCheck": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#skipcompatibilitycheck)",
+          "markdownDescription": "Skip version compatibility check between Vite Ruby and vite-plugin-ruby.\n\nDefault: `false`\n\n**Warning:** Enable only if you understand the risks. Version mismatches can cause hard-to-debug errors.\n\nRun `bin/vite upgrade` to install a compatible version.\n\n**Env Var:** `VITE_RUBY_SKIP_COMPATIBILITY_CHECK`\n\n[Documentation](https://vite-ruby.netlify.app/config/#skipcompatibilitycheck)",
           "type": "boolean"
         },
         "skipProxy": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#skipproxy-experimental)",
+          "markdownDescription": "Skip the dev server proxy and request assets from Vite directly.\n\n**Experimental** - Allows HTTP2 when `https` is enabled.\n\nDefault: `false`\n\n**Warning:** Don't enable in Rails 6 or earlier if using `vite_stylesheet_tag` with non-.css extensions.\n\n**Env Var:** `VITE_RUBY_SKIP_PROXY`\n\n[Documentation](https://vite-ruby.netlify.app/config/#skipproxy-experimental)",
           "type": "boolean"
         },
         "viteBinPath": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#vitebinpath)",
+          "markdownDescription": "Path to the Vite.js binary.\n\nDefault: `null` (uses package manager to execute vite)\n\nSpecify custom path if needed for unusual setups.\n\n**Env Var:** `VITE_RUBY_VITE_BIN_PATH`\n\n[Documentation](https://vite-ruby.netlify.app/config/#vitebinpath)",
           "type": "string"
         },
         "watchAdditionalPaths": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#watchadditionalpaths)",
+          "markdownDescription": "Additional paths to track for changes when using `autoBuild`.\n\nProvide globs relative to `root`.\n\nDefault: `[]` (only `sourceCodeDir` and `additionalEntrypoints` are watched)\n\nExample: `[\"app/components/**/*\"]`\n\n**Tip:** Define import aliases in `vite.config.ts` to reference these files.\n\n**Env Var:** `VITE_RUBY_WATCH_ADDITIONAL_PATHS`\n\n[Documentation](https://vite-ruby.netlify.app/config/#watchadditionalpaths)",
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
         },
         "ssrBuildEnabled": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssrbuildenabled)",
+          "markdownDescription": "Enable SSR (Server-Side Rendering) build during `assets:precompile`.\n\n**Experimental** - API may change in future versions.\n\nDefault: `false`\n\nWhen enabled, `rake assets:precompile` also runs an SSR build.\n\n**Env Var:** `VITE_RUBY_SSR_BUILD_ENABLED`\n\n[Documentation](https://vite-ruby.netlify.app/config/#ssrbuildenabled)",
           "type": "boolean"
         },
         "ssrEntrypoint": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssrentrypoint)",
+          "markdownDescription": "Entrypoint file for SSR builds.\n\n**Experimental** - API may change in future versions.\n\nDefault: `~/ssr/ssr.{js,ts,jsx,tsx}`\n\nFile glob pattern. `~/` is an alias for `sourceCodeDir`.\n\nExample: `app/frontend/ssr/ssr.ts`\n\n**Env Var:** `VITE_RUBY_SSR_ENTRYPOINT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#ssrentrypoint)",
           "type": "string"
         },
         "ssrOutputDir": {
-          "markdownDescription": "[Docs](https://vite-ruby.netlify.app/config/#ssroutputdir)",
+          "markdownDescription": "Output directory for SSR builds.\n\n**Experimental** - API may change in future versions.\n\nDefault: `public/vite-ssr`\n\nRelative to `root`. The SSR app is output to `ssrOutputDir/ssr.js`.\n\nRun the server with `bin/vite ssr`.\n\n**Env Var:** `VITE_RUBY_SSR_OUTPUT_DIR`\n\n[Documentation](https://vite-ruby.netlify.app/config/#ssroutputdir)",
           "type": "string"
         }
       },
@@ -111,16 +120,21 @@
   },
   "properties": {
     "all": {
-      "$ref": "#/definitions/environment"
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Configuration applied to **all environments** (development, test, production).\n\nSettings here can be overridden by environment-specific configurations."
     },
     "development": {
-      "$ref": "#/definitions/environment"
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Configuration for the **development** environment.\n\nOverrides settings from the `all` section."
     },
     "test": {
-      "$ref": "#/definitions/environment"
+      "$ref": "#/definitions/environment",
+      "markdownDescription": "Configuration for the **test** environment.\n\nOverrides settings from the `all` section."
     }
   },
   "additionalProperties": {
-    "$ref": "#/definitions/environment"
+    "$ref": "#/definitions/environment",
+    "markdownDescription": "Custom environment configuration.\n\nAllows defining configuration for custom environments like `staging`, `uat`, etc.\n\nOverrides settings from the `all` section.",
+    "additionalProperties": false
   }
 }

@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/honeybadger.json",
   "title": "Honeybadger configuration",
+  "markdownDescription": "Configuration for Honeybadger, an error and performance monitoring service for Ruby, JavaScript, PHP, Python, Elixir, and more.\n\nThis YAML configuration file supports environment-specific settings, ERB templating, and both error tracking and Insights (performance monitoring) features.\n\n[Honeybadger Configuration Documentation](https://docs.honeybadger.io/lib/ruby/gem-reference/configuration/)",
   "type": "object",
   "definitions": {
     "erb": {
@@ -13,18 +14,19 @@
       "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
     },
     "environment": {
+      "markdownDescription": "Environment-specific configuration for Honeybadger.\n\nSettings defined here override top-level settings when running in the specified environment (e.g., `production`, `development`, `staging`).\n\nSupports ERB templating for dynamic values.",
       "properties": {
         "api_key": {
           "type": "string",
-          "markdownDescription": "The API key for your Honeybadger project."
+          "markdownDescription": "The API key for your Honeybadger project.\n\n**Required** for error reporting and Insights.\n\nFind your API key in your Honeybadger project settings: **Settings → API Keys**\n\n[API Keys Documentation](https://docs.honeybadger.io/lib/ruby/gem-reference/configuration/)"
         },
         "env": {
           "type": "string",
-          "markdownDescription": "The environment the app is running in. In Rails this defaults to `Rails.env`."
+          "markdownDescription": "The environment the app is running in.\n\nIn Rails this defaults to `Rails.env`.\n\nExample: `production`, `staging`, `development`\n\nThis affects error grouping and allows environment-specific configuration."
         },
         "report_data": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Enable/disable reporting of data. Defaults to false for `test`, `development`, and `cucumber` environments."
+          "markdownDescription": "Enable/disable reporting of data to Honeybadger.\n\nDefault: `false` for `test`, `development`, and `cucumber` environments; `true` for all others.\n\nSet to `false` to disable error and event reporting entirely (useful for local development).\n\n[Environments Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/environments/)"
         },
         "root": {
           "type": "string",
@@ -32,7 +34,7 @@
         },
         "revision": {
           "type": "string",
-          "markdownDescription": "The project's git revision."
+          "markdownDescription": "The project's git revision (commit SHA).\n\nDefault: Automatically detected from git.\n\nUsed to link errors to specific code versions and for deployment tracking.\n\n[Deployment Tracking Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/tracking-deployments/)"
         },
         "hostname": {
           "type": "string",
@@ -52,31 +54,62 @@
         },
         "max_queue_size": {
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Maximum number of notices to queue for delivery at one time; new notices will be dropped if this number is exceeded."
+          "markdownDescription": "Maximum number of error notices to queue for delivery at one time.\n\nNew notices will be dropped if this number is exceeded.\n\nDefault: `100`\n\n**Note:** Increasing this value can use more memory. Decrease if you're experiencing memory issues in high-error scenarios."
         },
         "logging": {
           "type": "object",
           "properties": {
             "path": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "The path (absolute, or relative from `root`) to the log file.\n\nDefault: Rails logger or STDOUT.\n\nSet to `'STDOUT'` to log to standard output.\n\nExample: `'log/honeybadger.log'`"
             },
             "level": {
               "anyOf": [
                 { "$ref": "#/definitions/erb" },
                 {
-                  "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"]
+                  "enum": [
+                    "DEBUG",
+                    "INFO",
+                    "WARN",
+                    "ERROR",
+                    "FATAL",
+                    "UNKNOWN"
+                  ],
+                  "markdownEnumDescriptions": [
+                    "Most verbose logging level",
+                    "Standard informational messages (default)",
+                    "Warning messages only",
+                    "Error messages only",
+                    "Fatal error messages only",
+                    "Unknown severity messages"
+                  ]
                 }
               ],
-              "markdownDescription": "The log level. Does nothing unless `logging.path` is also set."
+              "markdownDescription": "The log level for Honeybadger's internal logging.\n\nDefault: `INFO`\n\nDoes nothing unless `logging.path` is also set."
             },
             "tty_level": {
               "anyOf": [
                 {
-                  "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"]
+                  "enum": [
+                    "DEBUG",
+                    "INFO",
+                    "WARN",
+                    "ERROR",
+                    "FATAL",
+                    "UNKNOWN"
+                  ],
+                  "markdownEnumDescriptions": [
+                    "Most verbose logging level",
+                    "Standard informational messages",
+                    "Warning messages only",
+                    "Error messages only",
+                    "Fatal error messages only",
+                    "Unknown severity messages"
+                  ]
                 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "Level to log when attached to a terminal (anything < `logging.level` will always be ignored)."
+              "markdownDescription": "The log level when outputting to a terminal (TTY).\n\nMust be >= `logging.level` — any level below `logging.level` will be ignored.\n\nDefault: Same as `logging.level`"
             }
           },
           "additionalProperties": false,
@@ -132,7 +165,7 @@
           "type": "object",
           "properties": {
             "filter_keys": {
-              "markdownDescription": " A list of keys to filter when sending request data. In Rails, this also includes existing params filters.",
+              "markdownDescription": "A list of keys to filter when sending request data.\n\nIn Rails, this also includes existing params filters configured in `config.filter_parameters`.\n\nDefault: `['password', 'password_confirmation']`\n\nExample: Add `'credit_card'`, `'ssn'`, or other sensitive field names.\n\n[Filtering Sensitive Data Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/filtering-sensitive-data/)",
               "type": "array",
               "uniqueItems": true,
               "items": {
@@ -195,7 +228,7 @@
               "default": true
             },
             "ignore": {
-              "markdownDescription": "A list of exception class names to ignore (appends to defaults).",
+              "markdownDescription": "A list of exception class names to ignore.\n\n**Appends** to default ignore list (use `ignore_only` to override defaults).\n\nDefault ignore list includes common framework exceptions like `ActionController::RoutingError`, `ActiveRecord::RecordNotFound`, etc.\n\nExample:\n```yaml\nexceptions:\n  ignore:\n    - CustomNotFoundError\n    - TemporaryError\n```\n\n[Ignoring Errors Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/ignoring-errors/)",
               "type": "array",
               "uniqueItems": true,
               "items": {
@@ -206,7 +239,7 @@
               }
             },
             "ignore_only": {
-              "markdownDescription": "A list of exception class names to ignore (overrides defaults).",
+              "markdownDescription": "A list of exception class names to ignore.\n\n**Overrides** default ignore list (use `ignore` to append to defaults).\n\nUse this when you want complete control over which exceptions are ignored.\n\nExample:\n```yaml\nexceptions:\n  ignore_only:\n    - ActionController::RoutingError\n```",
               "type": "array",
               "uniqueItems": true,
               "items": {
@@ -255,11 +288,11 @@
           "properties": {
             "enabled": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-              "markdownDescription": "Enable breadcrumb functionality.",
+              "markdownDescription": "Enable breadcrumb functionality.\n\nBreadcrumbs capture a trail of events leading up to an error, helping you understand context.\n\nDefault: `true`\n\n[Breadcrumbs Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/breadcrumbs/)",
               "default": true
             },
             "active_support_notifications": {
-              "markdownDescription": "Configuration for automatic Active Support Instrumentation events.",
+              "markdownDescription": "Configuration for automatic breadcrumb capture from Active Support Instrumentation events.\n\nBy default, Honeybadger automatically creates breadcrumbs for Rails framework events like database queries, cache operations, and view renders.\n\nYou can customize which events are captured here.\n\n[Active Support Instrumentation](https://guides.rubyonrails.org/active_support_instrumentation.html)",
               "type": "object"
             },
             "logging": {
@@ -295,7 +328,7 @@
                     { "type": "boolean" },
                     { "$ref": "#/definitions/erb" }
                   ],
-                  "markdownDescription": "Enable automatic Insights instrumentation for this plugin.",
+                  "markdownDescription": "Enable automatic Insights instrumentation for this plugin.\n\nInsights provides performance monitoring and APM features.\n\nDefault: `true`\n\n[Insights Documentation](https://docs.honeybadger.io/guides/insights/)",
                   "default": true
                 }
               }

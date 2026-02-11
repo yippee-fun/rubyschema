@@ -1,40 +1,51 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/cache.json",
-  "title": "Solid Cache configuration",
+  "title": "Solid Cache Configuration",
+  "markdownDescription": "Configuration for [Solid Cache](https://github.com/rails/solid_cache), a database-backed ActiveSupport::Cache::Store. Solid Cache uses modern SSDs to provide a much larger cache than traditional memory-only stores like Redis or Memcached.\n\nConfigured by default in Rails 8+. See the [Solid Cache README](https://github.com/rails/solid_cache) for more information.",
   "type": "object",
   "definitions": {
     "erb": { "type": "string", "pattern": "^<%=.*%>$" },
     "environment": {
       "type": "object",
+      "markdownDescription": "Environment-specific Solid Cache configuration.",
       "properties": {
         "databases": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "type": "string"
-          }
+          },
+          "markdownDescription": "Array of database shard names for multi-database cache setup. Uses Maglev consistent hashing to distribute cache entries.\n\nExample: `[cache_shard1, cache_shard2, cache_shard3]`"
         },
         "encrypt": {
-          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable encryption for cached values using Active Record Encryption. Requires setting up [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).\n\nSolid Cache uses optimized encryptor and serializer by default."
         },
         "store_options": {
           "type": "object",
+          "markdownDescription": "Cache store configuration options that control cache behavior, expiry, and size limits.",
           "properties": {
             "max_age": {
               "anyOf": [
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
-              ]
+              ],
+              "markdownDescription": "Maximum age of cache entries in seconds before they're eligible for deletion.\n\nDefault: `2.weeks` (1,209,600 seconds)\n\nCan be set to `nil` but not recommended unless using `max_entries` to limit cache size.",
+              "default": 1209600,
+              "examples": [86400, 604800, 1209600]
             },
             "max_size": {
               "anyOf": [
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
-              ]
+              ],
+              "markdownDescription": "Maximum total size of cache entries in bytes. When exceeded, Solid Cache will delete old entries.\n\nDefault: `nil` (no limit)\n\nSize is estimated by sampling entries, so this is approximate.",
+              "examples": [1073741824, 268435456000]
             },
             "namespace": {
-              "type": "string"
+              "type": "string",
+              "markdownDescription": "Namespace prefix for all cache keys. Useful for sharing a cache database across multiple applications or environments.\n\nExample: `myapp_production` results in keys like `myapp_production:users/1`"
             }
           },
           "additionalProperties": false

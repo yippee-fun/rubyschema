@@ -2,10 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/recurring.json",
   "title": "SolidQueue Recurring Configuration",
+  "markdownDescription": "Configuration for recurring tasks (cron-like jobs) in Solid Queue.\n\nRecurring tasks are managed by the scheduler component, which enqueues jobs for them when they're due based on their schedule. Tasks can be defined either as commands (Ruby code evaluated in the context of a job) or as Active Job classes with arguments.\n\n[Recurring Tasks Documentation](https://github.com/rails/solid_queue#recurring-tasks)",
   "type": "object",
   "definitions": {
     "environment": {
-      "markdownDescription": "[Docs](https://guides.rubyonrails.org/active_job_basics.html#recurring-tasks)",
+      "markdownDescription": "Environment-specific recurring task definitions.\n\nEach property name represents a unique task identifier, and its value defines either a task (with `command`) or a job (with `class`).\n\n[Recurring Tasks Documentation](https://guides.rubyonrails.org/active_job_basics.html#recurring-tasks)",
       "additionalProperties": {
         "oneOf": [
           { "$ref": "#/definitions/task" },
@@ -15,19 +16,19 @@
     },
     "schedule": {
       "type": "string",
-      "markdownDescription": "Natural langauge cron schedule such as \"every 5 minutes\" or \"every day at 5pm\".\n\n[Fugit Docs](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)"
+      "markdownDescription": "Natural language cron schedule expression.\n\nSupports formats like:\n- `\"every 5 minutes\"`\n- `\"every day at 5pm\"`\n- `\"0 0 * * *\"` (standard cron syntax)\n- `\"*/15 * * * *\"` (every 15 minutes)\n\nPowered by the Fugit library's natural language parsing.\n\n[Fugit Cron Documentation](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)"
     },
     "priority": {
-      "title": "Example",
-      "markdownDescription": "Numeric priority value (any positive integer) used when enqueuing the job. The smaller the value, the higher the priority. `0` is the highest priority.",
+      "markdownDescription": "Numeric priority value used when enqueuing the job.\n\nThe smaller the value, the higher the priority. `0` is the highest priority.\n\nDefault: `0`\n\n**Note:** Within the same queue, jobs will be picked in order of priority, but in a list of queues, the queue order takes precedence.",
       "type": "integer",
       "minimum": 0
     },
     "task": {
+      "markdownDescription": "A recurring task defined by a Ruby command string.\n\nUse this when you need to run simple Ruby code on a schedule without creating a dedicated Active Job class.",
       "properties": {
         "command": {
           "type": "string",
-          "markdownDescription": "Ruby code that will be evaluated in the context of a job (`SolidQueue::RecurringJob`)."
+          "markdownDescription": "Ruby code that will be evaluated in the context of a job (`SolidQueue::RecurringJob`).\n\nExample: `\"Product.sync_inventory\"` or `\"User.where(active: false).delete_all\"`\n\n**Security Warning:** This code is evaluated directly, so ensure it comes from trusted configuration sources only."
         },
         "schedule": {
           "$ref": "#/definitions/schedule"
@@ -36,20 +37,24 @@
           "$ref": "#/definitions/priority"
         },
         "queue": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The queue name where the recurring task will be enqueued.\n\nDefault: `\"default\"`\n\nYou can use this to route recurring tasks to specific workers."
         }
       },
       "required": ["command", "schedule"],
       "additionalProperties": false
     },
     "job": {
+      "markdownDescription": "A recurring task defined by an Active Job class with arguments.\n\nUse this when you have a dedicated Active Job class that you want to run on a schedule with specific arguments.",
       "properties": {
         "class": {
           "type": "string",
-          "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$"
+          "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$",
+          "markdownDescription": "The fully-qualified Active Job class name.\n\nMust end with `Job` (e.g., `\"CleanupOldRecordsJob\"` or `\"Reports::GenerateDailySummaryJob\"`)."
         },
         "args": {
-          "type": ["array", "object"]
+          "type": ["array", "object"],
+          "markdownDescription": "Arguments to pass to the job's `perform` method.\n\nCan be an array of positional arguments or an object (for keyword arguments).\n\nExamples:\n- Array: `[\"2024-01-01\", true]`\n- Object: `{\"start_date\": \"2024-01-01\", \"include_archived\": true}`"
         },
         "schedule": {
           "$ref": "#/definitions/schedule"
@@ -58,7 +63,8 @@
           "$ref": "#/definitions/priority"
         },
         "queue": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "The queue name where the recurring job will be enqueued.\n\nDefault: Uses the queue specified in the job class (via `queue_as`), or `\"default\"` if not specified.\n\nYou can use this to override the job's default queue for recurring executions."
         }
       },
       "required": ["class", "schedule"],
