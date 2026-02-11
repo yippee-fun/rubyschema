@@ -3,104 +3,413 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ruby Schema - JSON Schemas for Ruby Configs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Ruby Schema</title>
+    <meta name="description" content="JSON Schemas for Ruby gem configuration files. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs." />
+    <style>
+      :root {
+        --bg: #fafafa;
+        --fg: #1a1a1a;
+        --dim: #737373;
+        --border: #e5e5e5;
+        --accent: #cc0000;
+        --accent-dim: #991a1a;
+        --surface: #ffffff;
+        --code-bg: #f0f0f0;
+        --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #111111;
+          --fg: #e5e5e5;
+          --dim: #888888;
+          --border: #2a2a2a;
+          --accent: #ff6b6b;
+          --accent-dim: #ff9999;
+          --surface: #1a1a1a;
+          --code-bg: #1e1e1e;
+        }
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: var(--mono);
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--fg);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        max-width: 740px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      /* ---- Header ---- */
+
+      header {
+        margin-bottom: 4rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.25rem;
+      }
+
+      h1 span { color: var(--accent); }
+
+      .tagline {
+        font-size: 1.05rem;
+        color: var(--dim);
+        max-width: 540px;
+        line-height: 1.55;
+      }
+
+      /* ---- Prose ---- */
+
+      .prose {
+        color: var(--dim);
+        margin-bottom: 3.5rem;
+        line-height: 1.7;
+      }
+
+      .prose p + p { margin-top: 1rem; }
+
+      .prose a {
+        color: var(--fg);
+        text-decoration-color: var(--border);
+        text-underline-offset: 3px;
+      }
+
+      .prose a:hover {
+        color: var(--accent);
+        text-decoration-color: var(--accent);
+      }
+
+      /* ---- Sections ---- */
+
+      section { margin-bottom: 3.5rem; }
+
+      h2 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--dim);
+        margin-bottom: 1.25rem;
+      }
+
+      /* ---- Install block ---- */
+
+      .install {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .install code {
+        font-family: var(--mono);
+        font-size: 13px;
+        word-break: break-all;
+        user-select: all;
+        cursor: pointer;
+      }
+
+      .install-hint {
+        font-size: 12px;
+        color: var(--dim);
+      }
+
+      /* ---- Manual setup ---- */
+
+      .setup-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      @media (max-width: 600px) {
+        .setup-grid { grid-template-columns: 1fr; }
+      }
+
+      .setup-item label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dim);
+        margin-bottom: 0.4rem;
+      }
+
+      .setup-item code {
+        display: block;
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 0.6rem 0.75rem;
+        font-family: var(--mono);
+        font-size: 12px;
+        white-space: nowrap;
+        overflow-x: auto;
+      }
+
+      /* ---- Schema list ---- */
+
+      .schema-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .schema-table tr {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .schema-table tr:last-child { border-bottom: none; }
+
+      .schema-table td {
+        padding: 0.7rem 0;
+        vertical-align: baseline;
+      }
+
+      .schema-table td:first-child {
+        font-weight: 600;
+        white-space: nowrap;
+        padding-right: 1.5rem;
+        width: 1%;
+      }
+
+      .schema-table td:nth-child(2) {
+        color: var(--dim);
+        font-size: 13px;
+        padding-right: 1.5rem;
+        white-space: nowrap;
+        width: 1%;
+      }
+
+      .schema-table td:last-child {
+        font-size: 12px;
+        color: var(--dim);
+        word-break: break-all;
+      }
+
+      .schema-table td:last-child a {
+        color: var(--dim);
+        text-decoration: none;
+      }
+
+      .schema-table td:last-child a:hover {
+        color: var(--accent);
+      }
+
+      .schema-table .group-header td {
+        padding-top: 1.75rem;
+        padding-bottom: 0.5rem;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        border-bottom: none;
+      }
+
+      /* Responsive: hide URL column on narrow screens */
+      @media (max-width: 600px) {
+        .schema-table td:last-child { display: none; }
+      }
+
+      /* ---- Footer ---- */
+
+      footer {
+        margin-top: 5rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--dim);
+      }
+
+      footer a {
+        color: var(--fg);
+        text-decoration: none;
+      }
+
+      footer a:hover { color: var(--accent); }
+    </style>
   </head>
-  <body class="bg-gray-50 text-gray-900">
-    <div class="max-w-4xl mx-auto px-6 py-8">
-      <header class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-red-700 mb-2">
-          Ruby Schema
-        </h1>
-        <p class="text-xl text-gray-600">
-          JSON Schemas for Ruby YAML, JSON, and TOML Configs
-        </p>
+  <body>
+    <div class="container">
+
+      <header>
+        <h1><span>Ruby</span>Schema</h1>
+        <p class="tagline">Your editor already knows how to validate YAML, JSON and TOML — it just needs the right schemas.</p>
       </header>
 
-      <div class="bg-white rounded-lg shadow-sm p-8 mb-8">
-        <p class="mb-4">
-          <strong>Configuration is hard.</strong> Whether it's YAML with its
-          significant whitespace and ambiguous booleans, JSON with its strict
-          syntax, or TOML with its specific formatting rules, it's easy to make
-          mistakes. Most configs need to be <em>just so</em> to work properly,
-          yet they're often unspecified and poorly documented.
-        </p>
-
-        <p class="mb-4">
-          <strong>Ruby Schema makes configuration easier.</strong> We provide
-          JSON schemas for common Ruby gems, supporting YAML, JSON, and TOML
-          formats. Get auto-complete, validation, and inline documentation right
-          in your text editor.
-        </p>
-
-        <p>
-          With Ruby Schema, your configuration files become intelligent –
-          catching errors before you run your code and guiding you with
-          contextual help as you type, regardless of whether you prefer YAML,
-          JSON, or TOML.
-        </p>
+      <div class="prose">
+        <p>Ruby gems love configuration files. Between YAML’s ambiguous booleans, invisible whitespace bugs and Ruby’s insistence on the 1.1 spec, those files are a minefield. You won’t know something’s wrong until production tells you.</p>
+        <p>RubySchema provides <a href="https://json-schema.org/">JSON Schema</a> definitions for popular gems so your editor can catch mistakes, suggest keys and surface documentation as you type.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-red-700 mb-2">
-            🚀 Auto-complete
-          </h3>
-          <p class="text-gray-700">
-            Get intelligent suggestions as you type, speeding up configuration
-            and reducing typos.
-          </p>
+      <section>
+        <h2>Quick Start</h2>
+        <div class="install">
+          <code>bin/rails app:template LOCATION=https://www.rubyschema.org/rails.rb</code>
         </div>
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-red-700 mb-2">✅ Validation</h3>
-          <p class="text-gray-700">
-            Catch configuration errors instantly, before they cause runtime
-            failures.
-          </p>
-        </div>
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-red-700 mb-2">
-            📚 Inline Documentation
-          </h3>
-          <p class="text-gray-700">
-            See helpful documentation right in your editor, no need to search
-            through docs.
-          </p>
-        </div>
-      </div>
+        <p class="install-hint">Injects schema comments into your Rails config files. Safe to re-run when new schemas are added.</p>
+      </section>
 
-      <div class="bg-gray-900 text-gray-100 rounded-lg p-8 mb-8">
-        <h2 class="text-2xl font-bold mb-4">Quick Start for Rails</h2>
-        <p class="mb-4">
-          Install all Ruby schemas in your Rails app with one command:
-        </p>
-        <div class="bg-black rounded p-4 overflow-x-auto">
-          <code class="font-mono text-sm"
-            >bundle exec rails app:template
-            LOCATION=https://www.rubyschema.org/rails.rb</code
-          >
+      <section>
+        <h2>Manual Setup</h2>
+        <div class="setup-grid">
+          <div class="setup-item">
+            <label>YAML</label>
+            <code># yaml-language-server: $schema=&lt;url&gt;</code>
+          </div>
+          <div class="setup-item">
+            <label>JSON</label>
+            <code>{ "$schema": "&lt;url&gt;" }</code>
+          </div>
+          <div class="setup-item">
+            <label>TOML</label>
+            <code>#:schema &lt;url&gt;</code>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="text-center mt-12 py-8">
-        <a
-          href="https://github.com/joeldrapper/rubyschema"
-          class="inline-block px-8 py-4 bg-red-700 hover:bg-red-800 text-white font-bold rounded transition-colors"
-        >
-          View on GitHub
-        </a>
-      </div>
+      <section>
+        <h2>Schemas</h2>
+        <table class="schema-table">
 
-      <footer class="text-center mt-16 py-8 text-sm text-gray-500">
-        <p>
-          By
-          <a
-            href="https://joel.drapper.me"
-            class="text-gray-700 hover:text-red-700 transition-colors"
-            >Joel Drapper</a
-          >
-        </p>
+          <tr class="group-header"><td colspan="3">Rails</td></tr>
+          <tr>
+            <td>Database</td>
+            <td>database.yml</td>
+            <td><a href="/rails/database.json">rubyschema.org/rails/database.json</a></td>
+          </tr>
+          <tr>
+            <td>Storage</td>
+            <td>storage.yml</td>
+            <td><a href="/rails/storage.json">rubyschema.org/rails/storage.json</a></td>
+          </tr>
+          <tr>
+            <td>Cable</td>
+            <td>cable.yml</td>
+            <td><a href="/rails/cable.json">rubyschema.org/rails/cable.json</a></td>
+          </tr>
+          <tr>
+            <td>Cache</td>
+            <td>cache.yml</td>
+            <td><a href="/rails/cache.json">rubyschema.org/rails/cache.json</a></td>
+          </tr>
+          <tr>
+            <td>Queue</td>
+            <td>queue.yml</td>
+            <td><a href="/rails/queue.json">rubyschema.org/rails/queue.json</a></td>
+          </tr>
+          <tr>
+            <td>Recurring</td>
+            <td>recurring.yml</td>
+            <td><a href="/rails/recurring.json">rubyschema.org/rails/recurring.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">Deployment &amp; CI</td></tr>
+          <tr>
+            <td>Kamal</td>
+            <td>deploy.yml</td>
+            <td><a href="/kamal/deploy.json">rubyschema.org/kamal/deploy.json</a></td>
+          </tr>
+          <tr>
+            <td>Lefthook</td>
+            <td>lefthook.yml</td>
+            <td><a href="/lefthook.json">rubyschema.org/lefthook.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">Code Quality</td></tr>
+          <tr>
+            <td>RuboCop</td>
+            <td>.rubocop.yml</td>
+            <td><a href="/rubocop.json">rubyschema.org/rubocop.json</a></td>
+          </tr>
+          <tr>
+            <td>Standard</td>
+            <td>.standard.yml</td>
+            <td><a href="/standard.json">rubyschema.org/standard.json</a></td>
+          </tr>
+          <tr>
+            <td>Packwerk</td>
+            <td>package.yml</td>
+            <td><a href="/packwerk/package.json">rubyschema.org/packwerk/package.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">Background Jobs</td></tr>
+          <tr>
+            <td>Sidekiq</td>
+            <td>sidekiq.yml</td>
+            <td><a href="/sidekiq.json">rubyschema.org/sidekiq.json</a></td>
+          </tr>
+          <tr>
+            <td>Shoryuken</td>
+            <td>shoryuken.yml</td>
+            <td><a href="/shoryuken.json">rubyschema.org/shoryuken.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">Monitoring</td></tr>
+          <tr>
+            <td>Honeybadger</td>
+            <td>honeybadger.yml</td>
+            <td><a href="/honeybadger.json">rubyschema.org/honeybadger.json</a></td>
+          </tr>
+          <tr>
+            <td>RoRvsWild</td>
+            <td>rorvswild.yml</td>
+            <td><a href="/rorvswild.json">rubyschema.org/rorvswild.json</a></td>
+          </tr>
+          <tr>
+            <td>Scout APM</td>
+            <td>scout_apm.yml</td>
+            <td><a href="/scout_apm.json">rubyschema.org/scout_apm.json</a></td>
+          </tr>
+          <tr>
+            <td>PgHero</td>
+            <td>pghero.yml</td>
+            <td><a href="/pghero.json">rubyschema.org/pghero.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">I18n</td></tr>
+          <tr>
+            <td>Locale files</td>
+            <td>locales/*.yml</td>
+            <td><a href="/i18n/locale.json">rubyschema.org/i18n/locale.json</a></td>
+          </tr>
+          <tr>
+            <td>i18n-tasks</td>
+            <td>i18n-tasks.yml</td>
+            <td><a href="/i18n-tasks.json">rubyschema.org/i18n-tasks.json</a></td>
+          </tr>
+
+          <tr class="group-header"><td colspan="3">Other</td></tr>
+          <tr>
+            <td>Mongoid</td>
+            <td>mongoid.yml</td>
+            <td><a href="/mongoid.json">rubyschema.org/mongoid.json</a></td>
+          </tr>
+          <tr>
+            <td>Vite Ruby</td>
+            <td>vite.json</td>
+            <td><a href="/vite.json">rubyschema.org/vite.json</a></td>
+          </tr>
+
+        </table>
+      </section>
+
+      <footer>
+        <a href="https://github.com/yippee-fun/rubyschema">GitHub</a> &middot; by <a href="https://joel.drapper.me">Joel Drapper</a>
       </footer>
+
     </div>
   </body>
 </html>
