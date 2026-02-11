@@ -1054,12 +1054,15 @@
             "Max": { "type": "integer" },
             "AllowHeredoc": { "type": "boolean" },
             "AllowURI": { "type": "boolean" },
+            "AllowQualifiedName": { "type": "boolean" },
             "URISchemes": {
               "type": "array",
               "uniqueItems": true,
               "items": { "type": "string" }
             },
+            "AllowRBSInlineAnnotation": { "type": "boolean" },
             "IgnoreCopDirectives": { "type": "boolean" },
+            "AllowCopDirectives": { "type": "boolean" },
             "AllowedPatterns": {
               "type": "array",
               "uniqueItems": true,
@@ -4387,6 +4390,11 @@
               "uniqueItems": true,
               "items": { "type": "string" }
             },
+            "IncludedMacroPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" }
+            },
             "AllowParenthesesInMultilineCall": {
               "type": "boolean"
             },
@@ -4501,6 +4509,10 @@
           }
         }
       ]
+    },
+    "Style/ModuleMemberExistenceCheck": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylemodulememberexistencecheck)",
+      "$ref": "#/definitions/cop"
     },
     "Style/MultilineBlockChain": {
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_style#stylemultilineblockchain)",
