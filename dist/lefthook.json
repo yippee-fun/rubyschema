@@ -49,9 +49,9 @@
           "additionalProperties": { "$ref": "#/definitions/command" }
         },
         "scripts": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "$ref": "#/definitions/script" }
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "$ref": "#/definitions/script" }
         }
       },
       "additionalProperties": false
