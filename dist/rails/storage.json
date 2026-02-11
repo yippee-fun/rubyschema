@@ -2,39 +2,45 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/storage.json",
   "title": "Rails Storage Configuration",
-  "description": "Configuration for ActiveStorage.",
+  "markdownDescription": "Configuration for Active Storage services. Each service defines where uploaded files are stored (disk, S3, Google Cloud Storage, Azure, or mirrored across multiple services). Set the active service per environment in `config/environments/*.rb` with `config.active_storage.service = :service_name`.",
   "type": "object",
   "definitions": {
     "disk_service": {
-      "description": "Disk Service",
+      "markdownDescription": "Local disk storage service. Files are stored directly on the server's filesystem at the specified root path.",
       "properties": {
         "service": {
-          "const": "Disk"
+          "const": "Disk",
+          "markdownDescription": "Service type for local disk storage."
         },
         "root": {
           "type": "string",
-          "default": "<%= Rails.root.join(\"storage\") %>"
+          "default": "<%= Rails.root.join(\"storage\") %>",
+          "markdownDescription": "The root directory where uploaded files will be stored. Use an absolute path or ERB to generate one relative to your Rails app (e.g., `<%= Rails.root.join(\"storage\") %>`)."
         }
       },
       "required": ["service", "root"],
       "additionalProperties": false
     },
     "s3_service": {
-      "description": "",
+      "markdownDescription": "Amazon S3 or S3-compatible storage service. Requires the `aws-sdk-s3` gem. For S3-compatible services like DigitalOcean Spaces, provide the `endpoint` option.",
       "properties": {
         "service": {
-          "const": "S3"
+          "const": "S3",
+          "markdownDescription": "Service type for Amazon S3 or S3-compatible storage."
         },
         "endpoint": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Custom endpoint URL for S3-compatible services like DigitalOcean Spaces (e.g., `https://nyc3.digitaloceanspaces.com`). Omit for standard AWS S3."
         },
         "access_key_id": {
           "type": "string",
-          "default": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>"
+          "default": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>",
+          "markdownDescription": "AWS access key ID for authentication. Store securely using Rails encrypted credentials."
         },
         "secret_access_key": {
           "type": "string",
-          "default": "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>"
+          "default": "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>",
+          "markdownDescription": "AWS secret access key for authentication. Store securely using Rails encrypted credentials."
         },
         "region": {
           "anyOf": [
@@ -54,6 +60,7 @@
                 "ap-southeast-3",
                 "ap-southeast-4",
                 "ap-southeast-5",
+                "ap-southeast-6",
                 "ap-southeast-7",
                 "ca-central-1",
                 "ca-west-1",
@@ -78,29 +85,37 @@
                 "us-west-2"
               ]
             }
-          ]
+          ],
+          "markdownDescription": "AWS region where your S3 bucket is located (e.g., `us-east-1`)."
         },
         "bucket": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Name of the S3 bucket where files will be stored. Consider including the environment in the name (e.g., `my-bucket-<%= Rails.env %>`) to prevent accidentally destroying production data."
         },
         "http_open_timeout": {
-          "type": ["integer", "string"]
+          "type": ["integer", "string"],
+          "markdownDescription": "HTTP open timeout in seconds for S3 client connections. Set sensible timeouts to prevent connections from being held for several minutes in failure scenarios."
         },
         "http_read_timeout": {
-          "type": ["integer", "string"]
+          "type": ["integer", "string"],
+          "markdownDescription": "HTTP read timeout in seconds for S3 client operations. Set sensible timeouts to prevent connections from being held for several minutes in failure scenarios."
         },
         "retry_limit": {
-          "type": ["integer", "string"]
+          "type": ["integer", "string"],
+          "markdownDescription": "Maximum number of retry attempts for failed S3 operations. Set appropriate limits to avoid request queuing in failure scenarios."
         },
         "upload": {
           "type": "object",
+          "markdownDescription": "Upload options for controlling how files are stored in S3.",
           "properties": {
             "server_side_encryption": {
-              "enum": ["aws:kms", "AES256"]
+              "enum": ["aws:kms", "AES256"],
+              "markdownDescription": "Server-side encryption method. Use `aws:kms` for AWS KMS encryption or `AES256` for S3-managed encryption."
             },
             "cache_control": {
               "type": "string",
-              "default": "private, max-age=<%= 1.day.to_i %>"
+              "default": "private, max-age=<%= 1.day.to_i %>",
+              "markdownDescription": "Cache-Control header value for uploaded files. Controls how browsers and CDNs cache the content."
             }
           }
         }
@@ -109,57 +124,88 @@
       "additionalProperties": false
     },
     "gcs_service": {
+      "markdownDescription": "Google Cloud Storage (GCS) service. Requires the `google-cloud-storage` gem. Provide either credentials (keyfile path or inline JSON) or use IAM authentication.",
       "properties": {
         "service": {
-          "const": "GCS"
+          "const": "GCS",
+          "markdownDescription": "Service type for Google Cloud Storage."
         },
         "project": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Google Cloud project ID where your storage bucket is located."
         },
         "credentials": {
           "oneOf": [
             {
-              "description": "Your GCS keyfile path.",
+              "markdownDescription": "Path to your GCS service account keyfile. Use ERB to generate a path relative to your Rails app (e.g., `<%= Rails.root.join(\"path/to/gcs.keyfile\") %>`).",
               "type": "string",
               "default": "<%= Rails.root.join(\"path/to/gcs.keyfile\") %>"
             },
             {
               "type": "object",
               "title": "GCS Credentials",
+              "markdownDescription": "Inline service account credentials as a JSON object. Store sensitive values using Rails encrypted credentials.",
               "properties": {
                 "type": {
                   "anyOf": [
                     { "type": "string" },
                     { "enum": ["service_account"] }
-                  ]
+                  ],
+                  "markdownDescription": "Credential type, typically `service_account`."
                 },
-                "project_id": { "type": "string" },
+                "project_id": {
+                  "type": "string",
+                  "markdownDescription": "Google Cloud project ID."
+                },
                 "private_key_id": {
                   "type": "string",
-                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key_id) %>"
+                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key_id) %>",
+                  "markdownDescription": "Service account private key ID. Store securely using Rails encrypted credentials."
                 },
                 "private_key": {
                   "type": "string",
-                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key).dump %>"
+                  "default": "<%= Rails.application.credentials.dig(:gcs, :private_key).dump %>",
+                  "markdownDescription": "Service account private key. Store securely using Rails encrypted credentials. Use `.dump` to properly escape the key."
                 },
-                "client_email": { "type": "string" },
-                "client_id": { "type": "string" },
-                "auth_uri": { "type": "string" },
-                "token_uri": { "type": "string" },
-                "auth_provider_x509_cert_url": { "type": "string" },
-                "client_x509_cert_url": { "type": "string" }
+                "client_email": {
+                  "type": "string",
+                  "markdownDescription": "Service account email address."
+                },
+                "client_id": {
+                  "type": "string",
+                  "markdownDescription": "Service account client ID."
+                },
+                "auth_uri": {
+                  "type": "string",
+                  "markdownDescription": "OAuth2 authorization URI, typically `https://accounts.google.com/o/oauth2/auth`."
+                },
+                "token_uri": {
+                  "type": "string",
+                  "markdownDescription": "OAuth2 token URI, typically `https://accounts.google.com/o/oauth2/token`."
+                },
+                "auth_provider_x509_cert_url": {
+                  "type": "string",
+                  "markdownDescription": "X.509 certificate URL for the auth provider, typically `https://www.googleapis.com/oauth2/v1/certs`."
+                },
+                "client_x509_cert_url": {
+                  "type": "string",
+                  "markdownDescription": "X.509 certificate URL for this service account."
+                }
               }
             }
           ]
         },
         "iam": {
-          "type": "boolean"
+          "type": "boolean",
+          "markdownDescription": "Use IAM authentication instead of credentials when signing URLs. Useful for GKE applications with Workload Identity. When enabled, the metadata server provides the service account email."
         },
         "bucket": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Name of the GCS bucket where files will be stored. Consider including the environment in the name (e.g., `my-bucket-<%= Rails.env %>`)."
         },
         "cache_control": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Cache-Control header value for uploaded files. Controls how browsers and CDNs cache the content (e.g., `public, max-age=3600`)."
         }
       },
       "anyOf": [
@@ -173,35 +219,47 @@
       "additionalProperties": false
     },
     "azure_storage_service": {
+      "markdownDescription": "Microsoft Azure Storage service. Files are stored in Azure Blob Storage containers.",
       "properties": {
         "service": {
-          "const": "AzureStorage"
+          "const": "AzureStorage",
+          "markdownDescription": "Service type for Azure Storage."
         },
         "storage_account_name": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Azure Storage account name where your container is located."
         },
         "storage_access_key": {
           "type": "string",
-          "default": "<%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>"
+          "default": "<%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>",
+          "markdownDescription": "Azure Storage access key for authentication. Store securely using Rails encrypted credentials."
+        },
+        "container": {
+          "type": "string",
+          "markdownDescription": "Name of the Azure Storage container where files will be stored. Consider including the environment in the name (e.g., `my-container-<%= Rails.env %>`)."
         }
       },
-      "required": ["service", "storage_account_name", "storage_access_key"],
+      "required": ["service", "storage_account_name", "storage_access_key", "container"],
       "additionalProperties": false
     },
     "mirror_service": {
+      "markdownDescription": "Mirror service that replicates uploads and deletes across multiple storage services. Intended for temporary use during migrations between services. Uploads go to all services, but downloads are always handled by the primary service. Not atomic - verify all files are copied before switching services.",
       "properties": {
         "service": {
-          "const": "Mirror"
+          "const": "Mirror",
+          "markdownDescription": "Service type for mirroring across multiple storage services."
         },
         "primary": {
-          "type": "string"
+          "type": "string",
+          "markdownDescription": "Name of the primary storage service. This service handles all download requests. Must reference another service defined in this file."
         },
         "mirrors": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "type": "string"
-          }
+          },
+          "markdownDescription": "Array of secondary storage service names to mirror uploads to. Files are uploaded to all services, but only the primary service handles downloads. Each name must reference another service defined in this file."
         }
       },
       "required": ["service", "primary", "mirrors"],
@@ -221,6 +279,7 @@
   "properties": {
     "test": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Storage service for the test environment. Typically uses local disk storage in a temporary directory.",
       "default": {
         "service": "Disk",
         "root": "<%= Rails.root.join(\"tmp/storage\") %>"
@@ -228,6 +287,7 @@
     },
     "local": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Storage service for local development. Typically uses local disk storage in your project's storage directory.",
       "default": {
         "service": "Disk",
         "root": "<%= Rails.root.join(\"storage\") %>"
@@ -235,6 +295,7 @@
     },
     "amazon": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Amazon S3 storage service. Commonly used for production environments.",
       "default": {
         "service": "S3",
         "access_key_id": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>",
@@ -245,6 +306,7 @@
     },
     "google": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Google Cloud Storage service. Alternative cloud storage option to S3.",
       "default": {
         "service": "GCS",
         "project": "your_project",
@@ -254,6 +316,7 @@
     },
     "microsoft": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Microsoft Azure Storage service. Alternative cloud storage option to S3 and GCS.",
       "default": {
         "service": "AzureStorage",
         "storage_account_name": "your_account_name",
@@ -263,6 +326,7 @@
     },
     "mirror": {
       "$ref": "#/definitions/service",
+      "markdownDescription": "Mirror service for replicating uploads across multiple storage services. Use during migrations to keep services in sync.",
       "default": {
         "service": "Mirror",
         "primary": "local",
@@ -270,5 +334,8 @@
       }
     }
   },
-  "additionalProperties": { "$ref": "#/definitions/service" }
+  "additionalProperties": {
+    "$ref": "#/definitions/service",
+    "markdownDescription": "Custom storage service. You can define any number of services with custom names and reference them by name in your environment configuration."
+  }
 }
