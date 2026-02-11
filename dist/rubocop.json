@@ -1603,8 +1603,8 @@
       "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintconstantoverwritteninrescue)",
       "$ref": "#/definitions/cop"
     },
-    "Lint/onstantReassignment": {
-      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintonstantreassignment)",
+    "Lint/ConstantReassignment": {
+      "markdownDescription": "[Docs](https://docs.rubocop.org/rubocop/cops_lint#lintconstantreassignment)",
       "$ref": "#/definitions/cop"
     },
     "Lint/ConstantResolution": {
