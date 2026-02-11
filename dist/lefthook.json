@@ -458,8 +458,8 @@
       "uniqueItems": true,
       "items": {
         "type": "object",
-        "minItems": 1,
-        "maxItems": 1,
+        "minProperties": 1,
+        "maxProperties": 1,
         "propertyNames": { "type": "string" },
         "additionalProperties": { "type": "string" }
       }
