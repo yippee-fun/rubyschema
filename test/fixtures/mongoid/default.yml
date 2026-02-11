@@ -1,0 +1,81 @@
+development:
+  clients:
+    default:
+      database: my_app_development
+      hosts:
+        - localhost:27017
+      options:
+        read:
+          mode: primary
+        max_pool_size: 5
+        min_pool_size: 1
+        connect_timeout: 10
+        server_selection_timeout: 30
+  options:
+    log_level: debug
+    raise_not_found_error: true
+    use_utc: false
+    belongs_to_required_by_default: true
+    preload_models: false
+
+test:
+  clients:
+    default:
+      database: my_app_test
+      hosts:
+        - localhost:27017
+      options:
+        read:
+          mode: primary
+        max_pool_size: 1
+  options:
+    raise_not_found_error: true
+
+production:
+  clients:
+    default:
+      uri: mongodb+srv://user:password@cluster0.example.mongodb.net/my_app_production
+      options:
+        read:
+          mode: secondary_preferred
+          tag_sets:
+            - use: reporting
+        write:
+          w: 1
+        max_pool_size: 20
+        min_pool_size: 5
+        connect_timeout: 15
+        wait_queue_timeout: 10
+        compressors:
+          - zstd
+          - snappy
+        ssl: true
+        ssl_verify: true
+        ssl_ca_cert: /etc/ssl/certs/ca-certificates.crt
+        truncate_logs: true
+    analytics:
+      database: my_app_analytics
+      hosts:
+        - analytics1.example.com:27017
+        - analytics2.example.com:27017
+      options:
+        read:
+          mode: nearest
+        auth_mech: scram256
+        auth_source: admin
+        user: analytics_user
+        password: secret
+        connect: replica_set
+        replica_set: analytics-rs0
+  options:
+    app_name: my_app
+    log_level: warn
+    raise_not_found_error: true
+    use_utc: true
+    belongs_to_required_by_default: true
+    immutable_ids: true
+    duplicate_fields_exception: true
+    async_query_executor: global_thread_pool
+    global_executor_concurrency: 4
+  driver_options:
+    validate_update_replace: true

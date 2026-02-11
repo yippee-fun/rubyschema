@@ -1,0 +1,18 @@
+development:
+  databases:
+    - cache_db
+  encrypt: false
+  store_options:
+    max_age: 3600
+    max_size: 262144
+    namespace: dev_cache
+
+production:
+  databases:
+    - primary_cache
+    - replica_cache
+  encrypt: true
+  store_options:
+    max_age: 86400
+    max_size: 524288
+    namespace: prod_cache

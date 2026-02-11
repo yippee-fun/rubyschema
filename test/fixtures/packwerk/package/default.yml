@@ -1,0 +1,11 @@
+enforce_dependencies: strict
+dependencies:
+  - components/billing
+  - components/authentication
+  - components/notifications
+require:
+  - packwerk-extensions
+metadata:
+  owner: Team Platform
+  slack: "#team-platform"
+offenses_formatter: default

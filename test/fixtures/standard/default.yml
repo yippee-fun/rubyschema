@@ -1,0 +1,17 @@
+fix: false
+parallel: true
+format: progress
+ruby_version: 3.4
+default_ignores: true
+plugins:
+  - standard-rails
+  - standard-sorbet
+  - standard-rails:
+      target_rails_version: 7.1
+extend_config: .standard_todo.yml
+ignore:
+  - "vendor/**/*"
+  - "db/schema.rb"
+  - app/models/legacy_user.rb:
+      - Style/StringLiterals
+      - Layout/LineLength

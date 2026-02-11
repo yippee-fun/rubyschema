@@ -1,0 +1,46 @@
+name: Photos App
+key: "<%= Rails.application.credentials.dig(:scout, :key) %>"
+monitor: true
+auto_instruments: true
+log_level: INFO
+detailed_middleware: false
+hostname: web-01
+revision_sha: abc123def456
+scm_subdirectory: app
+sample_rate: 80
+endpoint_sample_rate: 90
+job_sample_rate: 50
+ignore_endpoints:
+  - "/health"
+  - "/status"
+ignore_jobs:
+  - CleanupJob
+sample_endpoints:
+  - "/busy_endpoint:50"
+sample_jobs:
+  - "HeavyJob:70"
+max_traces: 100
+enable_background_jobs: true
+collect_remote_ip: true
+record_queue_time: true
+auto_instruments_ignore:
+  - application_controller
+errors_ignored_exceptions:
+  - ActiveRecord::RecordNotFound
+  - ActionController::RoutingError
+errors_filtered_params:
+  - password
+  - s3-key
+log_file_path: stdout
+proxy: "http://proxy.example.com:8080"
+host: "https://scoutapm.com"
+uri_reporting: filtered_params
+disabled_instruments:
+  - Elasticsearch
+  - HttpClient
+timeline_traces: true
+use_prepend: true
+alias_method_instruments:
+  - Elasticsearch
+prepend_instruments:
+  - HttpClient

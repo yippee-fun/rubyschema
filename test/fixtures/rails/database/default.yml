@@ -1,0 +1,43 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 1000
+  host: localhost
+  connection_retries: 1
+  advisory_locks: true
+
+development:
+  <<: *default
+  database: myapp_development
+
+test:
+  <<: *default
+  database: myapp_test
+
+production:
+  primary:
+    adapter: postgresql
+    encoding: unicode
+    database: myapp_production
+    username: deploy
+    password: <%= ENV["DATABASE_PASSWORD"] %>
+    pool: 25
+    host: db.example.com
+    port: 5432
+    statement_limit: 200
+    retry_deadline: 5000
+    query_cache: true
+  primary_replica:
+    adapter: postgresql
+    encoding: unicode
+    database: myapp_production
+    username: deploy_readonly
+    password: <%= ENV["DATABASE_PASSWORD"] %>
+    pool: 10
+    host: db-replica.example.com
+  cache:
+    adapter: sqlite3
+    database: storage/production_cache.sqlite3
+    pool: 5
+    timeout: 5000

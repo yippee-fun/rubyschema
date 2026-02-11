@@ -1,0 +1,38 @@
+assert_lefthook_installed: true
+colors: auto
+min_version: "1.4.0"
+no_tty: false
+source_dir: ".lefthook/"
+source_dir_local: ".lefthook-local/"
+skip_lfs: false
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: bundle exec rubocop {staged_files}
+      glob: "*.rb"
+      stage_fixed: true
+      tags:
+        - style
+        - ruby
+    prettier:
+      run: npx prettier --check {staged_files}
+      glob: "*.{js,ts,jsx,tsx,css,md}"
+      tags:
+        - style
+        - frontend
+
+pre-push:
+  piped: true
+  commands:
+    test:
+      run: bundle exec rake test
+      tags:
+        - test
+      priority: 1
+    typecheck:
+      run: npx tsc --noEmit
+      tags:
+        - test
+      priority: 2

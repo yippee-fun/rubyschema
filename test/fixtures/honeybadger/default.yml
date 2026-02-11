@@ -1,0 +1,41 @@
+api_key: "abc123"
+env: production
+report_data: true
+root: "/app"
+revision: "a1b2c3d4"
+hostname: "web-01"
+debug: false
+send_data_at_exit: true
+max_queue_size: 100
+logging:
+  path: "/var/log/honeybadger.log"
+  level: "INFO"
+connection:
+  secure: true
+  host: "api.honeybadger.io"
+  port: 443
+  http_open_timeout: 2
+  http_read_timeout: 5
+request:
+  filter_keys:
+    - "password"
+    - "credit_card"
+  disable_session: false
+  disable_params: false
+  disable_environment: false
+  disable_url: false
+exceptions:
+  enabled: true
+  ignore:
+    - "ActiveRecord::RecordNotFound"
+    - "ActionController::RoutingError"
+  ignored_user_agents:
+    - "Googlebot"
+  notify_at_exit: true
+  source_radius: 3
+  local_variables: false
+  unwrap: false
+breadcrumbs:
+  enabled: true
+  logging:
+    enabled: true

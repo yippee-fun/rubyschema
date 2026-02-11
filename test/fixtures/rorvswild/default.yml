@@ -1,0 +1,19 @@
+production:
+  api_key: "abc123"
+  ignore_requests:
+    - "HeartbeatController#show"
+    - "HealthController#index"
+  ignore_jobs:
+    - SomeBackgroundJob
+    - AnotherWorker
+  ignore_exceptions:
+    - ActiveRecord::RecordNotFound
+    - ActionController::RoutingError
+  ignore_plugins:
+    - Redis
+    - Elasticsearch
+
+development:
+  api_key: "dev-key"
+  ignore_plugins:
+    - NetHttp

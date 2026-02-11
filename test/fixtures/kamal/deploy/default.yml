@@ -1,0 +1,81 @@
+service: myapp
+image: myapp/web
+registry:
+  server: ghcr.io
+  username: user
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+servers:
+  - 192.168.0.1
+  - 192.168.0.2
+env:
+  clear:
+    RAILS_ENV: production
+    DB_HOST: db.example.com
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+proxy:
+  host: myapp.example.com
+  ssl: true
+  app_port: 3000
+  response_timeout: 30
+  healthcheck:
+    interval: 3
+    path: /up
+    timeout: 5
+  buffering:
+    requests: true
+    responses: true
+    max_request_body: 10485760
+    max_response_body: 0
+    memory: 1048576
+ssh:
+  user: deploy
+  keys_only: true
+  log_level: fatal
+builder:
+  arch: amd64
+  dockerfile: Dockerfile
+  context: .
+  cache:
+    type: registry
+  args:
+    RUBY_VERSION: "3.4.1"
+  secrets:
+    - BUNDLE_GEMS__EXAMPLE__COM
+accessories:
+  db:
+    image: postgres:16
+    host: 192.168.0.3
+    port: "5432:5432"
+    env:
+      clear:
+        POSTGRES_DB: myapp_production
+      secret:
+        - POSTGRES_PASSWORD
+    volumes:
+      - data:/var/lib/postgresql/data
+    directories:
+      - data:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    roles:
+      - web
+    port: "6379:6379"
+    volumes:
+      - redis-data:/data
+boot:
+  limit: 3
+  wait: 5
+logging:
+  driver: json-file
+  options:
+    max-size: 100m
+volumes:
+  - /data/storage:/rails/storage
+retain_containers: 5
+deploy_timeout: 300
+drain_timeout: 30
+aliases:
+  shell: bash --login

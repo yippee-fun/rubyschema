@@ -1,0 +1,49 @@
+base_locale: en
+locales:
+  - en
+  - fr
+  - de
+  - ja
+data:
+  adapter: I18n::Tasks::Data::FileSystem
+  read:
+    - config/locales/%{locale}.yml
+    - config/locales/**/%{locale}.yml
+  write:
+    - "config/locales/%{locale}.yml"
+    - - "config/locales/devise.%{locale}.yml"
+      - "{devise}.*"
+  external:
+    - "<%=`bundle show gema`.chomp%>/config/locales/%{locale}.yml"
+  yaml:
+    write:
+      line_width: -1
+  json:
+    write:
+      indent: "  "
+      space: " "
+      object_nl: "\n"
+      array_nl: "\n"
+search:
+  paths:
+    - app/
+    - lib/
+  relative_roots:
+    - app/controllers
+    - app/helpers
+    - app/mailers
+    - app/presenters
+    - app/views
+  relative_exclude_method_name_paths:
+    - app/assets
+  exclude:
+    - app/assets/images
+    - app/assets/fonts
+  only:
+    - "*.rb"
+    - "*.html.erb"
+  strict: false
+  prism: rails
+translation:
+  backend: deepl
+  deepl_api_key: "abc123"

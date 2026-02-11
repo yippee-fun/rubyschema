@@ -1,0 +1,27 @@
+test:
+  service: Disk
+  root: tmp/storage
+
+local:
+  service: Disk
+  root: storage
+
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: us-east-1
+  bucket: my-app-production
+
+google:
+  service: GCS
+  project: my-project
+  credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
+  bucket: my-app-bucket
+
+mirror:
+  service: Mirror
+  primary: local
+  mirrors:
+    - amazon
+    - google

@@ -1,0 +1,23 @@
+en:
+  hello: Hello
+  goodbye: Goodbye
+  activerecord:
+    models:
+      user: User
+      post: Post
+    attributes:
+      user:
+        name: Name
+        email: Email
+      post:
+        title: Title
+        body: Body
+  errors:
+    messages:
+      blank: "can't be blank"
+      invalid: is invalid
+      taken: has already been taken
+  views:
+    pagination:
+      next: Next
+      previous: Previous

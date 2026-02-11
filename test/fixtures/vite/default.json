@@ -1,0 +1,31 @@
+{
+  "all": {
+    "sourceCodeDir": "app/frontend",
+    "entrypointsDir": "entrypoints",
+    "publicOutputDir": "vite",
+    "publicDir": "public",
+    "buildCacheDir": "tmp/cache/vite",
+    "packageManager": "yarn",
+    "hideBuildConsoleOutput": false,
+    "skipCompatibilityCheck": false
+  },
+  "development": {
+    "autoBuild": true,
+    "host": "localhost",
+    "port": 3036,
+    "https": false,
+    "devServerConnectTimeout": 0.01,
+    "watchAdditionalPaths": ["app/assets/**/*"]
+  },
+  "test": {
+    "autoBuild": true,
+    "port": 3037
+  },
+  "production": {
+    "autoBuild": false,
+    "base": "/vite/",
+    "ssrBuildEnabled": true,
+    "ssrEntrypoint": "ssr/ssr.ts",
+    "ssrOutputDir": "ssr-output"
+  }
+}

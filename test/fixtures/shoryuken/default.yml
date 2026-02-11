@@ -1,0 +1,9 @@
+logfile: log/shoryuken.log
+pidfile: tmp/pids/shoryuken.pid
+queues:
+  - default
+  - [high_priority, 6]
+  - [low_priority, 1]
+delay: 25
+concurrency: 25
+cache_visibility_timeout: true

@@ -1,0 +1,16 @@
+production:
+  periodic_cleanup:
+    class: CleanupJob
+    schedule: every day at 2am
+    queue: maintenance
+    priority: 5
+  send_weekly_digest:
+    class: WeeklyDigestJob
+    schedule: every Monday at 9am
+    queue: mailers
+    priority: 10
+  database_backup:
+    command: "Backup.perform"
+    schedule: every 6 hours
+    queue: critical
+    priority: 0
