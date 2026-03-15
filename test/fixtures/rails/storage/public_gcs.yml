@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../../../../dist/rails/storage.json
+%YAML 1.1
+---
+public_gcs:
+  service: GCS
+  project: my-project
+  credentials: <%= Rails.root.join("path/to/public_key.json") %>
+  bucket: my-public-bucket-<%= Rails.env %>
+  public: true
