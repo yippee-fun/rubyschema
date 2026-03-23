@@ -281,6 +281,18 @@
         "StringLiteralsFrozenByDefault": {
           "markdownDescription": "Set this to `true` if you enable frozen string literals globally with the `RUBYOPT` environment variable (e.g., `RUBYOPT=--enable=frozen-string-literal`). This affects how RuboCop analyzes string literals. [Docs](https://docs.rubocop.org/rubocop/configuration.html#opting-into-globally-frozen-string-literals)",
           "type": "boolean"
+        },
+        "MaxFilesInCache": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "const": false
+            }
+          ],
+          "markdownDescription": "Maximum number of files RuboCop stores in its result cache before pruning. Set to `false` to disable cache pruning entirely. [Docs](https://docs.rubocop.org/rubocop/usage/caching.html)"
         }
       },
       "not": {
@@ -2349,6 +2361,10 @@
       "markdownDescription": "Detects incorrect RuboCop directives. Suggests proper syntax. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintcopdirectivesyntax)",
       "$ref": "#/definitions/cop"
     },
+    "Lint/DataDefineOverride": {
+      "markdownDescription": "Disallows overriding built-in `Data` methods when using `Data.define`. Prevents accidentally redefining core behavior. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdatadefineoverride)",
+      "$ref": "#/definitions/cop"
+    },
     "Lint/Debugger": {
       "markdownDescription": "Checks for leftover debugging code like `binding.pry`, `byebug`, or `debugger` statements. These should typically be removed before committing code. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdebugger)",
       "allOf": [
@@ -3192,6 +3208,10 @@
           }
         }
       ]
+    },
+    "Lint/UnreachablePatternBranch": {
+      "markdownDescription": "Checks for unreachable `in` branches in pattern matching after an unconditional catch-all branch. Helps keep pattern matches correct and meaningful. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunreachablepatternbranch)",
+      "$ref": "#/definitions/cop"
     },
     "Lint/UnusedBlockArgument": {
       "markdownDescription": "Detects unused block parameters. Suggests using _ prefix. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunusedblockargument)",
@@ -4927,11 +4947,16 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["class_definition", "class_new"],
+              "enum": ["class_keyword", "class_new", "class_definition"],
               "markdownEnumDescriptions": [
-                "Prefer standard class definition syntax: `class Foo; end`",
-                "Prefer Class.new syntax: `Foo = Class.new`"
+                "Prefer class keyword syntax: `class Foo; end`",
+                "Prefer Class.new syntax: `Foo = Class.new`",
+                "Deprecated alias for `class_keyword`"
               ]
+            },
+            "AllowedParentClasses": {
+              "$ref": "#/definitions/constants",
+              "markdownDescription": "Parent classes for which both empty class styles are allowed regardless of `EnforcedStyle` (e.g., `StandardError`)."
             }
           }
         }
@@ -5115,6 +5140,10 @@
     },
     "Style/FileNull": {
       "markdownDescription": "Enforces use of `File::NULL` instead of hardcoded paths like `/dev/null`. More portable across operating systems. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylefilenull)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/FileOpen": {
+      "markdownDescription": "Checks for `File.open` calls without a block, which can leak file descriptors. Encourages safer file handling patterns. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylefileopen)",
       "$ref": "#/definitions/cop"
     },
     "Style/FileRead": {
@@ -5379,6 +5408,14 @@
           "properties": {
             "EnforcedStyle": {
               "enum": ["brackets", "fetch"]
+            },
+            "AllowedReceivers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Receiver expressions to ignore for this cop, such as `Rails.cache`."
             }
           }
         }
@@ -5651,6 +5688,10 @@
     },
     "Style/MapIntoArray": {
       "markdownDescription": "Checks for `map.to_a` which is redundant since `map` already returns an array. Suggests just using `map`. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylemapintoarray)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/MapJoin": {
+      "markdownDescription": "Checks for redundant `map(&:to_s)` before `join` and suggests simplifying to `join` directly when possible. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylemapjoin)",
       "$ref": "#/definitions/cop"
     },
     "Style/MapToHash": {
@@ -6181,6 +6222,25 @@
         }
       ]
     },
+    "Style/OneClassPerFile": {
+      "markdownDescription": "Checks that each source file defines at most one top-level class or module. Encourages clearer file organization. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleoneclassperfile)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "AllowedClasses": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
     "Style/OneLineConditional": {
       "markdownDescription": "Enforces multi-line formatting for complex ternary expressions to improve readability. Reduces cognitive load on single-line conditionals. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleonelineconditional)",
       "allOf": [
@@ -6279,6 +6339,10 @@
         }
       ]
     },
+    "Style/PartitionInsteadOfDoubleSelect": {
+      "markdownDescription": "Checks for consecutive `select`/`filter` and `reject` calls on the same receiver with matching predicates, and suggests using `partition` instead. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylepartitioninsteadofdoubleselect)",
+      "$ref": "#/definitions/cop"
+    },
     "Style/PercentLiteralDelimiters": {
       "markdownDescription": "Enforces consistent delimiters for percent literals (e.g., `%w[a b c]` vs `%w(a b c)`). Improves code consistency. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylepercentliteraldelimiters)",
       "allOf": [
@@ -6314,6 +6378,10 @@
     },
     "Style/PerlBackrefs": {
       "markdownDescription": "Discourages use of Perl-style backreferences like `$1`, `$2` in regex matches. Use Ruby's match data instead for clarity. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleperlbackrefs)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/PredicateWithKind": {
+      "markdownDescription": "Checks for block predicates like `any? { |x| x.is_a?(Klass) }` and suggests shorthand forms like `any?(Klass)` when available. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylepredicatewithkind)",
       "$ref": "#/definitions/cop"
     },
     "Style/PreferredHashMethods": {
@@ -6378,6 +6446,10 @@
     },
     "Style/RandomWithOffset": {
       "markdownDescription": "Enforces avoiding Random.rand() with offsets; use Random.randrange() instead. Improves code clarity. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylerandomwithoffset)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/ReduceToHash": {
+      "markdownDescription": "Checks for hash-building patterns with `each_with_object`, `inject`, or `reduce` and suggests using `to_h { ... }` when possible. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylereducetohash)",
       "$ref": "#/definitions/cop"
     },
     "Style/RedundantArgument": {
@@ -6523,6 +6595,10 @@
       "markdownDescription": "Detects unnecessary line continuation characters. Simplifies code formatting. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleredundantlinecontinuation)",
       "$ref": "#/definitions/cop"
     },
+    "Style/RedundantMinMaxBy": {
+      "markdownDescription": "Checks for cases where `max_by`/`min_by` can be replaced with simpler `max`/`min` calls. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleredundantminmaxby)",
+      "$ref": "#/definitions/cop"
+    },
     "Style/RedundantParentheses": {
       "markdownDescription": "Detects unnecessary parentheses around expressions. Reduces visual clutter. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleredundantparentheses)",
       "$ref": "#/definitions/cop"
@@ -6584,6 +6660,10 @@
     },
     "Style/RedundantStringEscape": {
       "markdownDescription": "Detects unnecessary escape sequences in strings. Simplifies string literals. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleredundantstringescape)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/RedundantStructKeywordInit": {
+      "markdownDescription": "Checks for redundant `keyword_init` options in `Struct.new` calls. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleredundantstructkeywordinit)",
       "$ref": "#/definitions/cop"
     },
     "Style/RegexpLiteral": {
@@ -6716,6 +6796,14 @@
     },
     "Style/Sample": {
       "markdownDescription": "Enforces proper sample handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylesample)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SelectByKind": {
+      "markdownDescription": "Checks for `select`/`reject`/`find` patterns with kind checks and suggests `grep`/`grep_v` alternatives when appropriate. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleselectbykind)",
+      "$ref": "#/definitions/cop"
+    },
+    "Style/SelectByRange": {
+      "markdownDescription": "Checks for `select`/`reject`/`find` patterns with range checks and suggests `grep`/`grep_v` alternatives when appropriate. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleselectbyrange)",
       "$ref": "#/definitions/cop"
     },
     "Style/SelectByRegexp": {
@@ -7032,6 +7120,10 @@
           }
         }
       ]
+    },
+    "Style/TallyMethod": {
+      "markdownDescription": "Checks for manual counting patterns that can be replaced with `Enumerable#tally`. [Docs](https://docs.rubocop.org/rubocop/cops_style#styletallymethod)",
+      "$ref": "#/definitions/cop"
     },
     "Style/TernaryParentheses": {
       "markdownDescription": "Enforces proper ternary parentheses handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleternaryparentheses)",
