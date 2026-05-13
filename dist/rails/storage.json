@@ -92,6 +92,10 @@
           "type": "string",
           "markdownDescription": "Name of the S3 bucket where files will be stored. Consider including the environment in the name (e.g., `my-bucket-<%= Rails.env %>`) to prevent accidentally destroying production data."
         },
+        "public": {
+          "type": "boolean",
+          "markdownDescription": "Whether files should be publicly accessible. When `true`, generated file URLs are permanent public URLs instead of signed private URLs."
+        },
         "http_open_timeout": {
           "type": ["integer", "string"],
           "markdownDescription": "HTTP open timeout in seconds for S3 client connections. Set sensible timeouts to prevent connections from being held for several minutes in failure scenarios."
@@ -203,6 +207,10 @@
           "type": "string",
           "markdownDescription": "Name of the GCS bucket where files will be stored. Consider including the environment in the name (e.g., `my-bucket-<%= Rails.env %>`)."
         },
+        "public": {
+          "type": "boolean",
+          "markdownDescription": "Whether files should be publicly accessible. When `true`, generated file URLs are permanent public URLs instead of signed private URLs."
+        },
         "cache_control": {
           "type": "string",
           "markdownDescription": "Cache-Control header value for uploaded files. Controls how browsers and CDNs cache the content (e.g., `public, max-age=3600`)."
@@ -237,6 +245,10 @@
         "container": {
           "type": "string",
           "markdownDescription": "Name of the Azure Storage container where files will be stored. Consider including the environment in the name (e.g., `my-container-<%= Rails.env %>`)."
+        },
+        "public": {
+          "type": "boolean",
+          "markdownDescription": "Whether files should be publicly accessible. When `true`, generated file URLs are permanent public URLs instead of signed private URLs."
         }
       },
       "required": [
