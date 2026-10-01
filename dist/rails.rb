@@ -10,6 +10,7 @@ yaml_schemas = {
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./.honeybadger.yml"           => "https://www.rubyschema.org/honeybadger.json",
   "./.rubocop.yml"               => "https://www.rubyschema.org/rubocop.json",
+  "./.rubocop_todo.yml"          => "https://www.rubyschema.org/rubocop.json",
   "./.standard.yml"              => "https://www.rubyschema.org/standard.json",
   "./app/**/package.yml"         => "https://www.rubyschema.org/packwerk/package.json",
   "./config/cable.yml"           => "https://www.rubyschema.org/rails/cable.json",

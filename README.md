@@ -48,7 +48,7 @@ return {
                 ["https://www.rubyschema.org/mongoid.json"] = "mongoid.yml",
                 ["https://www.rubyschema.org/pghero.json"] = "pghero.yml",
                 ["https://www.rubyschema.org/rorvswild.json"] = "rorvswild.yml",
-                ["https://www.rubyschema.org/rubocop.json"] = ".rubocop.yml",
+                ["https://www.rubyschema.org/rubocop.json"] = { ".rubocop.yml", ".rubocop_todo.yml" },
                 ["https://www.rubyschema.org/scout_apm.json"] = "scout_apm.yml",
                 ["https://www.rubyschema.org/shoryuken.json"] = "shoryuken.yml",
                 ["https://www.rubyschema.org/sidekiq.json"] = "sidekiq.yml",
@@ -111,6 +111,7 @@ You can find all available schemas below or in the [`dist` directory](./dist).
 | SolidCache    | `cache.yml`              | [`./dist/rails/cache.json`](./dist/rails/cache.json) |
 | SolidCable    | `cable.yml`              | [`./dist/rails/cable.json`](./dist/rails/cable.json) |
 | RuboCop       | `.rubocop.yml`           | [`./dist/rubocop.json`](./dist/rubocop.json) |
+| RuboCop       | `.rubocop_todo.yml`      | [`./dist/rubocop.json`](./dist/rubocop.json) |
 | Vite          | `vite.json`              | [`./dist/vite.json`](./dist/vite.json) |
 | Kamal         | `deploy.yml`             | [`./dist/kamal/deploy.json`](./dist/kamal/deploy.json) |
 | I18n          | `locales/{language}.yml` | [`./dist/i18n/locale.json`](./dist/i18n/locale.json) |
