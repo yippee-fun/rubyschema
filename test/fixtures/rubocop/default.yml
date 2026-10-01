@@ -13,6 +13,9 @@ inherit_mode:
 AllCops:
   TargetRubyVersion: 3.4
   NewCops: enable
+  FailLevel: warning
+  Preview: true
+  UseProjectIndex: true
   Exclude:
     - "bin/**/*"
     - "db/schema.rb"
@@ -32,7 +35,7 @@ Layout/LineLength:
   URISchemes:
     - http
     - https
-  IgnoreCopDirectives: true
+  AllowCopDirectives: true
   AllowedPatterns:
     - "^# "
 
@@ -43,6 +46,9 @@ Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
 
+Layout/EmptyLineAfterMagicComment:
+  NumberOfEmptyLines: 2
+
 Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: no_empty_lines
 
@@ -51,15 +57,24 @@ Layout/MultilineMethodCallIndentation:
 
 Lint:
   Enabled: true
+  NewCops: "1.88"
 
 Lint/AmbiguousBlockAssociation:
   AllowedMethods:
     - change
     - not_change
 
+Lint/MissingCopEnableDirective:
+  MaxRangeSize: 10
+
 Lint/SuppressedException:
   AllowComments: true
   AllowNil: true
+
+Lint/UnusedPrivateMethod:
+  Enabled: true
+  AllowedNames:
+    - respond_to_missing?
 
 Lint/UnusedMethodArgument:
   AllowUnusedKeywordArguments: true
@@ -125,6 +140,15 @@ Style/SymbolArray:
 Style/WordArray:
   EnforcedStyle: brackets
   MinSize: 0
+
+Style/DisableCopsWithinSourceCodeDirective:
+  Enabled: true
+  AllowWithReason: true
+  AllowedDirectives:
+    - todo
+
+Style/MutableConstant:
+  Recursive: true
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma

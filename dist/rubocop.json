@@ -6,7 +6,18 @@
     "cop": {
       "properties": {
         "Enabled": {
-          "type": "boolean",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "enum": ["pending", "preview"],
+              "markdownEnumDescriptions": [
+                "New cop awaiting a decision. Enabled or disabled in bulk by `NewCops`.",
+                "Preview cop. Only runs when `AllCops: Preview` is `true` or with `--preview`."
+              ]
+            }
+          ],
           "markdownDescription": "Enable or disable this cop. When set to `false`, the cop will not run. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
         },
         "Include": {
@@ -85,6 +96,23 @@
         "Enabled": {
           "type": "boolean",
           "markdownDescription": "Enable or disable all cops in this department. Individual cops can still override this setting."
+        },
+        "NewCops": {
+          "anyOf": [
+            {
+              "enum": ["pending", "disable", "enable"],
+              "markdownEnumDescriptions": [
+                "Leave this department's pending cops disabled and warn about them.",
+                "Disable this department's pending cops without warning.",
+                "Enable all of this department's pending cops."
+              ]
+            },
+            {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d+)*$"
+            }
+          ],
+          "markdownDescription": "Overrides `AllCops: NewCops` for the pending cops in this department. Can also be a version (e.g. `'1.80'`) to enable pending cops added in that version or earlier. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enabling-new-cops)"
         },
         "StyleGuideBaseURL": {
           "type": "string",
@@ -213,6 +241,85 @@
           },
           "markdownDescription": "File patterns (globs) to include for all cops. Files matching these patterns will be inspected. Overrides the default patterns from RuboCop. [Docs](https://docs.rubocop.org/rubocop/configuration.html#includingexcluding-files)"
         },
+        "RubyInterpreters": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "Interpreter names to look for in shebang lines when deciding whether an extensionless file is Ruby."
+        },
+        "DefaultFormatter": {
+          "anyOf": [
+            {
+              "enum": [
+                "autogenconf",
+                "clang",
+                "emacs",
+                "files",
+                "fuubar",
+                "github",
+                "html",
+                "json",
+                "junit",
+                "markdown",
+                "offenses",
+                "pacman",
+                "progress",
+                "quiet",
+                "sarif",
+                "simple",
+                "tap",
+                "worst"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "progress",
+          "markdownDescription": "Formatter used when no `-f`/`--format` option is given. [Docs](https://docs.rubocop.org/rubocop/formatters.html)"
+        },
+        "FailLevel": {
+          "enum": [
+            "info",
+            "refactor",
+            "convention",
+            "warning",
+            "error",
+            "fatal"
+          ],
+          "markdownEnumDescriptions": [
+            "Informational severity. Does not cause RuboCop to return a non-zero exit code.",
+            "Refactoring suggestion. Indicates code that could be restructured.",
+            "Convention violation. Indicates a violation of coding conventions.",
+            "Warning level. Indicates a potential problem that should be reviewed.",
+            "Error level. Indicates a problem that should be fixed.",
+            "Fatal level. Indicates a critical issue that must be fixed."
+          ],
+          "default": "refactor",
+          "markdownDescription": "The lowest severity that makes a run fail. Offenses below it are still reported. Can be overridden with `--fail-level`."
+        },
+        "DisplayCopNames": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Include cop names in offense messages. Can be overridden with `--no-display-cop-names`."
+        },
+        "DisplayStyleGuide": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Include style guide URLs in offense messages. Can be enabled with `-S`/`--display-style-guide`."
+        },
+        "ExtraDetails": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Include each cop's `Details` in offense messages. Can be enabled with `-E`/`--extra-details`."
+        },
+        "StyleGuideCopsOnly": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Only run cops that reference a style guide rule. Can be enabled with `--only-guide-cops`."
+        },
         "DisabledByDefault": {
           "type": "boolean",
           "markdownDescription": "When `true`, all cops except `Lint/Syntax` are disabled by default. Only cops explicitly enabled in configuration files will run. Cannot be used with `EnabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
@@ -221,28 +328,61 @@
           "type": "boolean",
           "markdownDescription": "When `true`, all cops are enabled by default, including those that are normally disabled. Cannot be used with `DisabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
         },
+        "NewCops": {
+          "enum": ["pending", "disable", "enable"],
+          "markdownEnumDescriptions": [
+            "Leave pending cops disabled and warn about them.",
+            "Disable pending cops without warning.",
+            "Enable all pending cops."
+          ],
+          "default": "pending",
+          "markdownDescription": "How to treat new cops that are marked `Enabled: pending` between major releases. Can be overridden with `--enable-pending-cops` or `--disable-pending-cops`. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enabling-new-cops)"
+        },
+        "UseProjectIndex": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Build a project-wide index of declarations and references once per run, for cops that can use it (e.g. `Lint/UnusedPrivateMethod`). Requires the `rubydex` gem."
+        },
+        "ProjectIndexIncludesGems": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "When `UseProjectIndex` is enabled, also index the sources of gems in the bundle, at the cost of extra memory."
+        },
+        "Preview": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Opt in to preview behavior: cops marked `Enabled: preview`, and the defaults expected in the next major release. Can be overridden with `--preview`/`--no-preview`. [Docs](https://docs.rubocop.org/rubocop/versioning.html#preview)"
+        },
+        "UseCache": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable the result cache. Can be overridden with `--cache`. [Docs](https://docs.rubocop.org/rubocop/usage/caching.html)"
+        },
         "TargetRubyVersion": {
           "anyOf": [
             {
               "type": "number"
             },
             {
-              "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4],
+              "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4, 4.0, 4.1],
               "markdownEnumDescriptions": [
                 "Ruby 2.7",
                 "Ruby 3.0",
                 "Ruby 3.1",
                 "Ruby 3.2",
                 "Ruby 3.3",
-                "Ruby 3.4"
+                "Ruby 3.4",
+                "Ruby 4.0",
+                "Ruby 4.1"
               ]
             }
           ],
           "markdownDescription": "The minimum Ruby version your code must support. Cops that detect version-specific features will adjust their behavior accordingly. If not specified, RuboCop will try to detect it from `.ruby-version`, `Gemfile.lock`, `*.gemspec`, or `.tool-versions`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version)"
         },
         "ParserEngine": {
-          "enum": ["parser_whitequark", "parser_prism"],
+          "enum": ["default", "parser_whitequark", "parser_prism"],
           "markdownEnumDescriptions": [
+            "Let RuboCop choose the parser based on `TargetRubyVersion`.",
             "Whitequark parser. Supports Ruby 2.0-3.4.",
             "Prism parser. Supports Ruby 3.3+ and is typically faster."
           ],
@@ -293,6 +433,43 @@
             }
           ],
           "markdownDescription": "Maximum number of files RuboCop stores in its result cache before pruning. Set to `false` to disable cache pruning entirely. [Docs](https://docs.rubocop.org/rubocop/usage/caching.html)"
+        },
+        "CacheRootDirectory": {
+          "type": ["string", "null"],
+          "markdownDescription": "Directory under which the `rubocop_cache` directory is stored. Defaults to `$XDG_CACHE_HOME` or `~/.cache`. Can be overridden with `--cache-root` or `$RUBOCOP_CACHE_ROOT`. [Docs](https://docs.rubocop.org/rubocop/usage/caching.html)"
+        },
+        "AllowSymlinksInCacheRootDirectory": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Allow `CacheRootDirectory` to be a symlink. Only enable this if you are sure the cache location cannot be tampered with."
+        },
+        "SuggestExtensions": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "markdownDescription": "Whether to suggest RuboCop extensions for gems in the bundle. Set to `false` to disable, or map extension names to the gems they're suggested for."
         }
       },
       "not": {
@@ -379,6 +556,23 @@
                   }
                 ]
               }
+            },
+            "AllowedGems": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Gems that don't need a comment."
+            },
+            "IgnoredGems": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "**Deprecated** since RuboCop 1.88. Use `AllowedGems` instead.",
+              "deprecationMessage": "Renamed to `AllowedGems` in RuboCop 1.88."
             }
           }
         }
@@ -483,6 +677,14 @@
                 "Require version specifications for dependencies",
                 "Forbid version specifications for dependencies"
               ]
+            },
+            "AllowedGems": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Gems to ignore."
             }
           }
         }
@@ -507,6 +709,14 @@
                 "Place development dependencies in `gems.rb`",
                 "Place development dependencies in gemspec file"
               ]
+            },
+            "AllowedGems": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Gems to ignore."
             }
           }
         }
@@ -707,37 +917,46 @@
               "uniqueItems": true,
               "type": "array",
               "items": {
-                "enum": [
-                  "module_inclusion",
-                  "constants",
-                  "association",
-                  "public_attribute_macros",
-                  "public_delegate",
-                  "macros",
-                  "public_class_methods",
-                  "initializer",
-                  "public_methods",
-                  "protected_attribute_macros",
-                  "protected_methods",
-                  "private_attribute_macros",
-                  "private_delegate",
-                  "private_methods"
-                ],
-                "markdownEnumDescriptions": [
-                  "Module inclusion (`include`, `prepend`, `extend`)",
-                  "Constant definitions",
-                  "ActiveRecord associations",
-                  "Public attribute macros (`attr_accessor`, etc.)",
-                  "Public delegate definitions",
-                  "General macros (validations, etc.)",
-                  "Public class methods",
-                  "`initialize` method",
-                  "Public instance methods",
-                  "Protected attribute macros",
-                  "Protected instance methods",
-                  "Private attribute macros",
-                  "Private delegate definitions",
-                  "Private instance methods"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "enum": [
+                      "module_inclusion",
+                      "constants",
+                      "association",
+                      "public_attribute_macros",
+                      "public_delegate",
+                      "macros",
+                      "public_class_methods",
+                      "initializer",
+                      "public_methods",
+                      "protected_attribute_macros",
+                      "protected_methods",
+                      "private_attribute_macros",
+                      "private_delegate",
+                      "private_class_methods",
+                      "private_methods"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "Module inclusion (`include`, `prepend`, `extend`)",
+                      "Constant definitions",
+                      "ActiveRecord associations",
+                      "Public attribute macros (`attr_accessor`, etc.)",
+                      "Public delegate definitions",
+                      "General macros (validations, etc.)",
+                      "Public class methods",
+                      "`initialize` method",
+                      "Public instance methods",
+                      "Protected attribute macros",
+                      "Protected instance methods",
+                      "Private attribute macros",
+                      "Private delegate definitions",
+                      "Private class methods",
+                      "Private instance methods"
+                    ]
+                  }
                 ]
               }
             },
@@ -837,7 +1056,20 @@
     },
     "Layout/ClosingParenthesisIndentation": {
       "markdownDescription": "Enforces indentation of closing parenthesis. Improves code formatting. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutclosingparenthesisindentation)",
-      "$ref": "#/definitions/cop"
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "IndentationWidth": {
+              "type": ["integer", "null"],
+              "minimum": 1,
+              "markdownDescription": "Number of spaces to indent. Defaults to `Layout/IndentationWidth`."
+            }
+          }
+        }
+      ]
     },
     "Layout/CommentIndentation": {
       "markdownDescription": "Enforces consistent indentation of comments. Improves code readability. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutcommentindentation)",
@@ -849,6 +1081,11 @@
           "properties": {
             "AllowForAlignment": {
               "type": "boolean"
+            },
+            "IndentationWidth": {
+              "type": ["integer", "null"],
+              "minimum": 1,
+              "markdownDescription": "Number of spaces to indent. Defaults to `Layout/IndentationWidth`."
             }
           }
         }
@@ -924,7 +1161,20 @@
     },
     "Layout/EmptyLineAfterMagicComment": {
       "markdownDescription": "Enforces blank line after magic comments. Improves code formatting. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylineaftermagiccomment)",
-      "$ref": "#/definitions/cop"
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "NumberOfEmptyLines": {
+              "type": "integer",
+              "minimum": 1,
+              "markdownDescription": "Minimum number of empty lines after the last magic comment. Set to `2` when using YARD. `Layout/EmptyLines` must be disabled for values greater than `1`."
+            }
+          }
+        }
+      ]
     },
     "Layout/EmptyLinesAfterModuleInclusion": {
       "markdownDescription": "Enforces blank lines after module inclusions. Improves code spacing. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutemptylinesaftermoduleinclusion)",
@@ -1484,6 +1734,10 @@
             },
             "AllowSteepAnnotation": {
               "type": "boolean"
+            },
+            "AllowYARDCommentBlockSeparator": {
+              "type": "boolean",
+              "markdownDescription": "Allow `#-` lines, which YARD uses to separate a comment block from the documentation that follows."
             }
           }
         }
@@ -1584,7 +1838,9 @@
               "type": "boolean"
             },
             "IgnoreCopDirectives": {
-              "type": "boolean"
+              "type": "boolean",
+              "markdownDescription": "**Deprecated.** Use `AllowCopDirectives` instead.",
+              "deprecationMessage": "Renamed to `AllowCopDirectives`."
             },
             "AllowCopDirectives": {
               "type": "boolean"
@@ -2028,17 +2284,18 @@
         {
           "properties": {
             "EnforcedStyle": {
-              "enum": ["space", "no_space"],
+              "enum": ["space", "no_space", "compact"],
               "markdownEnumDescriptions": [
-                "Require a space before opening brace in blocks: `array.each {}`",
-                "Disallow a space before opening brace in blocks: `array.each{}`"
+                "Require spaces inside array brackets: `[ 1, 2 ]`",
+                "Disallow spaces inside array brackets: `[1, 2]`",
+                "Like `space`, but successive brackets are collapsed together: `[[ 1, 2 ]]`"
               ]
             },
-            "EnforcedStyleForEmptyBraces": {
+            "EnforcedStyleForEmptyBrackets": {
               "enum": ["space", "no_space"],
               "markdownEnumDescriptions": [
-                "Require a space before empty braces: `foo {}`",
-                "Disallow a space before empty braces: `foo{}`"
+                "Require a space inside empty brackets: `[ ]`",
+                "Disallow a space inside empty brackets: `[]`"
               ]
             }
           }
@@ -2094,7 +2351,7 @@
                 "Allow spaces for alignment but not for single-line hashes: compact style"
               ]
             },
-            "EnforcedStyleForEmptyBrackets": {
+            "EnforcedStyleForEmptyBraces": {
               "enum": ["space", "no_space"],
               "markdownEnumDescriptions": [
                 "Require space inside empty braces: `{ }`",
@@ -2269,6 +2526,10 @@
       "markdownDescription": "Detects ambiguous regexp literals. Suggests clarification. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintambiguousregexpliteral)",
       "$ref": "#/definitions/cop"
     },
+    "Lint/ArgumentMismatch": {
+      "markdownDescription": "Checks for calls that pass the wrong number of positional arguments to a method. Requires `AllCops: UseProjectIndex`. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintargumentmismatch)",
+      "$ref": "#/definitions/cop"
+    },
     "Lint/ArrayLiteralInRegexp": {
       "markdownDescription": "Detects array literals inside regexps which don't work as expected. Suggests proper syntax. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintarrayliteralinregexp)",
       "$ref": "#/definitions/cop"
@@ -2429,6 +2690,10 @@
       "markdownDescription": "Detects use of deprecated deprecated open s s l constant. Suggests using modern alternatives. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdeprecatedopensslconstant)",
       "$ref": "#/definitions/cop"
     },
+    "Lint/DeprecatedReference": {
+      "markdownDescription": "Checks for references to methods and constants documented as deprecated with a YARD `@deprecated` tag. Requires `AllCops: UseProjectIndex`. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdeprecatedreference)",
+      "$ref": "#/definitions/cop"
+    },
     "Lint/DisjunctiveAssignmentInConstructor": {
       "markdownDescription": "Enforces proper disjunctive assignment in constructor handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintdisjunctiveassignmentinconstructor)",
       "$ref": "#/definitions/cop"
@@ -2476,7 +2741,31 @@
     },
     "Lint/DuplicateMethods": {
       "markdownDescription": "Detects duplicate duplicate methods in code. Helps keep code DRY. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicatemethods)",
-      "$ref": "#/definitions/cop"
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "DelegatingMethods": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "`delegate`-style macros that define methods. Only used when `AllCops: ActiveSupportExtensionsEnabled` is `true`."
+            },
+            "AllowedCrossFilePaths": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Glob patterns for files whose duplicate definitions aren't reported when found via `AllCops: UseProjectIndex`."
+            }
+          }
+        }
+      ]
     },
     "Lint/DuplicateRegexpCharacterClassElement": {
       "markdownDescription": "Detects duplicate elements in regexp character classes. Simplifies regexps. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintduplicateregexpcharacterclasselement)",
@@ -2706,6 +2995,10 @@
       "markdownDescription": "Enforces proper loop handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintloop)",
       "$ref": "#/definitions/cop"
     },
+    "Lint/MisplacedMagicComment": {
+      "markdownDescription": "Checks for magic comments placed where Ruby silently ignores them, such as after the first line of code. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmisplacedmagiccomment)",
+      "$ref": "#/definitions/cop"
+    },
     "Lint/MissingCopEnableDirective": {
       "markdownDescription": "Detects cop disable without corresponding enable. Prevents permanently disabled cops. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmissingcopenabledirective)",
       "allOf": [
@@ -2714,8 +3007,13 @@
         },
         {
           "properties": {
-            "MaximumRangeSize": {
+            "MaxRangeSize": {
               "type": "number"
+            },
+            "MaximumRangeSize": {
+              "type": "number",
+              "markdownDescription": "**Deprecated** since RuboCop 1.88. Use `MaxRangeSize` instead.",
+              "deprecationMessage": "Renamed to `MaxRangeSize` in RuboCop 1.88."
             }
           }
         }
@@ -2747,6 +3045,34 @@
     "Lint/MultipleComparison": {
       "markdownDescription": "Detects multiple comparisons in single if. Suggests using case/in. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintmultiplecomparison)",
       "$ref": "#/definitions/cop"
+    },
+    "Lint/NameTypo": {
+      "markdownDescription": "Checks for probable typos in constant and method names. Requires `AllCops: UseProjectIndex`. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnametypo)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "CheckConstants": {
+              "type": "boolean",
+              "markdownDescription": "Check constant references for typos."
+            },
+            "CheckMethods": {
+              "type": "boolean",
+              "markdownDescription": "Check method calls for typos."
+            },
+            "AllowedNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Names that should never be reported as typos."
+            }
+          }
+        }
+      ]
     },
     "Lint/NestedMethodDefinition": {
       "markdownDescription": "Enforces proper nested method definition handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintnestedmethoddefinition)",
@@ -2820,8 +3146,13 @@
                 "type": "string"
               }
             },
-            "IgnoredClasses": {
+            "AllowedClasses": {
               "$ref": "#/definitions/constants"
+            },
+            "IgnoredClasses": {
+              "$ref": "#/definitions/constants",
+              "markdownDescription": "**Deprecated** since RuboCop 1.88. Use `AllowedClasses` instead.",
+              "deprecationMessage": "Renamed to `AllowedClasses` in RuboCop 1.88."
             }
           }
         }
@@ -3038,7 +3369,19 @@
     },
     "Lint/SelfAssignment": {
       "markdownDescription": "Enforces proper self assignment handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintselfassignment)",
-      "$ref": "#/definitions/cop"
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "AllowRBSInlineAnnotation": {
+              "type": "boolean",
+              "markdownDescription": "Allow self-assignments that carry an RBS inline type annotation (e.g. `foo = foo #: Integer`)."
+            }
+          }
+        }
+      ]
     },
     "Lint/SendWithMixinArgument": {
       "markdownDescription": "Enforces proper send with mixin argument handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsendwithmixinargument)",
@@ -3073,6 +3416,10 @@
     },
     "Lint/StructNewOverride": {
       "markdownDescription": "Enforces proper struct new override handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintstructnewoverride)",
+      "$ref": "#/definitions/cop"
+    },
+    "Lint/SuperArgumentMismatch": {
+      "markdownDescription": "Checks for `super` calls that pass the wrong number of positional arguments to the overridden method. Requires `AllCops: UseProjectIndex`. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintsuperargumentmismatch)",
       "$ref": "#/definitions/cop"
     },
     "Lint/SuppressedException": {
@@ -3250,6 +3597,34 @@
             },
             "NotImplementedExceptions": {
               "$ref": "#/definitions/constants"
+            }
+          }
+        }
+      ]
+    },
+    "Lint/UnusedPrivateMethod": {
+      "markdownDescription": "Checks for private instance methods that are never referenced anywhere in the project. Requires `AllCops: UseProjectIndex`. Disabled by default since symbol-based references from other files can't be detected. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintunusedprivatemethod)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "AllowedNames": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Method names to ignore."
+            },
+            "AllowedPatterns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Regular expressions matching method names to ignore."
             }
           }
         }
@@ -3495,9 +3870,15 @@
         },
         {
           "properties": {
-            "LengthThreshold": {
+            "Max": {
               "type": "integer",
               "minimum": 0
+            },
+            "LengthThreshold": {
+              "type": "integer",
+              "minimum": 0,
+              "markdownDescription": "**Deprecated** since RuboCop 1.88. Use `Max` instead.",
+              "deprecationMessage": "Renamed to `Max` in RuboCop 1.88."
             }
           }
         }
@@ -4197,6 +4578,10 @@
       "markdownDescription": "Detects Marshal.load which can deserialize arbitrary objects. Suggests safer alternatives. [Docs](https://docs.rubocop.org/rubocop/cops_security#securitymarshalload)",
       "$ref": "#/definitions/cop"
     },
+    "Security/Open": {
+      "markdownDescription": "Checks for the use of `Kernel#open` and `URI.open` with dynamic data, which can run shell commands or open unexpected resources. [Docs](https://docs.rubocop.org/rubocop/cops_security#securityopen)",
+      "$ref": "#/definitions/cop"
+    },
     "Security/YAMLLoad": {
       "markdownDescription": "Detects YAML.load which can deserialize arbitrary objects. Suggests YAML.safe_load instead. [Docs](https://docs.rubocop.org/rubocop/cops_security#securityyamlload)",
       "$ref": "#/definitions/cop"
@@ -4839,6 +5224,10 @@
       "markdownDescription": "Enforces use of `Dir.empty?` (Ruby 2.4+) instead of checking if `Dir.children` or `Dir.entries` is empty. More efficient and readable. [Docs](https://docs.rubocop.org/rubocop/cops_style#styledirempty)",
       "$ref": "#/definitions/cop"
     },
+    "Style/DirectiveScope": {
+      "markdownDescription": "Checks for `disable`/`enable` or `push`/`pop` directive pairs wrapping a single statement, which can use the tighter `disable-next` form instead. [Docs](https://docs.rubocop.org/rubocop/cops_style#styledirectivescope)",
+      "$ref": "#/definitions/cop"
+    },
     "Style/DisableCopsWithinSourceCodeDirective": {
       "markdownDescription": "Checks for inline RuboCop disable comments and can enforce department-level or cop-level disabling. Helps maintain control over which cops can be disabled. [Docs](https://docs.rubocop.org/rubocop/cops_style#styledisablecopswithinsourcecodedirective)",
       "allOf": [
@@ -4852,7 +5241,40 @@
               "uniqueItems": true,
               "items": {
                 "type": "string"
-              }
+              },
+              "markdownDescription": "Cop or department names. A directive is exempt only when everything it disables is listed here."
+            },
+            "DisallowedCops": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "Cop or department names. When set, only directives touching these are flagged. Takes precedence over `AllowedCops`."
+            },
+            "AllowWithReason": {
+              "type": "boolean",
+              "markdownDescription": "Allow disable directives that carry a `-- reason` justification."
+            },
+            "AllowedDirectives": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "disable",
+                  "todo",
+                  "disable-next",
+                  "todo-next",
+                  "push",
+                  "next"
+                ]
+              },
+              "markdownDescription": "Directive forms this cop ignores entirely, such as `todo`."
+            },
+            "AllowTrailingComment": {
+              "type": "boolean",
+              "markdownDescription": "**Removed.** Use `AllowWithReason` instead.",
+              "deprecationMessage": "Removed in RuboCop 1.91. Use `AllowWithReason` instead."
             }
           }
         }
@@ -4900,8 +5322,9 @@
       ]
     },
     "Style/DoubleCopDisableDirective": {
-      "markdownDescription": "Checks for duplicate RuboCop disable comments targeting the same cop. Redundant disables should be removed to keep configuration clean. [Docs](https://docs.rubocop.org/rubocop/cops_style#styledoublecopdisabledirective)",
-      "$ref": "#/definitions/cop"
+      "markdownDescription": "**Removed** in RuboCop 1.91. Superseded by `Lint/CopDirectiveSyntax`.",
+      "$ref": "#/definitions/cop",
+      "deprecationMessage": "Removed in RuboCop 1.91. Use `Lint/CopDirectiveSyntax` instead."
     },
     "Style/DoubleNegation": {
       "markdownDescription": "Checks for double negation (`!!`) and suggests using explicit conversion methods or truthiness. Can allow double negation in return statements for boolean conversion. [Docs](https://docs.rubocop.org/rubocop/cops_style#styledoublenegation)",
@@ -5120,15 +5543,24 @@
         },
         {
           "properties": {
-            "AllowedVars": {
+            "DefaultToNil": {
+              "type": "boolean"
+            },
+            "AllowedVariables": {
               "type": "array",
               "uniqueItems": true,
               "items": {
                 "type": "string"
               }
             },
-            "DefaultToNil": {
-              "type": "boolean"
+            "AllowedVars": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              },
+              "markdownDescription": "**Deprecated** since RuboCop 1.88. Use `AllowedVariables` instead.",
+              "deprecationMessage": "Renamed to `AllowedVariables` in RuboCop 1.88."
             }
           }
         }
@@ -5872,22 +6304,7 @@
     },
     "Style/ModuleMemberExistenceCheck": {
       "markdownDescription": "Checks for module member existence checks using `respond_to?` or `const_defined?` and suggests using predicate methods instead. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylemodulememberexistencecheck)",
-      "allOf": [
-        {
-          "$ref": "#/definitions/cop"
-        },
-        {
-          "properties": {
-            "AllowedMethods": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      ]
+      "$ref": "#/definitions/cop"
     },
     "Style/MultilineBlockChain": {
       "markdownDescription": "Checks for chaining methods on multi-line blocks and suggests breaking into multiple statements for readability. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylemultilineblockchain)",
@@ -5961,6 +6378,10 @@
           "properties": {
             "EnforcedStyle": {
               "enum": ["literals", "strict"]
+            },
+            "Recursive": {
+              "type": "boolean",
+              "markdownDescription": "Also freeze mutable literals nested inside arrays and hashes."
             }
           }
         }
@@ -7146,6 +7567,10 @@
           }
         }
       ]
+    },
+    "Style/TimeNow": {
+      "markdownDescription": "Checks for `Time.new` with no arguments, which implicitly returns the current time, and suggests the more explicit `Time.now`. [Docs](https://docs.rubocop.org/rubocop/cops_style#styletimenow)",
+      "$ref": "#/definitions/cop"
     },
     "Style/TopLevelMethodDefinition": {
       "markdownDescription": "Enforces proper top level method definition handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_style#styletoplevelmethoddefinition)",
