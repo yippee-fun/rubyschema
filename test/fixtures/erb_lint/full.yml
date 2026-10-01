@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../../../dist/erb_lint.json
+%YAML 1.1
+---
+inherit_from:
+  - .erb_lint_shared.yml
+inherit_gem:
+  my_style_gem: config/erb_lint.yml
+EnableDefaultLinters: false
+glob: "**/*.{html,text,js}{+*,}.erb"
+exclude:
+  - "**/vendor/**/*"
+  - "**/node_modules/**/*"
+linters:
+  AllowedScriptType:
+    enabled: true
+    allowed_types:
+      - application/json
+      - text/javascript
+      - text/html
+    allow_blank: false
+    disallow_inline_scripts: false
+  ClosingErbTagIndent:
+    enabled: true
+  CommentSyntax:
+    enabled: true
+  DeprecatedClasses:
+    enabled: true
+    exclude:
+      - app/views/shared/deprecated/**
+    addendum: See UX wiki for help.
+    rule_set:
+      - deprecated: ['badge[-_\w]*']
+        suggestion: Use the ui_badge() component instead.
+  ErbSafety:
+    enabled: true
+    better_html_config: .better-html.yml
+  ExtraNewline:
+    enabled: true
+  FinalNewline:
+    enabled: true
+    present: true
+  HardCodedString:
+    enabled: true
+    corrector:
+      path: path/to/corrector_file.rb
+      name: I18nCorrector
+      i18n_load_path: config/locales/en.yml
+  NoJavascriptTagHelper:
+    enabled: true
+    correction_style: plain
+  NoUnusedDisable:
+    enabled: true
+  ParserErrors:
+    enabled: true
+  PartialInstanceVariable:
+    enabled: true
+  RequireInputAutocomplete:
+    enabled: true
+  RequireScriptNonce:
+    enabled: true
+  RightTrim:
+    enabled: true
+    enforced_style: "-"
+  Rubocop:
+    enabled: true
+    only:
+      - Style/StringLiterals
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+      Layout/InitialIndentation:
+        Enabled: false
+      Layout/LineLength:
+        Enabled: false
+      Layout/TrailingEmptyLines:
+        Enabled: false
+      Layout/TrailingWhitespace:
+        Enabled: false
+      Naming/FileName:
+        Enabled: false
+      Style/FrozenStringLiteralComment:
+        Enabled: false
+      Lint/UselessAssignment:
+        Enabled: false
+      Rails/OutputSafety:
+        Enabled: false
+  RubocopText:
+    enabled: true
+    config_file_path: .erb_lint_rubocop.yml
+  SelfClosingTag:
+    enabled: true
+    enforced_style: always
+  SpaceAroundErbTag:
+    enabled: true
+  SpaceIndentation:
+    enabled: true
+    tab_width: 4
+  SpaceInHtmlTag:
+    enabled: true
+  StrictLocals:
+    enabled: true
+  TrailingWhitespace:
+    enabled: true
+  CustomLinter:
+    enabled: true
+    custom_message: We suggest you change this file.

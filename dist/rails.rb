@@ -6,7 +6,8 @@ failed_files = []
 
 yaml_schemas = {
   "./.circleci/config.yml"       => "https://json.schemastore.org/circleciconfig.json",
-
+  "./.erb-lint.yml"              => "https://www.rubyschema.org/erb_lint.json",
+  "./.erb_lint.yml"              => "https://www.rubyschema.org/erb_lint.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./.honeybadger.yml"           => "https://www.rubyschema.org/honeybadger.json",
   "./.rubocop.yml"               => "https://www.rubyschema.org/rubocop.json",
