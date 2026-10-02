@@ -48,7 +48,7 @@
           "type": "string"
         },
         "additionalEntrypoints": {
-          "markdownDescription": "Additional entrypoint patterns.\n\nSpecify glob patterns for files that can be referenced using tag helpers without being in `entrypointsDir`.\n\nDefault: `[\"~/{assets,fonts,icons,images}/**/*\"]`\n\nExamples:\n- `\"~/images/**/*\"` - Reference with `vite_asset_path 'images/logo.svg'`\n- `\"app/components/**/*.js\"` - Reference with `vite_asset_path '/app/components/header.js'`\n\n**Env Var:** `VITE_RUBY_ADDITIONAL_ENTRYPOINTS`\n\n[Documentation](https://vite-ruby.netlify.app/config/#additionalentrypoints)",
+          "markdownDescription": "Additional entrypoint patterns.\n\nSpecify glob patterns for files that can be referenced using tag helpers without being in `entrypointsDir`.\n\nDefault: `[\"~/{assets,fonts,icons,images}/**/*\"]`\n\nExamples:\n- `\"~/images/**/*\"` - Reference with `vite_asset_path 'images/logo.svg'`\n- `\"app/components/**/*.js\"` - Reference with `vite_asset_path '/app/components/header.js'`\n\nCannot be set with an environment variable.\n\n[Documentation](https://vite-ruby.netlify.app/config/#additionalentrypoints)",
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
@@ -62,9 +62,13 @@
           "type": "string"
         },
         "devServerConnectTimeout": {
-          "markdownDescription": "Timeout when connecting to the dev server (in seconds).\n\nDefault: `0.01`\n\nIncrease this if fallback compilation is triggered even though the dev server is running.\n\n**Env Var:** `VITE_RUBY_DEV_SERVER_CONNECT_TIMEOUT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#devserverconnecttimeout)",
+          "markdownDescription": "Timeout when connecting to the dev server (in seconds). Only used when `devServerConnectionCheck` is enabled.\n\nDefault: `0.01`\n\nIncrease this if fallback compilation is triggered even though the dev server is running.\n\n**Env Var:** `VITE_RUBY_DEV_SERVER_CONNECT_TIMEOUT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#devserverconnecttimeout)",
           "type": "number",
           "minimum": 0
+        },
+        "devServerConnectionCheck": {
+          "markdownDescription": "Detect whether the dev server is running by opening a TCP connection to `host`:`port` (using `devServerConnectTimeout`), instead of reading the metadata file the Vite plugin writes to `tmp/vite-ruby-<mode>.json` while the dev server is running (which must contain the configured `port`).\n\nDefault: `false`\n\nUseful if the metadata file can become stale, for example when the Vite process is force-killed (`SIGKILL`) and has no chance to remove it.\n\n**Env Var:** `VITE_RUBY_DEV_SERVER_CONNECTION_CHECK`\n\n[Documentation](https://vite-ruby.netlify.app/config/#devserverconnectioncheck)",
+          "type": "boolean"
         },
         "hideBuildConsoleOutput": {
           "markdownDescription": "Skip Vite build output from logs.\n\nDefault: `false`\n\nSet to `true` to reduce noise in logs.\n\n**Env Var:** `VITE_RUBY_HIDE_BUILD_CONSOLE_OUTPUT`\n\n[Documentation](https://vite-ruby.netlify.app/config/#hidebuildconsoleoutput)",
@@ -97,7 +101,7 @@
           "type": "string"
         },
         "watchAdditionalPaths": {
-          "markdownDescription": "Additional paths to track for changes when using `autoBuild`.\n\nProvide globs relative to `root`.\n\nDefault: `[]` (only `sourceCodeDir` and `additionalEntrypoints` are watched)\n\nExample: `[\"app/components/**/*\"]`\n\n**Tip:** Define import aliases in `vite.config.ts` to reference these files.\n\n**Env Var:** `VITE_RUBY_WATCH_ADDITIONAL_PATHS`\n\n[Documentation](https://vite-ruby.netlify.app/config/#watchadditionalpaths)",
+          "markdownDescription": "Additional paths to track for changes when using `autoBuild`.\n\nProvide globs relative to `root`.\n\nDefault: `[]` (only `sourceCodeDir` and `additionalEntrypoints` are watched)\n\nExample: `[\"app/components/**/*\"]`\n\n**Tip:** Define import aliases in `vite.config.ts` to reference these files.\n\nCannot be set with an environment variable.\n\n[Documentation](https://vite-ruby.netlify.app/config/#watchadditionalpaths)",
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string" }
