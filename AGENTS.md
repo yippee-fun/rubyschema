@@ -24,6 +24,7 @@ RubySchema is a collection of JSON schemas for common Ruby gem configuration fil
 1. Create the schema as `dist/<name>.json` (or `dist/<name>/<subname>.json` for namespaced schemas).
 2. If the config file lives inside a Rails project, add a mapping entry to the appropriate hash in `dist/rails.rb` (`yaml_schemas`, `json_schemas`, or `toml_schemas`). Keep entries in alphabetical order by path.
 3. Add test fixtures under `test/fixtures/<name>/`.
+4. List the schema on the homepage (`dist/index.html`), update the schema count there, and add it to the README's table. `test/site_test.rb` checks this.
 
 ## Running Tests
 
