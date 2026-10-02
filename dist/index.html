@@ -16,6 +16,7 @@
         --border: #e5e5e5;
         --accent: #cc0000;
         --accent-dim: #991a1a;
+        --on-accent: #ffffff;
         --surface: #ffffff;
         --code-bg: #f0f0f0;
         --mono:
@@ -30,6 +31,7 @@
           --border: #2a2a2a;
           --accent: #ff6b6b;
           --accent-dim: #ff9999;
+          --on-accent: #111111;
           --surface: #1a1a1a;
           --code-bg: #1e1e1e;
         }
@@ -120,7 +122,7 @@
       .btn-primary {
         background: var(--accent);
         border-color: var(--accent);
-        color: #fff;
+        color: var(--on-accent);
       }
 
       .btn-primary:hover {
