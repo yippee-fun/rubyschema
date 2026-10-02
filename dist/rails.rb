@@ -14,6 +14,7 @@ yaml_schemas = {
   "./.rubocop_todo.yml"          => "https://www.rubyschema.org/rubocop.json",
   "./.standard.yml"              => "https://www.rubyschema.org/standard.json",
   "./app/**/package.yml"         => "https://www.rubyschema.org/packwerk/package.json",
+  "./config/blazer.yml"          => "https://www.rubyschema.org/blazer.json",
   "./config/brakeman.yml"        => "https://www.rubyschema.org/brakeman.json",
   "./config/cable.yml"           => "https://www.rubyschema.org/rails/cable.json",
   "./config/cache.yml"           => "https://www.rubyschema.org/rails/cache.json",

@@ -42,6 +42,7 @@ return {
           settings = {
             yaml = {
               schemas = {
+                ["https://www.rubyschema.org/blazer.json"] = "blazer.yml",
                 ["https://www.rubyschema.org/brakeman.json"] = "brakeman.yml",
                 ["https://www.rubyschema.org/erb_lint.json"] = ".erb_lint.yml",
                 ["https://www.rubyschema.org/honeybadger.json"] = "honeybadger.yml",
@@ -132,6 +133,7 @@ You can find all available schemas below or in the [`dist` directory](./dist).
 | Mongoid       | `mongoid.yml`            | [`./dist/mongoid.json`](./dist/mongoid.json) |
 | Pghero        | `pghero.yml`             | [`./dist/pghero.json`](./dist/pghero.json) |
 | I18n-tasks    | `i18n-tasks.yml`         | [`./dist/i18n-tasks.json`](./dist/i18n-tasks.json) |
+| Blazer        | `config/blazer.yml`      | [`./dist/blazer.json`](./dist/blazer.json) |
 
 ## Contributing
 
