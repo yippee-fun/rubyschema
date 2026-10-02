@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Not found · RubySchema</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --bg: #fafafa;
+        --fg: #1a1a1a;
+        --dim: #737373;
+        --border: #e5e5e5;
+        --accent: #cc0000;
+        --mono:
+          ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #111111;
+          --fg: #e5e5e5;
+          --dim: #888888;
+          --border: #2a2a2a;
+          --accent: #ff6b6b;
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--mono);
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--fg);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 740px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 6rem;
+      }
+
+      h1 {
+        font-size: clamp(1.9rem, 5vw, 2.3rem);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      h1 span {
+        color: var(--accent);
+      }
+
+      p {
+        color: var(--dim);
+        max-width: 66ch;
+      }
+
+      p + p {
+        margin-top: 1rem;
+      }
+
+      a {
+        color: var(--fg);
+        text-decoration-color: var(--border);
+        text-underline-offset: 3px;
+      }
+
+      a:hover {
+        color: var(--accent);
+        text-decoration-color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1><span>404</span> Not found</h1>
+      <p>
+        There’s nothing at this address. If it came from a
+        <code>$schema</code> line in one of your config files, check the
+        spelling against the list of schemas.
+      </p>
+      <p>
+        <a href="/#schemas">Browse schemas</a> &middot;
+        <a href="/">Home</a>
+      </p>
+    </main>
+  </body>
+</html>

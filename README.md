@@ -43,6 +43,7 @@ return {
             yaml = {
               schemas = {
                 ["https://www.rubyschema.org/blazer.json"] = "blazer.yml",
+                ["https://www.rubyschema.org/brakeman.json"] = "brakeman.yml",
                 ["https://www.rubyschema.org/erb_lint.json"] = ".erb_lint.yml",
                 ["https://www.rubyschema.org/honeybadger.json"] = "honeybadger.yml",
                 ["https://www.rubyschema.org/i18n-tasks.json"] = "i18n-tasks.yml",
@@ -121,6 +122,7 @@ You can find all available schemas below or in the [`dist` directory](./dist).
 | RoRvsWild     | `rorvswild.yml`          | [`./dist/rorvswild.json`](./dist/rorvswild.json) |
 | Standard      | `.standard.yml`          | [`./dist/standard.json`](./dist/standard.json) |
 | ERB Lint      | `.erb_lint.yml`          | [`./dist/erb_lint.json`](./dist/erb_lint.json) |
+| Brakeman      | `config/brakeman.yml`    | [`./dist/brakeman.json`](./dist/brakeman.json) |
 | Honeybadger   | `honeybadger.yml`        | [`./dist/honeybadger.json`](./dist/honeybadger.json) |
 | Shoryuken     | `shoryuken.yml`          | [`./dist/shoryuken.json`](./dist/shoryuken.json) |
 | Packwerk      | `package.yml`            | [`./dist/packwerk/package.json`](./dist/packwerk/package.json) |
@@ -131,7 +133,7 @@ You can find all available schemas below or in the [`dist` directory](./dist).
 | Mongoid       | `mongoid.yml`            | [`./dist/mongoid.json`](./dist/mongoid.json) |
 | Pghero        | `pghero.yml`             | [`./dist/pghero.json`](./dist/pghero.json) |
 | I18n-tasks    | `i18n-tasks.yml`         | [`./dist/i18n-tasks.json`](./dist/i18n-tasks.json) |
-| Blazer        | `blazer.yml`             | [`./dist/blazer.json`](./dist/blazer.json) |
+| Blazer        | `config/blazer.yml`      | [`./dist/blazer.json`](./dist/blazer.json) |
 
 ## Contributing
 
