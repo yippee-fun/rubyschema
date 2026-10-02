@@ -20,7 +20,7 @@
       "type": "object",
       "properties": {
         "adapter": {
-          "markdownDescription": "The database adapter to use. Common values include:\n\n- `postgresql` - PostgreSQL\n- `mysql2` - MySQL/MariaDB\n- `sqlite3` - SQLite\n- `trilogy` - MySQL using the Trilogy client",
+          "markdownDescription": "The database adapter to use. Required unless `url` is set. Common values include:\n\n- `postgresql` - PostgreSQL\n- `mysql2` - MySQL/MariaDB\n- `sqlite3` - SQLite\n- `trilogy` - MySQL/MariaDB using the Trilogy client",
           "type": "string",
           "examples": ["postgresql", "mysql2", "sqlite3", "trilogy"]
         },
@@ -54,33 +54,50 @@
         },
         "username": {
           "markdownDescription": "Database username for authentication.",
-          "type": "string",
+          "type": ["string", "null"],
           "examples": ["deploy", "root", "postgres"]
         },
         "password": {
           "markdownDescription": "Database password for authentication.\n\nIt's recommended to use ERB to read this from an environment variable rather than committing it to version control.",
-          "type": "string",
+          "type": ["string", "null"],
           "examples": ["<%= ENV['DATABASE_PASSWORD'] %>"]
         },
+        "max_connections": {
+          "markdownDescription": "Maximum number of database connections in the connection pool.\n\nA connection pool synchronizes thread access to a limited number of database connections. This value should be at least the number of threads your server manages.\n\nFor Puma, this typically should match or exceed `max_threads`. Set to `nil` or `-1` for unlimited connections. Default is 5.",
+          "anyOf": [
+            { "type": "integer" },
+            { "type": "null" },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 5,
+          "examples": [5, 25, "<%= ENV.fetch(\"RAILS_MAX_THREADS\") { 5 } %>"]
+        },
+        "min_connections": {
+          "markdownDescription": "Minimum number of connections the pool will open and maintain. Default is 0.\n\nCannot be combined with `pool`; use `max_connections` instead.",
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "default": 0,
+          "examples": [0, 2]
+        },
         "pool": {
-          "markdownDescription": "Maximum number of database connections in the connection pool.\n\nA connection pool synchronizes thread access to a limited number of database connections. This value should be at least the number of threads your server manages.\n\nFor Puma, this typically should match or exceed `max_threads`. Default is 5.",
+          "markdownDescription": "Maximum number of database connections in the connection pool. Renamed to `max_connections` in Rails 8.1; `pool` is still accepted as a fallback.\n\nIf both `pool` and `max_connections` are set they must have the same value. Default is 5.",
+          "deprecationMessage": "Renamed to `max_connections` in Rails 8.1.",
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
           "default": 5,
           "examples": [5, 25]
         },
         "timeout": {
-          "markdownDescription": "Timeout in milliseconds for acquiring a connection from the pool.\n\nIf a connection cannot be obtained within this time, an error is raised. Default is 5000ms (5 seconds).",
+          "markdownDescription": "SQLite-specific: Timeout in milliseconds to wait for a database lock (busy timeout) before raising an error.\n\nWhen not set, SQLite does not wait. The Rails-generated `database.yml` sets this to `5000`.",
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
-          "default": 5000,
           "examples": [5000, 10000]
         },
         "checkout_timeout": {
-          "markdownDescription": "Alias for `timeout`. Timeout in seconds for acquiring a connection from the pool.",
+          "markdownDescription": "Number of seconds to wait for a connection to become available in the pool before giving up and raising a timeout error. Default is 5.",
           "anyOf": [{ "type": "number" }, { "$ref": "#/definitions/erb" }],
+          "default": 5,
           "examples": [5, 10]
         },
         "encoding": {
-          "markdownDescription": "Character encoding to use for the database connection.\n\n- PostgreSQL: Sets `client_encoding` (e.g., `unicode`, `utf8`)\n- MySQL: Sets connection encoding (e.g., `utf8mb4`)\n- SQLite: Sets pragma encoding",
+          "markdownDescription": "Character encoding to use for the database connection.\n\n- PostgreSQL: Sets `client_encoding` (e.g., `unicode`, `utf8`)\n- MySQL: Sets the connection character set with `SET NAMES` (e.g., `utf8mb4`)",
           "type": "string",
           "examples": ["unicode", "utf8", "utf8mb4"]
         },
@@ -90,33 +107,39 @@
           "examples": ["/tmp/mysql.sock", "/var/run/postgresql"]
         },
         "migrations_paths": {
-          "markdownDescription": "Directory containing migrations for this database, relative to `db/`.\n\nUseful for multi-database setups where each database has its own set of migrations (e.g., `db/primary_migrate`, `db/cache_migrate`).",
-          "type": "string",
-          "examples": ["primary_migrate", "cache_migrate"]
+          "markdownDescription": "Directory (or list of directories) containing migrations for this database, relative to the application root. Defaults to `db/migrate`.\n\nUseful for multi-database setups where each database has its own set of migrations (e.g., `db/cache_migrate`, `db/queue_migrate`).",
+          "anyOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ],
+          "examples": [
+            "db/cache_migrate",
+            "db/queue_migrate",
+            "db/cable_migrate"
+          ]
         },
         "schema_search_path": {
-          "markdownDescription": "PostgreSQL-specific: Comma-separated list of schemas to search when a table name is referenced without a schema qualifier.\n\nSets the `search_path` connection variable.",
+          "markdownDescription": "PostgreSQL-specific: Comma-separated list of schemas to search when a table name is referenced without a schema qualifier.\n\nSets the `search_path` connection variable. `schema_order` is accepted as a legacy alias.",
           "type": "string",
           "examples": ["public,shared", "myapp,public"]
         },
         "prepared_statements": {
-          "markdownDescription": "Enable or disable prepared statements for the connection.\n\nDefault is `true`. Disabling can be useful when using PgBouncer in transaction pooling mode.",
-          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "default": true
+          "markdownDescription": "Enable or disable prepared statements for the connection.\n\nDefaults to `true` for PostgreSQL and SQLite, and `false` for `mysql2` and `trilogy`. The `trilogy` adapter does not support prepared statements and raises an error if this is `true`.",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
         },
         "advisory_locks": {
-          "markdownDescription": "PostgreSQL-specific: Enable or disable advisory locks.\n\nAdvisory locks are used by Active Record for database-level locking during migrations. Default is `true`.\n\nSet to `false` when using PgBouncer in transaction pooling mode, as it doesn't support advisory locks.",
+          "markdownDescription": "Enable or disable advisory locks (PostgreSQL and MySQL).\n\nAdvisory locks are used by Active Record to make database migrations concurrency safe. Default is `true`.\n\nSet to `false` when using PgBouncer in transaction pooling mode, as it doesn't support advisory locks.",
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "default": true
         },
         "statement_limit": {
-          "markdownDescription": "PostgreSQL-specific: Maximum number of prepared statements to cache per connection.\n\nDefault is 1000. Lower this if you encounter \"prepared statement name is already in use\" errors.",
+          "markdownDescription": "Maximum number of prepared statements to cache per connection.\n\nDefault is 1000. The more prepared statements in use, the more memory your database will require; lower this if your database is hitting memory limits.",
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
           "default": 1000,
           "examples": [200, 500, 1000]
         },
         "variables": {
-          "markdownDescription": "Hash of session variables to set on connection establishment.\n\nFor PostgreSQL, these are set using `SET SESSION key = value`. For MySQL, these are set using `SET @@SESSION.key = value`.",
+          "markdownDescription": "Hash of session variables to set on connection establishment.\n\nFor PostgreSQL, these are set using `SET SESSION key TO value`. For MySQL, these are set using `SET @@SESSION.key = value`. Use the value `:default` to reset a variable to its global default.",
           "type": "object",
           "additionalProperties": {
             "anyOf": [
@@ -129,7 +152,7 @@
           "examples": [{ "statement_timeout": 5000 }, { "time_zone": "UTC" }]
         },
         "reaping_frequency": {
-          "markdownDescription": "Frequency in seconds to periodically run the connection reaper.\n\nThe reaper removes inactive connections from the pool. Default is `nil` (disabled).\n\nUseful in environments where connections may be killed by the database server after inactivity.",
+          "markdownDescription": "Frequency in seconds to periodically run the connection reaper.\n\nThe reaper removes dead and idle connections from the pool and performs pool maintenance. Defaults to 20 seconds, or the smallest of `idle_timeout`, `max_age` and `keepalive` if lower. Set to `nil` to disable.",
           "anyOf": [
             { "type": "number" },
             { "type": "null" },
@@ -138,13 +161,13 @@
           "examples": [60, 300]
         },
         "connection_retries": {
-          "markdownDescription": "Number of times to retry establishing an initial database connection before giving up.\n\nDefault is 1 (no retries). Useful when the database might not be immediately available on application startup.",
+          "markdownDescription": "Number of times to reconnect and retry safely retryable (idempotent) queries when the connection to the database fails.\n\nDefault is 1. Set to `0` to disable retries.",
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
           "default": 1,
           "examples": [1, 5, 10]
         },
         "retry_deadline": {
-          "markdownDescription": "Maximum time in seconds to spend retrying failed connection attempts.\n\nIf set, Rails will keep retrying connections that fail with connection errors until this deadline is reached. Works in conjunction with `connection_retries`.",
+          "markdownDescription": "Maximum time in seconds after a query was first attempted during which it may be retried.\n\nIf this deadline has passed, an otherwise retryable query will not be retried even if `connection_retries` remain. Default is `nil` (no deadline).",
           "anyOf": [
             { "type": "number" },
             { "type": "null" },
@@ -153,7 +176,7 @@
           "examples": [5, 30, 60]
         },
         "idle_timeout": {
-          "markdownDescription": "Time in seconds after which idle connections in the pool may be closed.\n\nDefault is 300 seconds (5 minutes). Set to `nil` to disable.",
+          "markdownDescription": "Number of seconds that a connection will be kept unused in the pool before it is automatically disconnected.\n\nDefault is 300 seconds (5 minutes). Set to `0` to keep connections forever.",
           "anyOf": [
             { "type": "number" },
             { "type": "null" },
@@ -163,12 +186,17 @@
           "examples": [300, 600]
         },
         "query_cache": {
-          "markdownDescription": "Enable or disable query caching for this database connection.\n\nWhen enabled (default), identical queries within the same request return cached results. Default is `true`.",
-          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "default": true
+          "markdownDescription": "Configure query caching for this database connection.\n\nBy default, identical queries within the same request or job return cached results. Set to an integer to change the maximum number of cached queries (default `100`), or to `false` to disable the query cache.",
+          "anyOf": [
+            { "type": "integer" },
+            { "type": "boolean" },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 100,
+          "examples": [100, 200, false]
         },
         "replica": {
-          "markdownDescription": "Indicates this configuration is for a read replica.\n\nSet to `true` for replica databases in a multi-database setup. Rails will route read queries to replicas when configured.",
+          "markdownDescription": "Indicates this configuration is for a read replica.\n\nSet to `true` for replica databases in a multi-database setup. Replicas are excluded from database tasks such as migrations.",
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "examples": [true, false]
         },
@@ -193,12 +221,12 @@
           ]
         },
         "sslcert": {
-          "markdownDescription": "PostgreSQL-specific: Path to the client SSL certificate file.",
+          "markdownDescription": "PostgreSQL and MySQL: Path to the client SSL certificate file.",
           "type": "string",
           "examples": ["/path/to/client-cert.pem"]
         },
         "sslkey": {
-          "markdownDescription": "PostgreSQL-specific: Path to the client SSL private key file.",
+          "markdownDescription": "PostgreSQL and MySQL: Path to the client SSL private key file.",
           "type": "string",
           "examples": ["/path/to/client-key.pem"]
         },
@@ -213,8 +241,9 @@
           "default": true
         },
         "min_messages": {
-          "markdownDescription": "PostgreSQL-specific: Minimum message severity level to display. Sets the `client_min_messages` session parameter.",
+          "markdownDescription": "PostgreSQL-specific: Minimum message severity level to display. Sets the `client_min_messages` session parameter.\n\nDefault is `warning`.",
           "type": "string",
+          "default": "warning",
           "enum": [
             "debug5",
             "debug4",
@@ -259,16 +288,154 @@
           "default": false
         },
         "strict": {
-          "markdownDescription": "MySQL-specific: Enable strict SQL mode.\n\nDefault is `true`. When enabled, MySQL rejects invalid data and raises errors instead of warnings.",
+          "markdownDescription": "Enable strict mode.\n\n- MySQL: Enables `STRICT_ALL_TABLES` SQL mode so MySQL rejects invalid data and raises errors instead of warnings. Default is `true`.\n- SQLite: Disallows double-quoted string literals in SQL statements. Defaults to `config.active_record.sqlite3_adapter_strict_strings_by_default` (`false`).",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+        },
+        "flags": {
+          "markdownDescription": "Client flags to set when opening the connection.\n\n- `mysql2`: An integer bitmask or an array of flag names (e.g. `[\"-MULTI_STATEMENTS\"]`). `FOUND_ROWS` is always added.\n- SQLite: An integer bitmask of `SQLite3::Constants::Open` flags.\n\nRarely needed in typical applications.",
+          "anyOf": [
+            { "type": "integer" },
+            { "type": "array", "items": { "type": "string" } },
+            { "$ref": "#/definitions/erb" }
+          ]
+        },
+        "collation": {
+          "markdownDescription": "MySQL-specific: Collation to use for the connection, applied together with `encoding` via `SET NAMES ... COLLATE ...`.",
+          "type": "string",
+          "examples": ["utf8mb4_unicode_ci", "utf8mb4_0900_ai_ci"]
+        },
+        "wait_timeout": {
+          "markdownDescription": "MySQL-specific: Number of seconds the server waits for activity on the connection before closing it. Sets the `wait_timeout` session variable.\n\nDefault is `2147483`.",
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "default": 2147483
+        },
+        "sslca": {
+          "markdownDescription": "MySQL-specific: Path to the SSL certificate authority (CA) file.",
+          "type": "string",
+          "examples": ["/path/to/ca-cert.pem"]
+        },
+        "sslcapath": {
+          "markdownDescription": "MySQL-specific: Path to a directory containing trusted SSL CA certificates.",
+          "type": "string"
+        },
+        "sslcipher": {
+          "markdownDescription": "MySQL-specific: List of permitted ciphers for SSL encryption.",
+          "type": "string"
+        },
+        "ssl_mode": {
+          "markdownDescription": "MySQL-specific: SSL mode for the connection. For `trilogy`, values are mapped to `Trilogy::SSL_*` constants (e.g. `required` becomes `SSL_MODE_REQUIRED`).",
+          "anyOf": [
+            {
+              "enum": [
+                "disabled",
+                "preferred",
+                "required",
+                "verify_ca",
+                "verify_identity"
+              ]
+            },
+            { "type": "string" },
+            { "type": "integer" }
+          ]
+        },
+        "pragmas": {
+          "markdownDescription": "SQLite-specific: Hash of [PRAGMA](https://www.sqlite.org/pragma.html) statements to set on each connection. Merged with the Rails defaults:\n\n- `foreign_keys: true`\n- `journal_mode: wal`\n- `synchronous: normal`\n- `mmap_size: 134217728` (128 MB)\n- `journal_size_limit: 67108864` (64 MB)\n- `cache_size: 2000`",
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "$ref": "#/definitions/erb" }
+            ]
+          },
+          "examples": [{ "journal_mode": "wal", "synchronous": "normal" }]
+        },
+        "extensions": {
+          "markdownDescription": "SQLite-specific: List of [SQLite extensions](https://sqlite.org/loadext.html) to load (requires `sqlite3` gem v2.4.0 or later). Each entry may be a filesystem path or the name of a class that responds to `.to_path`.",
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [["SQLean::UUID", ".sqlpkg/nalgeon/crypto/crypto.so"]]
+        },
+        "keepalive": {
+          "markdownDescription": "Number of seconds between keepalive checks on idle connections in the pool.\n\nDefault is 600 seconds. Set to `false` to disable.",
+          "anyOf": [
+            { "type": "number" },
+            { "type": "boolean" },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 600,
+          "examples": [300, 600, false]
+        },
+        "max_age": {
+          "markdownDescription": "Number of seconds the pool will allow a connection to exist before retiring it at its next checkin.\n\nDefault is unlimited.",
+          "anyOf": [{ "type": "number" }, { "$ref": "#/definitions/erb" }],
+          "examples": [3600, 86400]
+        },
+        "pool_jitter": {
+          "markdownDescription": "Maximum reduction factor to apply to the `max_age` and `keepalive` intervals, so that connections don't all expire at once.\n\nDefault is `0.2`. Range `0.0`-`1.0`.",
+          "anyOf": [
+            { "type": "number", "minimum": 0, "maximum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 0.2
+        },
+        "min_threads": {
+          "markdownDescription": "Minimum number of threads in this pool's asynchronous query executor. Only used when `config.active_record.async_query_executor` is `:multi_thread_pool`.\n\nDefault is 0.",
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "default": 0
+        },
+        "max_threads": {
+          "markdownDescription": "Maximum number of threads in this pool's asynchronous query executor. Only used when `config.active_record.async_query_executor` is `:multi_thread_pool`.\n\nDefaults to `max_connections`, capped at 5.",
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
+        },
+        "verify_timeout": {
+          "markdownDescription": "Number of seconds since the connection's last activity during which it is assumed to still be alive and is not re-verified before use.\n\nDefault is 2.",
+          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+          "default": 2
+        },
+        "default_timezone": {
+          "markdownDescription": "Time zone used for this connection when reading and writing dates and times. Overrides `config.active_record.default_timezone` for this database.",
+          "enum": ["utc", "local"]
+        },
+        "database_tasks": {
+          "markdownDescription": "Whether database tasks (`db:create`, `db:migrate`, etc.) should run against this database. Set to `false` for databases that are managed externally.\n\nDefault is `true` (always `false` for replicas).",
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "default": true
         },
-        "flags": {
-          "markdownDescription": "MySQL-specific: Bitmask of MySQL client flags to set.\n\nSee MySQL documentation for available flags. Rarely needed in typical applications.",
-          "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }]
+        "schema_dump": {
+          "markdownDescription": "Filename of the schema dump for this database, relative to `db/`. Set to `false` to disable dumping the schema.\n\nDefaults to `schema.rb` / `structure.sql` for the primary database, and `<name>_schema.rb` / `<name>_structure.sql` for others.",
+          "anyOf": [
+            { "type": "string" },
+            { "type": "boolean", "const": false },
+            { "type": "null" }
+          ],
+          "examples": ["cache_schema.rb", false]
+        },
+        "schema_format": {
+          "markdownDescription": "Format used to dump and load the schema for this database. Overrides `config.active_record.schema_format`.",
+          "enum": ["ruby", "sql"],
+          "markdownEnumDescriptions": [
+            "Dump the schema as Ruby (`schema.rb`).",
+            "Dump the schema as SQL (`structure.sql`)."
+          ]
+        },
+        "schema_cache_path": {
+          "markdownDescription": "Path to the schema cache dump file for this database.\n\nDefaults to `db/schema_cache.yml` for the primary database and `db/<name>_schema_cache.yml` for others.",
+          "type": "string",
+          "examples": ["db/schema_cache.yml"]
+        },
+        "seeds": {
+          "markdownDescription": "Whether `db:prepare` should load `db/seeds.rb` when creating this database.\n\nDefaults to `true` for the primary database and `false` for others.",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }]
+        },
+        "use_metadata_table": {
+          "markdownDescription": "Whether to store environment and schema information in the internal `ar_internal_metadata` table. Set to `false` when working with a shared database or a database user that cannot create tables.\n\nDefault is `true`.",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": true
         }
       },
-      "required": ["adapter"]
+      "anyOf": [{ "required": ["adapter"] }, { "required": ["url"] }]
     }
   },
   "properties": {

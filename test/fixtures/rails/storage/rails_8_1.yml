@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../dist/rails/storage.json
+%YAML 1.1
+---
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+  public: true
+
+amazon:
+  service: S3
+  region: us-east-1
+  bucket: your_own_bucket-<%= Rails.env %>
+  http_open_timeout: 0
+  http_read_timeout: 0
+  retry_limit: 0
+  upload:
+    server_side_encryption: AES256
+    cache_control: "private, max-age=<%= 1.day.to_i %>"
+    multipart_threshold: <%= 250.megabytes %>
+
+digitalocean:
+  service: S3
+  endpoint: https://nyc3.digitaloceanspaces.com
+  access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret_access_key) %>
+  bucket: my-space
+  force_path_style: true
+
+google:
+  service: GCS
+  project: my-project
+  bucket: your_own_bucket-<%= Rails.env %>
+  iam: true
+  gsa_email: foobar@baz.iam.gserviceaccount.com
+  cache_control: "public, max-age=3600"
+
+azure:
+  service: AzureBlob
+  storage_account_name: my-account
+  storage_access_key: <%= Rails.application.credentials.dig(:azure, :storage_access_key) %>
+  container: my-container
+
+mirror:
+  service: Mirror
+  primary: local
+  mirrors: [amazon, google]
+
+microsoft:
+  service: AzureStorage
+  storage_account_name: your_account_name
+  storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
+  container: your_container_name-<%= Rails.env %>
