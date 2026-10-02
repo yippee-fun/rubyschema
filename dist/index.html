@@ -269,6 +269,10 @@
         color: var(--editor-dim);
       }
 
+      .editor .directive {
+        color: var(--editor-number);
+      }
+
       .editor .key {
         color: var(--editor-key);
       }
@@ -426,6 +430,15 @@
         overflow-x: auto;
         white-space: nowrap;
         user-select: all;
+      }
+
+      .snippet:has(.multiline) {
+        align-items: flex-start;
+      }
+
+      .snippet code.multiline {
+        white-space: pre;
+        line-height: 1.6;
       }
 
       .snippet-large {
@@ -638,6 +651,9 @@
           <div class="editor-body" aria-hidden="true">
             <ol>
               <li><span class="comment"># yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json</span></li>
+              <li> </li>
+              <li><span class="directive">%YAML 1.1</span></li>
+              <li><span class="directive">---</span></li>
               <li><span class="key">service</span>: <span class="str">blog</span></li>
               <li><span class="key">image</span>: <span class="str">joel/blog</span></li>
               <li><span class="key">servers</span>:</li>
@@ -677,9 +693,16 @@
             <div>
               <h3>YAML</h3>
               <div class="snippet">
-                <code># yaml-language-server: $schema=&lt;url&gt;</code>
-                <button type="button" class="copy" data-copy="# yaml-language-server: $schema=" aria-label="Copy YAML snippet" hidden>Copy</button>
+                <code class="multiline"># yaml-language-server: $schema=&lt;url&gt;
+
+%YAML 1.1
+---</code>
+                <button type="button" class="copy" data-copy="# yaml-language-server: $schema=&lt;url&gt;&#10;&#10;%YAML 1.1&#10;---&#10;" aria-label="Copy YAML snippet" hidden>Copy</button>
               </div>
+              <p class="hint">
+                <code>%YAML 1.1</code> tells the language server to read the
+                file the way Ruby does, since Psych implements YAML 1.1.
+              </p>
             </div>
             <div>
               <h3>JSON</h3>
@@ -953,7 +976,7 @@
 
       <footer>
         <a href="https://github.com/yippee-fun/rubyschema">GitHub</a>
-        <a href="https://github.com/yippee-fun/rubyschema/issues">Report a problem</a>
+        <a href="https://github.com/yippee-fun/rubyschema/issues/new">Report a problem</a>
         <span class="by">by <a href="https://joel.drapper.me">Joel Drapper</a></span>
       </footer>
     </div>
