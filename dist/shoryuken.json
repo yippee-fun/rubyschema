@@ -7,26 +7,14 @@
     "erb": {
       "type": "string",
       "pattern": "^<%=.*%>$"
-    }
-  },
-  "properties": {
-    "logfile": {
-      "type": "string",
-      "markdownDescription": "Path to the log file.\n\nDefault: STDOUT\n\nExample: `./shoryuken.log`\n\n**CLI equivalent:** `-L, --logfile PATH`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)"
-    },
-    "pidfile": {
-      "type": "string",
-      "markdownDescription": "Path to the PID file.\n\nUseful for process management and deployments.\n\nExample: `./shoryuken.pid`\n\n**CLI equivalent:** `-P, --pidfile PATH`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)"
     },
     "queues": {
       "type": "array",
-      "markdownDescription": "List of SQS queues to process.\n\nA single Shoryuken process can consume from multiple queues. You can specify:\n- **Queue names:** `[\"queue1\", \"queue2\"]`\n- **Queue URLs:** `[\"https://sqs.eu-west-1.amazonaws.com/000/queue1\"]`\n- **Queue ARNs:** `[\"arn:aws:sqs:us-east-1:123456789012:queue1\"]`\n\n**Load balancing:** Use `[queue_name, weight]` syntax to control fetch frequency:\n```yaml\nqueues:\n  - [queue1, 8]  # Fetch 8 times per cycle\n  - [queue2, 4]  # Fetch 4 times per cycle\n  - [queue3, 1]  # Fetch 1 time per cycle\n```\n\nEach fetch can retrieve up to 10 messages (AWS SQS limit).\n\n**Required** - At least one queue must be specified.\n\n[Queues Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#queues)",
+      "markdownDescription": "List of SQS queues to process.\n\nA single Shoryuken process can consume from multiple queues. You can specify:\n- **Queue names:** `[\"queue1\", \"queue2\"]`\n- **Queue URLs:** `[\"https://sqs.eu-west-1.amazonaws.com/000/queue1\"]`\n- **Queue ARNs:** `[\"arn:aws:sqs:us-east-1:123456789012:queue1\"]`\n\n**Load balancing:** Use `[queue_name, weight]` syntax to control fetch frequency:\n```yaml\nqueues:\n  - [queue1, 8]  # Fetch 8 times per cycle\n  - [queue2, 4]  # Fetch 4 times per cycle\n  - [queue3, 1]  # Fetch 1 time per cycle\n```\n\nEach fetch can retrieve up to 10 messages (AWS SQS limit).\n\nQueues listed here belong to the `default` processing group. Use `groups` to process other queues with their own settings.\n\n[Queues Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#queues)",
       "uniqueItems": true,
       "items": {
         "oneOf": [
-          {
-            "type": "string"
-          },
+          { "type": "string" },
           {
             "type": "array",
             "items": [
@@ -45,8 +33,84 @@
       },
       "minItems": 1
     },
+    "polling_strategy": {
+      "anyOf": [
+        { "enum": ["WeightedRoundRobin", "StrictPriority"] },
+        { "type": "string" }
+      ],
+      "markdownDescription": "Polling strategy used to pick which queue to fetch from next.\n\nDefault: `WeightedRoundRobin`\n\n- `WeightedRoundRobin` - cycles through queues according to their weights, pausing empty queues for `delay` seconds.\n- `StrictPriority` - keeps fetching from the highest priority queue until it is empty before trying the next one.\n\nAny other value is resolved as the name of a custom polling strategy class.\n\n[Polling Strategies Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Polling-strategies)",
+      "markdownEnumDescriptions": [
+        "Cycle through queues according to their weights (default).",
+        "Fetch from the highest priority queue until it is empty, then the next."
+      ],
+      "default": "WeightedRoundRobin"
+    }
+  },
+  "properties": {
+    "logfile": {
+      "type": "string",
+      "markdownDescription": "Path to the log file.\n\nDefault: STDOUT\n\nExample: `./shoryuken.log`\n\n**CLI equivalent:** `-L, --logfile PATH`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)"
+    },
+    "pidfile": {
+      "type": "string",
+      "markdownDescription": "Path to the PID file.\n\nUseful for process management and deployments.\n\nExample: `./shoryuken.pid`\n\n**CLI equivalent:** `-P, --pidfile PATH`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)"
+    },
+    "daemon": {
+      "type": "boolean",
+      "markdownDescription": "Run Shoryuken as a daemon in the background.\n\nDefault: `false`\n\nWhen daemonized, STDOUT and STDERR are redirected to `logfile`, so a `logfile` should be set.\n\n**CLI equivalent:** `-d, --daemon`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)",
+      "default": false
+    },
+    "verbose": {
+      "type": "boolean",
+      "markdownDescription": "Enable verbose (`DEBUG` level) logging.\n\nDefault: `false`\n\n**CLI equivalent:** `-v, --verbose`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)",
+      "default": false
+    },
+    "require": {
+      "type": "string",
+      "markdownDescription": "Path to a file, or a directory of workers, to require before starting.\n\nWhen a directory is given, every `*.rb` file within it (recursively) is required.\n\nExample: `./app/workers`\n\n**CLI equivalent:** `-r, --require PATH`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)"
+    },
+    "queues": { "$ref": "#/definitions/queues" },
+    "groups": {
+      "type": "object",
+      "markdownDescription": "Processing groups, each with its own queues, concurrency, delay and polling strategy.\n\nQueues in different groups are fetched independently, so a busy queue in one group does not delay fetching from queues in another.\n\nExample:\n```yaml\ngroups:\n  group1:\n    concurrency: 1\n    queues:\n      - queue1\n  group2:\n    concurrency: 10\n    delay: 10\n    polling_strategy: StrictPriority\n    queues:\n      - queue2\n      - queue3\n```\n\n[Processing Groups Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Processing-Groups)",
+      "additionalProperties": {
+        "type": "object",
+        "markdownDescription": "A processing group. Settings not set here fall back to the top-level values.",
+        "properties": {
+          "concurrency": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              { "$ref": "#/definitions/erb" }
+            ],
+            "markdownDescription": "Number of threads available for processing messages from this group.\n\nDefaults to the top-level `concurrency`."
+          },
+          "delay": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              { "$ref": "#/definitions/erb" }
+            ],
+            "markdownDescription": "Number of seconds to pause fetching from an empty queue in this group.\n\nDefaults to the top-level `delay`."
+          },
+          "polling_strategy": { "$ref": "#/definitions/polling_strategy" },
+          "queues": { "$ref": "#/definitions/queues" }
+        },
+        "additionalProperties": false
+      }
+    },
     "delay": {
-      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        { "$ref": "#/definitions/erb" }
+      ],
       "markdownDescription": "Number of seconds to pause fetching from an empty queue.\n\nDefault: `0`\n\nWhen Shoryuken fetches from a queue and finds no messages, it will pause fetching from that queue for this many seconds.\n\n**Cost vs. Speed tradeoff:**\n- `delay: 0` - Fetch continuously (faster message processing, higher AWS costs)\n- `delay: 25` - Pause 25 seconds when empty (lower costs, slower to pick up new messages)\n\nExample:\n```yaml\ndelay: 25\nqueues:\n  - queue1\n  - queue2\n```\n\nIf `queue1` is empty, Shoryuken pauses fetching from `queue1` for 25 seconds but continues fetching from `queue2`.\n\n[AWS SQS Pricing](https://aws.amazon.com/sqs/pricing/) | [Delay Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#delay)",
       "default": 0
     },
@@ -55,12 +119,34 @@
       "markdownDescription": "Number of threads available for processing messages concurrently.\n\nDefault: `25`\n\n**Important:** \n- Be careful increasing this value to avoid overwhelming your system with I/O operations\n- When using databases (ActiveRecord) or connection pools, set the pool size >= concurrency\n- Higher concurrency = more memory usage\n\nExample with environment variable:\n```yaml\nconcurrency: <%= ENV.fetch('SHORYUKEN_CONCURRENCY', 25) %>\n```\n\nIn Rails `database.yml`:\n```yaml\nproduction:\n  pool: <%= ENV.fetch('SHORYUKEN_CONCURRENCY', 25) %>\n```\n\n[Concurrency Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#concurrency)",
       "default": 25
     },
-    "cache_visibility_timeout": {
+    "polling_strategy": { "$ref": "#/definitions/polling_strategy" },
+    "timeout": {
       "anyOf": [
-        { "type": ["integer", "boolean"] },
+        {
+          "type": "number",
+          "minimum": 0
+        },
         { "$ref": "#/definitions/erb" }
       ],
-      "markdownDescription": "Cache the queue visibility timeout instead of fetching it from SQS.\n\nDefault: `false`\n\n**When disabled (default):**\n- Shoryuken requests visibility timeout from SQS for each queue\n- Changes to visibility timeout in AWS Console are automatically detected\n- More SQS API requests (higher quota usage)\n\n**When enabled:**\n- Visibility timeout is cached (fewer SQS requests, lower quota usage)\n- You must restart Shoryuken after changing visibility timeout in AWS Console\n\nSet to `true` to reduce SQS API quota usage:\n```ruby\nShoryuken.cache_visibility_timeout = true\n```\n\n[Documentation](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options#cache_visibility_timeout)"
+      "markdownDescription": "Number of seconds to wait for in-flight workers to finish when shutting down, before they are forcibly killed.\n\nDefault: `8`\n\n**CLI equivalent:** `-t, --timeout NUM`\n\n[Shoryuken Options](https://github.com/ruby-shoryuken/shoryuken/wiki/Shoryuken-options)",
+      "default": 8
+    },
+    "thread_priority": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -3,
+          "maximum": 3
+        },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Ruby thread priority used for the threads that dispatch work to processors.\n\nDefault: `-1`\n\nSee [`Thread#priority`](https://docs.ruby-lang.org/en/master/Thread.html#method-i-priority).",
+      "default": -1
+    },
+    "aws": {
+      "type": "object",
+      "markdownDescription": "Options passed to `Aws::SQS::Client.new` when Shoryuken creates its default SQS client.\n\nExample:\n```yaml\naws:\n  region: us-east-1\n```\n\nAWS credentials are usually better configured outside Shoryuken (environment variables, `~/.aws/credentials`, instance profiles, or `Shoryuken.sqs_client = ...` in Ruby).\n\n[Configure the AWS Client](https://github.com/ruby-shoryuken/shoryuken/wiki/Configure-the-AWS-Client) | [Aws::SQS::Client options](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SQS/Client.html#initialize-instance_method)",
+      "default": {}
     }
   },
   "additionalProperties": false
