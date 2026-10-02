@@ -27,7 +27,7 @@ RubySchema is a collection of JSON schemas for common Ruby gem configuration fil
 
 ## Running Tests
 
-Tests use **Minitest** and validate every schema against JSON Schema draft-07 and check that all fixture files pass validation against their corresponding schema.
+Tests use **Minitest** and validate every schema against JSON Schema draft-07, lint it (only known keywords, every `$ref` resolves, every `default` and `examples` value matches its own schema, no unused `definitions`), and check that all fixture files pass validation against their corresponding schema. CI runs them on every push to `main` and every pull request.
 
 ```sh
 bundle exec rake test
