@@ -5,7 +5,6 @@
   "markdownDescription": "Configures Action Cable subscription adapters for WebSocket connections in Rails applications. Each top-level key represents an environment (development, test, production, etc.) that specifies how Action Cable handles real-time pub/sub messaging.\n\nSee the [Rails Guide](https://guides.rubyonrails.org/action_cable_overview.html#configuration) for more information.",
   "type": "object",
   "definitions": {
-    "erb": { "type": "string", "pattern": "^<%=.*%>$" },
     "environment": {
       "title": "Environment",
       "markdownDescription": "Action Cable environment configuration. Specifies the adapter and connection details for pub/sub messaging.",
