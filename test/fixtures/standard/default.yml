@@ -11,10 +11,20 @@ plugins:
   - standard-sorbet
   - standard-rails:
       target_rails_version: 7.1
-extend_config: .standard_todo.yml
+      enabled: true
+  - standard-custom:
+      enabled: false
+  - my-plugin:
+      require_path: my_plugin/standard
+      plugin_class_name: MyPlugin::Plugin
+extend_config:
+  - .betterlint.yml
 ignore:
   - "vendor/**/*"
   - "db/schema.rb"
   - app/models/legacy_user.rb:
       - Style/StringLiterals
       - Layout/LineLength
+      - Style/FileOpen
+      - Performance/StringReplacement
+      - Rails/OutputSafety
