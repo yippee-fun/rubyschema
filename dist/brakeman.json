@@ -1,0 +1,672 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/brakeman.json",
+  "title": "Brakeman Configuration",
+  "markdownDescription": "Configuration for Brakeman, a static analysis security scanner for Rails applications. Typically located at `config/brakeman.yml`. Generate one from command-line options with `brakeman -C`.\n\nCommand-line options take priority over the config file.\n\n[Brakeman Documentation](https://brakemanscanner.org/docs/)",
+  "type": "object",
+  "definitions": {
+    "check": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CheckBasicAuth",
+            "CheckBasicAuthTimingAttack",
+            "CheckCSRFTokenForgeryCVE",
+            "CheckContentTag",
+            "CheckCookieSerialization",
+            "CheckCreateWith",
+            "CheckCrossSiteScripting",
+            "CheckDefaultRoutes",
+            "CheckDeserialize",
+            "CheckDetailedExceptions",
+            "CheckDigestDoS",
+            "CheckDivideByZero",
+            "CheckDynamicFinders",
+            "CheckEOLRails",
+            "CheckEOLRuby",
+            "CheckEscapeFunction",
+            "CheckEvaluation",
+            "CheckExecute",
+            "CheckFileAccess",
+            "CheckFileDisclosure",
+            "CheckFilterSkipping",
+            "CheckForceSSL",
+            "CheckForgerySetting",
+            "CheckHeaderDoS",
+            "CheckI18nXSS",
+            "CheckJRubyXML",
+            "CheckJSONEncoding",
+            "CheckJSONEntityEscape",
+            "CheckJSONParsing",
+            "CheckLinkTo",
+            "CheckLinkToHref",
+            "CheckMailTo",
+            "CheckMassAssignment",
+            "CheckMimeTypeDoS",
+            "CheckModelAttrAccessible",
+            "CheckModelAttributes",
+            "CheckModelSerialize",
+            "CheckNestedAttributes",
+            "CheckNestedAttributesBypass",
+            "CheckNumberToCurrency",
+            "CheckPageCachingCVE",
+            "CheckPathname",
+            "CheckPermitAttributes",
+            "CheckQuoteTableName",
+            "CheckRansack",
+            "CheckRedirect",
+            "CheckRegexDoS",
+            "CheckRender",
+            "CheckRenderDoS",
+            "CheckRenderInline",
+            "CheckRenderRCE",
+            "CheckResponseSplitting",
+            "CheckReverseTabnabbing",
+            "CheckRouteDoS",
+            "CheckSQL",
+            "CheckSQLCVEs",
+            "CheckSSLVerify",
+            "CheckSafeBufferManipulation",
+            "CheckSanitizeConfigCve",
+            "CheckSanitizeMethods",
+            "CheckSecrets",
+            "CheckSelectTag",
+            "CheckSelectVulnerability",
+            "CheckSend",
+            "CheckSendFile",
+            "CheckSessionManipulation",
+            "CheckSessionSettings",
+            "CheckSimpleFormat",
+            "CheckSingleQuotes",
+            "CheckSkipBeforeFilter",
+            "CheckSprocketsPathTraversal",
+            "CheckStripTags",
+            "CheckSymbolDoS",
+            "CheckSymbolDoSCVE",
+            "CheckTemplateInjection",
+            "CheckTranslateBug",
+            "CheckUnsafeReflection",
+            "CheckUnsafeReflectionMethods",
+            "CheckUnscopedFind",
+            "CheckValidationRegex",
+            "CheckVerbConfusion",
+            "CheckWeakHash",
+            "CheckWeakRSAKey",
+            "CheckWithoutProtection",
+            "CheckXMLDoS",
+            "CheckYAMLParsing"
+          ],
+          "markdownEnumDescriptions": [
+            "Checks for the use of http_basic_authenticate_with",
+            "Check for timing attack in basic auth (CVE-2015-7576)",
+            "Checks for versions with CSRF token forgery vulnerability (CVE-2020-8166)",
+            "Checks for XSS in calls to content_tag",
+            "Check for use of Marshal for cookie serialization",
+            "Checks for strong params bypass in CVE-2014-3514",
+            "Checks for unescaped output in views",
+            "Checks for default routes",
+            "Checks for unsafe deserialization of objects",
+            "Checks for information disclosure displayed via detailed exceptions",
+            "Checks for digest authentication DoS vulnerability",
+            "Warns on potential division by zero",
+            "Check unsafe usage of find_by_*",
+            "Checks for unsupported versions of Rails",
+            "Checks for unsupported versions of Ruby",
+            "Checks for versions before 2.3.14 which have a vulnerable escape method",
+            "Searches for evaluation of user input",
+            "Finds instances of possible command injection",
+            "Finds possible file access using user input",
+            "Checks for versions with file existence disclosure vulnerability",
+            "Checks for versions 3.0-3.0.9 which had a vulnerability in filters",
+            "Check that force_ssl setting is enabled in production",
+            "Verifies that protect_from_forgery is enabled in direct subclasses of ActionController::Base",
+            "Checks for header DoS (CVE-2013-6414)",
+            "Checks for i18n XSS (CVE-2013-4491)",
+            "Checks for versions with JRuby XML parsing backend",
+            "Checks for missing JSON encoding (CVE-2015-3226)",
+            "Check if HTML escaping is disabled for JSON output",
+            "Checks for JSON parsing vulnerabilities CVE-2013-0333 and CVE-2013-0269",
+            "Checks for XSS in link_to in versions before 3.0",
+            "Checks to see if values used for hrefs are sanitized using a :url_safe_method to protect against javascript:/data: XSS",
+            "Checks for mail_to XSS vulnerability in certain versions",
+            "Finds instances of mass assignment",
+            "Checks for mime type denial of service (CVE-2016-0751)",
+            "Reports models which have dangerous attributes defined via attr_accessible",
+            "Reports models which do not use attr_restricted and warns on models that use attr_protected",
+            "Report uses of serialize in versions vulnerable to CVE-2013-0277",
+            "Checks for nested attributes vulnerability in Rails 2.3.9 and 3.0.0",
+            "Checks for nested attributes vulnerability (CVE-2015-7577)",
+            "Checks for number helpers XSS vulnerabilities in certain versions",
+            "Check for page caching vulnerability (CVE-2020-8159)",
+            "Check for unexpected Pathname behavior",
+            "Warn on potentially dangerous attributes allowed via permit",
+            "Checks for quote_table_name vulnerability in versions before 2.3.14 and 3.0.10",
+            "Checks for dangerous use of the Ransack library",
+            "Looks for calls to redirect_to with user input as arguments",
+            "Searches regexes including user input",
+            "Finds calls to render that might allow file access or code execution",
+            "Warn about denial of service with render :text (CVE-2014-0082)",
+            "Checks for cross-site scripting in render calls",
+            "Finds calls to render that might be vulnerable to CVE-2016-0752",
+            "Report response splitting in Rails 2.3.0 - 2.3.13",
+            "Checks for reverse tabnabbing cases on 'link_to' calls",
+            "Checks for route DoS (CVE-2015-7581)",
+            "Check for SQL injection",
+            "Checks for several SQL CVEs",
+            "Checks for OpenSSL::SSL::VERIFY_NONE",
+            "Check for Rails versions with SafeBuffer bug",
+            "Checks for vunerable uses of sanitize (CVE-2022-32209)",
+            "Checks for versions with vulnerable sanitize and sanitize_css",
+            "Checks for secrets stored in source code",
+            "Looks for unsafe uses of select_tag() in some versions of Rails 3.x",
+            "Looks for unsafe uses of select() helper",
+            "Check for unsafe use of Object#send",
+            "Check for user input in uses of send_file",
+            "Check for user input in session keys",
+            "Checks for session key length and http_only settings",
+            "Checks for simple_format XSS vulnerability (CVE-2013-6416) in certain versions",
+            "Check for versions which do not escape single quotes (CVE-2012-3464)",
+            "Warn when skipping CSRF or authentication checks by default",
+            "Checks for CVE-2018-3760",
+            "Report strip_tags vulnerabilities",
+            "Checks for symbol denial of service",
+            "Checks for versions with ActiveRecord symbol denial of service vulnerability",
+            "Searches for evaluation of user input through template injection",
+            "Report XSS vulnerability in translate helper",
+            "Checks for unsafe reflection",
+            "Checks for unsafe reflection to access methods",
+            "Check for unscoped ActiveRecord queries",
+            "Report uses of validates_format_of with improper anchors",
+            "Check for uses of `request.get?` that might have unintentional behavior",
+            "Checks for use of weak hashes like MD5",
+            "Checks for weak uses RSA keys",
+            "Check for mass assignment using without_protection",
+            "Checks for XML denial of service (CVE-2015-3227)",
+            "Checks for YAML parsing vulnerabilities (CVE-2013-0156)"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^Check[A-Za-z0-9_]+$",
+          "markdownDescription": "A custom check class name (for checks loaded with `additional_checks_path`)."
+        }
+      ]
+    },
+    "optionalCheck": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CheckDivideByZero",
+            "CheckForceSSL",
+            "CheckReverseTabnabbing",
+            "CheckSecrets",
+            "CheckSymbolDoS",
+            "CheckUnscopedFind",
+            "CheckWeakHash"
+          ],
+          "markdownEnumDescriptions": [
+            "Warns on potential division by zero",
+            "Check that force_ssl setting is enabled in production",
+            "Checks for reverse tabnabbing cases on 'link_to' calls",
+            "Checks for secrets stored in source code",
+            "Checks for symbol denial of service",
+            "Check for unscoped ActiveRecord queries",
+            "Checks for use of weak hashes like MD5"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^Check[A-Za-z0-9_]+$",
+          "markdownDescription": "A custom check class name (for checks loaded with `additional_checks_path`)."
+        }
+      ]
+    }
+  },
+  "properties": {
+    "parallel_checks": {
+      "type": "boolean",
+      "markdownDescription": "Run checks and file parsing in parallel. Set to `false` to run sequentially.\n\n**CLI:** `-n, --no-threads`",
+      "default": true
+    },
+    "report_progress": {
+      "type": "boolean",
+      "markdownDescription": "Show progress reports while scanning.\n\n**CLI:** `--[no-]progress`",
+      "default": true
+    },
+    "quiet": {
+      "type": "boolean",
+      "markdownDescription": "Suppress informational messages.\n\n**CLI:** `-q, --[no-]quiet`"
+    },
+    "exit_on_warn": {
+      "type": "boolean",
+      "markdownDescription": "Exit with a non-zero code when warnings are found.\n\n**CLI:** `-z, --[no-]exit-on-warn`",
+      "default": true
+    },
+    "exit_on_error": {
+      "type": "boolean",
+      "markdownDescription": "Exit with a non-zero code when errors are raised.\n\n**CLI:** `--[no-]exit-on-error`",
+      "default": true
+    },
+    "ensure_latest": {
+      "markdownDescription": "Fail when Brakeman is not the latest version. Set to `true`, or to a number of days (1-15) a newer release must have been out before failing.\n\n**CLI:** `--ensure-latest [DAYS]`\n\n**Example:**\n```yaml\nensure_latest: 7\n```",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 15
+        }
+      ]
+    },
+    "ensure_ignore_notes": {
+      "type": "boolean",
+      "markdownDescription": "Fail when an ignored warning in the ignore file has no note.\n\n**CLI:** `--ensure-ignore-notes`"
+    },
+    "ensure_no_obsolete_ignore_entries": {
+      "type": "boolean",
+      "markdownDescription": "Fail when the ignore file contains an entry that no longer matches a warning.\n\n**CLI:** `--ensure-no-obsolete-ignore-entries`"
+    },
+    "rails3": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 3 mode.\n\n**CLI:** `-3, --rails3`"
+    },
+    "rails4": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 4 mode. The CLI flag also sets `rails3`, so set every lower version to `true` as well.\n\n**CLI:** `-4, --rails4`"
+    },
+    "rails5": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 5 mode. The CLI flag also sets `rails3` and `rails4`, so set every lower version to `true` as well.\n\n**CLI:** `-5, --rails5`"
+    },
+    "rails6": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 6 mode. The CLI flag also sets `rails3` to `rails5`, so set every lower version to `true` as well.\n\n**CLI:** `-6, --rails6`"
+    },
+    "rails7": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 7 mode. The CLI flag also sets `rails3` to `rails6`, so set every lower version to `true` as well.\n\n**CLI:** `-7, --rails7`"
+    },
+    "rails8": {
+      "type": "boolean",
+      "markdownDescription": "Force Rails 8 mode. The CLI flag also sets `rails3` to `rails7`, so set every lower version to `true` as well.\n\n**CLI:** `-8, --rails8`"
+    },
+    "force_scan": {
+      "type": "boolean",
+      "markdownDescription": "Scan the application even if Rails is not detected.\n\n**CLI:** `--force-scan`"
+    },
+    "run_all_checks": {
+      "type": "boolean",
+      "markdownDescription": "Run all default and optional checks.\n\n**CLI:** `-A, --run-all-checks`"
+    },
+    "assume_all_routes": {
+      "type": "boolean",
+      "markdownDescription": "Assume all controller methods are actions.\n\n**CLI:** `-a, --[no-]assume-routes`",
+      "default": true
+    },
+    "escape_html": {
+      "type": "boolean",
+      "markdownDescription": "Assume HTML is escaped by default.\n\n**CLI:** `-e, --escape-html`"
+    },
+    "ignore_ifs": {
+      "type": "boolean",
+      "markdownDescription": "Disable flow sensitivity on conditionals. Faster, but less accurate. `--faster` sets this and `disable_constant_tracking`.\n\n**CLI:** `--no-branching`"
+    },
+    "disable_constant_tracking": {
+      "type": "boolean",
+      "markdownDescription": "Disable tracking of constant values. Faster, but less accurate. `--faster` sets this and `ignore_ifs`.\n\n**CLI:** `--faster`"
+    },
+    "ignore_model_output": {
+      "type": "boolean",
+      "markdownDescription": "Consider model attributes XSS-safe.\n\n**CLI:** `--ignore-model-output`",
+      "default": false
+    },
+    "ignore_attr_protected": {
+      "type": "boolean",
+      "markdownDescription": "Consider models with `attr_protected` safe.\n\n**CLI:** `--ignore-protected`"
+    },
+    "interprocedural": {
+      "type": "boolean",
+      "markdownDescription": "Process method calls to known methods.\n\n**CLI:** `--interprocedural`"
+    },
+    "branch_limit": {
+      "type": "integer",
+      "minimum": -1,
+      "default": 5,
+      "markdownDescription": "Limit the depth of values in branches. Use `-1` for no limit.\n\n**CLI:** `--branch-limit LIMIT`"
+    },
+    "parser_timeout": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 10,
+      "markdownDescription": "Seconds to spend parsing a single file before giving up.\n\n**CLI:** `--parser-timeout SECONDS`"
+    },
+    "use_prism": {
+      "type": "boolean",
+      "markdownDescription": "Use the Prism parser (requires `prism` 1.0.0 or newer).\n\n**CLI:** `--[no-]prism`",
+      "default": true
+    },
+    "check_arguments": {
+      "type": "boolean",
+      "markdownDescription": "Report indirect use of untrusted data, such as arguments to methods. Set to `false` to only report direct use.\n\n**CLI:** `-r, --report-direct`",
+      "default": true
+    },
+    "safe_methods": {
+      "type": "array",
+      "markdownDescription": "Methods considered safe for unescaped output in views.\n\nValues must be written as Ruby symbols (with a leading colon), as Brakeman compares them against symbols. Plain strings are silently ignored.\n\n**CLI:** `-s, --safe-methods meth1,meth2`\n\n**Example:**\n```yaml\nsafe_methods:\n  - :sanitize_markdown\n```",
+      "items": {
+        "type": "string",
+        "pattern": "^:[A-Za-z_][A-Za-z0-9_]*[?!]?$",
+        "markdownDescription": "A method name written as a Ruby symbol, e.g. `:my_helper`."
+      },
+      "uniqueItems": true
+    },
+    "sql_safe_methods": {
+      "type": "array",
+      "markdownDescription": "Do not warn about SQL injection when input is wrapped in one of these methods.\n\nValues must be written as Ruby symbols (with a leading colon), as Brakeman compares them against symbols. Plain strings are silently ignored.\n\n**CLI:** `--sql-safe-methods meth1,meth2`\n\n**Example:**\n```yaml\nsql_safe_methods:\n  - :quote_identifier\n```",
+      "items": {
+        "type": "string",
+        "pattern": "^:[A-Za-z_][A-Za-z0-9_]*[?!]?$",
+        "markdownDescription": "A method name written as a Ruby symbol, e.g. `:my_helper`."
+      },
+      "uniqueItems": true
+    },
+    "url_safe_methods": {
+      "type": "array",
+      "markdownDescription": "Do not warn about XSS when a `link_to` href is wrapped in one of these methods.\n\nValues must be written as Ruby symbols (with a leading colon), as Brakeman compares them against symbols. Plain strings are silently ignored.\n\n**CLI:** `--url-safe-methods meth1,meth2`\n\n**Example:**\n```yaml\nurl_safe_methods:\n  - :safe_url\n```",
+      "items": {
+        "type": "string",
+        "pattern": "^:[A-Za-z_][A-Za-z0-9_]*[?!]?$",
+        "markdownDescription": "A method name written as a Ruby symbol, e.g. `:my_helper`."
+      },
+      "uniqueItems": true
+    },
+    "skip_files": {
+      "type": "array",
+      "markdownDescription": "Files or directories to skip. Paths are relative to the application root, and directories must end in `/`.\n\n**CLI:** `--skip-files file1,path2`\n\n**Example:**\n```yaml\nskip_files:\n  - plugins/\n  - app/views/legacy/report.html.erb\n```",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "only_files": {
+      "type": "array",
+      "markdownDescription": "Process only these files or directories. Paths are relative to the application root, and directories must end in `/`.\n\n**CLI:** `--only-files file1,path2`\n\n**Example:**\n```yaml\nonly_files:\n  - app/controllers/\n```",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "skip_vendor": {
+      "type": "boolean",
+      "markdownDescription": "Skip processing the `vendor` directory.\n\n**CLI:** `--[no-]skip-vendor`",
+      "default": true
+    },
+    "additional_libs_path": {
+      "type": "array",
+      "markdownDescription": "Application-relative lib directories to process.\n\n**CLI:** `--add-libs-path path1,path2`\n\n**Example:**\n```yaml\nadditional_libs_path:\n  - app/services\n```",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "engine_paths": {
+      "type": "array",
+      "markdownDescription": "Engines to include in the scan. Globs are supported.\n\n**CLI:** `--add-engines-path path1,path2`",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "default": ["engines/*"]
+    },
+    "follow_symlinks": {
+      "type": "boolean",
+      "markdownDescription": "Follow symbolic links to directories.\n\n**CLI:** `--[no-]follow-symlinks`"
+    },
+    "gemfile": {
+      "type": "string",
+      "markdownDescription": "Gemfile to scan.\n\n**CLI:** `--gemfile GEMFILE`"
+    },
+    "enable_checks": {
+      "type": "array",
+      "markdownDescription": "Optional checks to enable in addition to the defaults. Use the full class name, including the `Check` prefix.\n\n**CLI:** `-E, --enable Check1,Check2`\n\n**Example:**\n```yaml\nenable_checks:\n  - CheckUnscopedFind\n```",
+      "items": {
+        "$ref": "#/definitions/optionalCheck"
+      },
+      "uniqueItems": true
+    },
+    "run_checks": {
+      "type": "array",
+      "markdownDescription": "Only run these checks. Use the full class name, including the `Check` prefix.\n\n**CLI:** `-t, --test Check1,Check2`\n\n**Example:**\n```yaml\nrun_checks:\n  - CheckSQL\n  - CheckCrossSiteScripting\n```",
+      "items": {
+        "$ref": "#/definitions/check"
+      },
+      "uniqueItems": true
+    },
+    "skip_checks": {
+      "type": "array",
+      "markdownDescription": "Checks to skip. Use the full class name, including the `Check` prefix.\n\n**CLI:** `-x, --except Check1,Check2`\n\n**Example:**\n```yaml\nskip_checks:\n  - CheckDefaultRoutes\n```",
+      "items": {
+        "$ref": "#/definitions/check"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "additional_checks_path": {
+      "type": "array",
+      "markdownDescription": "Directories containing additional out-of-tree checks.\n\n**Note:** for safety, Brakeman ignores this option in a config file unless it is run with `--allow-check-paths-in-config`.\n\n**CLI:** `--add-checks-path path1,path2`",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "debug": {
+      "type": "boolean",
+      "markdownDescription": "Output lots of debugging information.\n\n**CLI:** `-d, --debug`"
+    },
+    "show_timing": {
+      "type": "boolean",
+      "markdownDescription": "Measure the time taken by each scan step.\n\n**CLI:** `--timing`"
+    },
+    "output_format": {
+      "type": "string",
+      "enum": [
+        ":text",
+        ":to_text",
+        ":html",
+        ":to_html",
+        ":csv",
+        ":to_csv",
+        ":pdf",
+        ":to_pdf",
+        ":tabs",
+        ":to_tabs",
+        ":json",
+        ":to_json",
+        ":markdown",
+        ":to_markdown",
+        ":codeclimate",
+        ":to_codeclimate",
+        ":cc",
+        ":to_cc",
+        ":plain",
+        ":to_plain",
+        ":table",
+        ":to_table",
+        ":junit",
+        ":to_junit",
+        ":sarif",
+        ":to_sarif",
+        ":sonar",
+        ":to_sonar",
+        ":github",
+        ":to_github",
+        ":to_s"
+      ],
+      "markdownEnumDescriptions": [
+        "Plain text report (default)",
+        "Plain text report (default)",
+        "HTML report",
+        "HTML report",
+        "CSV report",
+        "CSV report",
+        "PDF report",
+        "PDF report",
+        "Tab-separated report",
+        "Tab-separated report",
+        "JSON report",
+        "JSON report",
+        "Markdown report",
+        "Markdown report",
+        "Code Climate engine output",
+        "Code Climate engine output",
+        "Code Climate engine output (alias of `codeclimate`)",
+        "Code Climate engine output (alias of `codeclimate`)",
+        "Plain text report (alias of `text`)",
+        "Plain text report (alias of `text`)",
+        "Terminal table report",
+        "Terminal table report",
+        "JUnit XML report",
+        "JUnit XML report",
+        "SARIF report",
+        "SARIF report",
+        "SonarQube report",
+        "SonarQube report",
+        "GitHub Actions annotations",
+        "GitHub Actions annotations",
+        "Plain text report (default)"
+      ],
+      "markdownDescription": "Report format. Written as a Ruby symbol (`brakeman -C` writes the `:to_` form). Cannot be combined with multiple `output_files`; with `output_files`, the format is chosen from each file's extension instead.\n\n**CLI:** `-f, --format TYPE`\n\n**Example:**\n```yaml\noutput_format: :to_json\n```"
+    },
+    "html_style": {
+      "type": "string",
+      "markdownDescription": "Path to a CSS file to use for HTML output.\n\n**CLI:** `--css-file CSSFile`"
+    },
+    "ignore_file": {
+      "type": "string",
+      "default": "config/brakeman.ignore",
+      "markdownDescription": "Ignore file listing warnings to skip. Manage it with `brakeman -I`.\n\n**CLI:** `-i, --ignore-config IGNOREFILE`"
+    },
+    "show_ignored": {
+      "type": "boolean",
+      "markdownDescription": "Show warnings that are normally ignored by the ignore file, without affecting the exit code.\n\n**CLI:** `--show-ignored`",
+      "default": false
+    },
+    "combine_locations": {
+      "type": "boolean",
+      "markdownDescription": "Combine warning locations.\n\n**CLI:** `-l, --[no-]combine-locations`",
+      "default": true
+    },
+    "highlight_user_input": {
+      "type": "boolean",
+      "markdownDescription": "Highlight user input in reports.\n\n**CLI:** `--[no-]highlights`",
+      "default": true
+    },
+    "output_color": {
+      "markdownDescription": "Use ANSI colors in reports. `true` only colors output to a terminal; `:force` always colors it, even when piped.\n\n**CLI:** `--[no-]color`\n\n**Example:**\n```yaml\noutput_color: :force\n```",
+      "default": true,
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "enum": [":force"]
+        }
+      ]
+    },
+    "report_routes": {
+      "type": "boolean",
+      "markdownDescription": "Report controller information.\n\n**CLI:** `-m, --routes`"
+    },
+    "message_limit": {
+      "type": "integer",
+      "default": 100,
+      "markdownDescription": "Limit message length in the HTML report.\n\n**CLI:** `--message-limit LENGTH`"
+    },
+    "pager": {
+      "type": "boolean",
+      "markdownDescription": "Use a pager for output to a terminal.\n\n**CLI:** `--[no-]pager`",
+      "default": true
+    },
+    "table_width": {
+      "type": "integer",
+      "minimum": 1,
+      "markdownDescription": "Limit table width in the text report.\n\n**CLI:** `--table-width WIDTH`"
+    },
+    "output_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Files to write reports to. The format of each is chosen from its extension (`.html`, `.json`, `.sarif`, ...). Defaults to stdout.\n\n**CLI:** `-o, --output FILE`\n\n**Example:**\n```yaml\noutput_files:\n  - tmp/brakeman.html\n  - tmp/brakeman.json\n```"
+    },
+    "collapse_mass_assignment": {
+      "type": "boolean",
+      "markdownDescription": "Report a single warning for all models without `attr_accessible`, instead of one per model.\n\n**CLI:** `--no-separate-models`",
+      "default": false
+    },
+    "summary_only": {
+      "markdownDescription": "`:summary_only` (or `true`) outputs only the summary of warnings. `:no_summary` outputs the warnings without the summary.\n\n**CLI:** `--[no-]summary`\n\n**Example:**\n```yaml\nsummary_only: :no_summary\n```",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "enum": [":summary_only", ":no_summary"],
+          "markdownEnumDescriptions": [
+            "Only output the summary",
+            "Output warnings without the summary"
+          ]
+        }
+      ]
+    },
+    "absolute_paths": {
+      "type": "boolean",
+      "markdownDescription": "Output absolute file paths in reports.\n\n**CLI:** `--absolute-paths`"
+    },
+    "github_repo": {
+      "type": "string",
+      "pattern": "^[^/@]+/[^/@]+(/[^@]*)?(@.+)?$",
+      "markdownDescription": "Link to files on GitHub in Markdown and HTML reports. Format is `USER/REPO[/PATH][@REF]`; the ref defaults to `master`.\n\n**CLI:** `--github-repo USER/REPO[/PATH][@REF]`\n\n**Example:**\n```yaml\ngithub_repo: yippee-fun/app@main\n```"
+    },
+    "text_fields": {
+      "type": "array",
+      "markdownDescription": "Fields to include in the text report, in order.\n\nValues must be written as Ruby symbols (with a leading colon), as Brakeman compares them against symbols. Plain strings are silently ignored.\n\n**CLI:** `--text-fields field1,field2`\n\n**Example:**\n```yaml\ntext_fields:\n  - :confidence\n  - :check\n  - :message\n  - :file\n  - :line\n```",
+      "items": {
+        "type": "string",
+        "enum": [
+          ":category",
+          ":category_id",
+          ":check",
+          ":code",
+          ":confidence",
+          ":cwe",
+          ":file",
+          ":fingerprint",
+          ":line",
+          ":link",
+          ":message",
+          ":render_path"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "min_confidence": {
+      "type": "integer",
+      "enum": [0, 1, 2],
+      "markdownEnumDescriptions": [
+        "High confidence warnings only",
+        "High and medium confidence warnings",
+        "All warnings, including weak confidence"
+      ],
+      "default": 2,
+      "markdownDescription": "Minimum confidence level of warnings to report.\n\n**Note:** this runs the opposite way to the CLI flag. `-w3` (high only) is stored as `0`, and `-w1` (all warnings) as `2`.\n\n**CLI:** `-w, --confidence-level LEVEL`\n\n**Example:**\n```yaml\nmin_confidence: 1\n```"
+    }
+  },
+  "additionalProperties": false
+}
