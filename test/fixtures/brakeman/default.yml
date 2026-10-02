@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../../dist/brakeman.json
+%YAML 1.1
+---
+
+skip_files:
+  - vendor/
+  - app/views/legacy/
+skip_checks:
+  - CheckDefaultRoutes
+enable_checks:
+  - CheckUnscopedFind
+  - CheckWeakHash
+min_confidence: 1
+quiet: true
+safe_methods:
+  - :sanitize_markdown
+output_files:
+  - tmp/brakeman.html
+  - tmp/brakeman.json
