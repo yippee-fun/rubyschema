@@ -3,21 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ruby Schema</title>
+    <title>RubySchema</title>
     <meta
       name="description"
       content="JSON Schemas for common configuration files in Ruby projects. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs."
     />
+    <link rel="canonical" href="https://www.rubyschema.org/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.rubyschema.org/" />
+    <meta property="og:title" content="RubySchema" />
+    <meta
+      property="og:description"
+      content="JSON Schemas for common configuration files in Ruby projects. Auto-complete, validation and inline documentation for YAML, JSON and TOML configs."
+    />
+    <meta name="twitter:card" content="summary" />
     <style>
       :root {
         --bg: #fafafa;
         --fg: #1a1a1a;
-        --dim: #737373;
+        --dim: #6b6b6b;
         --border: #e5e5e5;
         --accent: #cc0000;
         --accent-dim: #991a1a;
+        --on-accent: #ffffff;
         --surface: #ffffff;
-        --code-bg: #f0f0f0;
+        --code-bg: #f3f3f3;
+
+        --editor-bg: #1b1b1f;
+        --editor-chrome: #26262b;
+        --editor-fg: #d8d8dc;
+        --editor-dim: #6e6e78;
+        --editor-key: #ff8a8a;
+        --editor-string: #a8d8a0;
+        --editor-number: #f0c674;
+        --editor-error: #ff5c5c;
+        --editor-popup: #2c2c33;
+        --editor-select: #3d3d4a;
+
+        --sans:
+          system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+          sans-serif;
         --mono:
           ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
       }
@@ -25,13 +51,17 @@
       @media (prefers-color-scheme: dark) {
         :root {
           --bg: #111111;
-          --fg: #e5e5e5;
-          --dim: #888888;
+          --fg: #e8e8e8;
+          --dim: #949494;
           --border: #2a2a2a;
           --accent: #ff6b6b;
           --accent-dim: #ff9999;
-          --surface: #1a1a1a;
+          --on-accent: #111111;
+          --surface: #191919;
           --code-bg: #1e1e1e;
+
+          --editor-bg: #1a1a1a;
+          --editor-chrome: #222222;
         }
       }
 
@@ -44,8 +74,8 @@
       }
 
       body {
-        font-family: var(--mono);
-        font-size: 15px;
+        font-family: var(--sans);
+        font-size: 16px;
         line-height: 1.6;
         color: var(--fg);
         background: var(--bg);
@@ -53,79 +83,112 @@
         text-rendering: optimizeLegibility;
       }
 
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+      }
+
+      a {
+        color: inherit;
+        text-decoration-color: var(--border);
+        text-underline-offset: 3px;
+      }
+
+      a:hover {
+        color: var(--accent);
+        text-decoration-color: var(--accent);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
       .container {
-        max-width: 740px;
+        max-width: 780px;
         margin: 0 auto;
-        padding: 4rem 1.5rem 6rem;
+        padding: 0 1.5rem 5rem;
       }
 
       @media (max-width: 600px) {
         .container {
-          padding: 3rem 1.1rem 4.5rem;
+          padding: 0 1rem 4rem;
         }
       }
 
-      /* ---- Header ---- */
-
-      header {
-        margin-bottom: 4rem;
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
       }
 
-      h1 {
-        font-size: clamp(1.9rem, 5vw, 2.3rem);
-        font-weight: 700;
-        letter-spacing: -0.035em;
-        line-height: 1.1;
-        margin-bottom: 1rem;
-        text-wrap: balance;
+      /* ---- Hero ---- */
+
+      header {
+        padding: 5rem 0 1rem;
       }
 
       h1 span {
         color: var(--accent);
       }
 
+      h1 {
+        font-family: var(--mono);
+        font-size: clamp(2.2rem, 7vw, 3.25rem);
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 1.05;
+        margin-bottom: 1.25rem;
+      }
+
       .tagline {
-        font-size: 1.08rem;
+        font-size: clamp(1.15rem, 3vw, 1.35rem);
+        line-height: 1.45;
+        max-width: 34ch;
+        text-wrap: balance;
+      }
+
+      .lede {
+        margin-top: 1rem;
         color: var(--dim);
-        max-width: 540px;
-        line-height: 1.6;
+        max-width: 58ch;
         text-wrap: pretty;
       }
 
       .cta-row {
         display: flex;
         gap: 0.75rem;
-        margin-top: 1.35rem;
+        margin-top: 1.75rem;
         flex-wrap: wrap;
       }
 
       .btn {
         display: inline-block;
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 0.58rem 0.92rem;
-        font-size: 12px;
+        border-radius: 8px;
+        padding: 0.65rem 1.1rem;
+        font-size: 14px;
         font-weight: 600;
-        letter-spacing: 0.02em;
         text-decoration: none;
-        transition: border-color 120ms ease, color 120ms ease,
+        transition:
+          border-color 120ms ease,
+          color 120ms ease,
           background-color 120ms ease;
-      }
-
-      .btn:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
       }
 
       .btn-primary {
         background: var(--accent);
         border-color: var(--accent);
-        color: #fff;
+        color: var(--on-accent);
       }
 
       .btn-primary:hover {
         background: var(--accent-dim);
         border-color: var(--accent-dim);
+        color: var(--on-accent);
       }
 
       .btn-secondary {
@@ -135,91 +198,280 @@
 
       .btn-secondary:hover {
         border-color: var(--accent);
-        color: var(--accent);
       }
 
-      /* ---- Prose ---- */
+      /* ---- Editor mock ---- */
 
-      .prose {
-        color: var(--dim);
-        margin-bottom: 3.5rem;
-        line-height: 1.7;
-        max-width: 66ch;
-        text-wrap: pretty;
+      .editor {
+        margin-top: 3rem;
+        border-radius: 10px;
+        background: var(--editor-bg);
+        color: var(--editor-fg);
+        box-shadow:
+          0 1px 2px rgb(0 0 0 / 0.08),
+          0 12px 32px -8px rgb(0 0 0 / 0.25);
+        overflow: hidden;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.75;
       }
 
-      .prose p + p {
-        margin-top: 1rem;
-      }
-
-      .proof {
-        margin-top: 1rem;
+      .editor-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 0.9rem;
+        background: var(--editor-chrome);
+        color: var(--editor-dim);
         font-size: 12px;
+      }
+
+      .editor-bar i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4a4a52;
+      }
+
+      .editor-bar span {
+        margin-left: 0.6rem;
+      }
+
+      .editor-body {
+        position: relative;
+        padding: 0.9rem 0 1.4rem;
+        overflow-x: auto;
+      }
+
+      .editor ol {
+        list-style: none;
+        counter-reset: line;
+        min-width: 30rem;
+      }
+
+      .editor li {
+        counter-increment: line;
+        white-space: pre;
+        padding-right: 1rem;
+        position: relative;
+      }
+
+      .editor li::before {
+        content: counter(line);
+        display: inline-block;
+        width: 3.2em;
+        padding-right: 1.2em;
+        text-align: right;
+        color: var(--editor-dim);
+      }
+
+      .editor .comment {
+        color: var(--editor-dim);
+      }
+
+      .editor .key {
+        color: var(--editor-key);
+      }
+
+      .editor .str {
+        color: var(--editor-string);
+      }
+
+      .editor .num {
+        color: var(--editor-number);
+      }
+
+      .editor .squiggle {
+        text-decoration: underline wavy var(--editor-error);
+        text-decoration-skip-ink: none;
+        text-underline-offset: 4px;
+      }
+
+      .editor .cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.15em;
+        vertical-align: -0.2em;
+        background: var(--editor-fg);
+        animation: blink 1.1s steps(1) infinite;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .editor .cursor {
+          animation: none;
+        }
+      }
+
+      .popup {
+        position: absolute;
+        z-index: 1;
+        background: var(--editor-popup);
+        border: 1px solid #3a3a44;
+        border-radius: 6px;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+        font-size: 12px;
+        line-height: 1.5;
+        white-space: normal;
+      }
+
+      .popup-error {
+        left: 16ch;
+        top: -0.35em;
+        padding: 0.35rem 0.65rem;
+        color: var(--editor-fg);
+        white-space: nowrap;
+      }
+
+      .popup-error b {
+        color: var(--editor-error);
+        font-weight: 600;
+      }
+
+      .popup-complete {
+        left: 13ch;
+        top: 100%;
+        margin-top: 2px;
+        display: flex;
+        min-width: 22rem;
+      }
+
+      .popup-complete ul {
+        list-style: none;
+        padding: 0.3rem;
+        border-right: 1px solid #3a3a44;
+        flex: none;
+      }
+
+      .popup-complete ul li {
+        padding: 0.1rem 0.6rem;
+        border-radius: 4px;
+      }
+
+      .popup-complete ul li {
+        counter-increment: none;
+      }
+
+      .popup-complete ul li::before {
+        content: none;
+      }
+
+      .popup-complete ul li.selected {
+        background: var(--editor-select);
+      }
+
+      .popup-complete p {
+        padding: 0.4rem 0.7rem;
+        color: var(--editor-dim);
+        font-family: var(--sans);
+        max-width: 14rem;
+      }
+
+      .editor-caption {
+        margin-top: 0.75rem;
+        font-size: 13px;
         color: var(--dim);
-        letter-spacing: 0.02em;
-      }
-
-      .prose a {
-        color: var(--fg);
-        text-decoration-color: var(--border);
-        text-underline-offset: 3px;
-      }
-
-      .prose a:hover {
-        color: var(--accent);
-        text-decoration-color: var(--accent);
+        text-align: center;
       }
 
       /* ---- Sections ---- */
 
       section {
-        margin-bottom: 3.5rem;
+        padding-top: 3.5rem;
       }
 
       section[id] {
-        scroll-margin-top: 2rem;
+        scroll-margin-top: 1rem;
       }
 
       h2 {
-        font-size: 0.8rem;
+        font-family: var(--mono);
+        font-size: 0.78rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--dim);
-        margin-bottom: 1.05rem;
+        margin-bottom: 1rem;
       }
 
-      /* ---- Install block ---- */
-
-      .install {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .install code {
-        font-family: var(--mono);
-        font-size: 13px;
-        word-break: break-all;
-        user-select: all;
-        cursor: pointer;
-      }
-
-      .install-hint {
-        font-size: 12px;
+      .hint {
+        margin-top: 0.75rem;
+        font-size: 14px;
         color: var(--dim);
-        line-height: 1.65;
+        max-width: 62ch;
         text-wrap: pretty;
       }
 
-      /* ---- Manual setup ---- */
+      /* ---- Code blocks with copy ---- */
+
+      .snippet {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.85rem 0.85rem 0.85rem 1.1rem;
+      }
+
+      .snippet code {
+        flex: 1;
+        min-width: 0;
+        font-size: 13px;
+        overflow-x: auto;
+        white-space: nowrap;
+        user-select: all;
+      }
+
+      .snippet-large {
+        padding: 1.1rem 1rem 1.1rem 1.35rem;
+      }
+
+      .snippet-large code {
+        font-size: 14px;
+      }
+
+      .copy {
+        flex: none;
+        font: 600 12px var(--sans);
+        color: var(--dim);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.25rem 0.6rem;
+        cursor: pointer;
+        transition:
+          border-color 120ms ease,
+          color 120ms ease;
+      }
+
+      .copy:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .copy[data-copied] {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
 
       .setup-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 0.75rem;
+      }
+
+      .setup-grid > div {
+        min-width: 0;
+      }
+
+      .setup-grid > div:first-child {
+        grid-column: 1 / -1;
       }
 
       @media (max-width: 600px) {
@@ -228,39 +480,26 @@
         }
       }
 
-      .setup-item label {
-        display: block;
-        font-size: 12px;
+      .setup-grid h3 {
+        font-size: 13px;
         font-weight: 600;
         color: var(--dim);
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.35rem;
       }
 
-      .setup-item code {
-        display: block;
-        background: var(--code-bg);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 0.6rem 0.75rem;
-        font-family: var(--mono);
-        font-size: 12px;
-        line-height: 1.5;
-        white-space: nowrap;
-        overflow-x: auto;
-      }
-
-      /* ---- Schema list ---- */
+      /* ---- Schema table ---- */
 
       .schema-table {
         width: 100%;
         border-collapse: collapse;
+        font-size: 15px;
       }
 
       .schema-table tr {
         border-bottom: 1px solid var(--border);
       }
 
-      .schema-table tr:last-child {
+      .schema-table tbody:last-child tr:last-child {
         border-bottom: none;
       }
 
@@ -278,56 +517,73 @@
 
       .schema-table td:nth-child(2) {
         color: var(--dim);
-        font-size: 13px;
         padding-right: 1.5rem;
         white-space: nowrap;
-        width: 1%;
       }
 
       .schema-table td:last-child {
-        font-size: 12px;
-        color: var(--dim);
-        word-break: break-all;
+        text-align: right;
+        white-space: nowrap;
       }
 
       .schema-table td:last-child a {
+        font-family: var(--mono);
+        font-size: 12px;
         color: var(--dim);
         text-decoration: none;
+        margin-right: 0.6rem;
       }
 
       .schema-table td:last-child a:hover {
         color: var(--accent);
       }
 
-      .schema-table .group-header td {
-        padding-top: 1.75rem;
+      .schema-table .group-header th {
+        text-align: left;
+        padding-top: 2rem;
         padding-bottom: 0.5rem;
+        font-family: var(--mono);
         font-size: 12px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: var(--accent);
-        border-bottom: none;
       }
 
-      /* Responsive: hide URL column on narrow screens */
+      .schema-table tbody:first-of-type .group-header th {
+        padding-top: 0.5rem;
+      }
+
       @media (max-width: 600px) {
         header {
-          margin-bottom: 3.25rem;
+          padding: 3rem 0 0.5rem;
         }
 
-        .cta-row {
-          width: 100%;
-          gap: 0.55rem;
+        .snippet-large code {
+          white-space: normal;
+          word-break: break-all;
+        }
+
+        .editor {
+          font-size: 12px;
         }
 
         .btn {
-          width: 100%;
+          flex: 1;
           text-align: center;
         }
 
-        .schema-table td:last-child {
+        .schema-table td:last-child a {
           display: none;
+        }
+
+        .schema-table td:nth-child(2) {
+          white-space: normal;
+          padding-right: 0.75rem;
+        }
+
+        .schema-table td:first-child {
+          padding-right: 0.75rem;
         }
       }
 
@@ -337,8 +593,11 @@
         margin-top: 5rem;
         padding-top: 2rem;
         border-top: 1px solid var(--border);
-        font-size: 13px;
+        font-size: 14px;
         color: var(--dim);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.25rem;
       }
 
       footer a {
@@ -349,6 +608,10 @@
       footer a:hover {
         color: var(--accent);
       }
+
+      footer .by {
+        margin-left: auto;
+      }
     </style>
   </head>
   <body>
@@ -356,248 +619,352 @@
       <header>
         <h1><span>Ruby</span>Schema</h1>
         <p class="tagline">
-          Stop shipping broken config files. Add editor validation and
-          autocomplete for Ruby project configs in minutes.
+          Catch config mistakes in your editor, not in production.
+        </p>
+        <p class="lede">
+          JSON Schemas for the config files in your Ruby project. Your editor
+          flags invalid keys, suggests valid options and shows inline docs as
+          you type. 23 schemas. Tested against real fixtures.
         </p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#quick-start">Install in Rails</a>
-          <a class="btn btn-secondary" href="#schemas">Browse Schemas</a>
+          <a class="btn btn-secondary" href="#schemas">Browse schemas</a>
         </div>
+
+        <figure class="editor" aria-label="Example: editing config/deploy.yml with RubySchema">
+          <div class="editor-bar" aria-hidden="true">
+            <i></i><i></i><i></i><span>config/deploy.yml</span>
+          </div>
+          <div class="editor-body" aria-hidden="true">
+            <ol>
+              <li><span class="comment"># yaml-language-server: $schema=https://www.rubyschema.org/kamal/deploy.json</span></li>
+              <li><span class="key">service</span>: <span class="str">blog</span></li>
+              <li><span class="key">image</span>: <span class="str">joel/blog</span></li>
+              <li><span class="key">servers</span>:</li>
+              <li>  - <span class="num">192.168.0.1</span></li>
+              <li><span class="key squiggle">registy</span>:<div class="popup popup-error"><b>Error</b> Property registy is not allowed.</div></li>
+              <li>  <span class="key">username</span>: <span class="str">joel</span></li>
+              <li><span class="key">builder</span>:</li>
+              <li>  <span class="key">arch</span>: <span class="cursor"></span><div class="popup popup-complete"><ul><li class="selected">amd64</li><li>arm64</li></ul><p>Build for AMD/Intel 64-bit processors</p></div></li>
+              <li> </li>
+              <li> </li>
+            </ol>
+          </div>
+        </figure>
+        <p class="editor-caption">
+          Validation and auto-complete for Kamal’s <code>deploy.yml</code>,
+          from the YAML language server.
+        </p>
       </header>
 
-      <div class="prose">
-        <p>
-          RubySchema publishes JSON Schemas for popular Ruby project configuration
-          files. Your editor can catch invalid keys, suggest valid options and
-          show inline docs as you type.
-        </p>
-        <p>
-          Works with the
-          <a href="https://github.com/redhat-developer/yaml-language-server"
-            >YAML language server</a
-          >, JSON Schema-aware tooling and editor integrations like VS Code,
-          Neovim and Zed.
-        </p>
-        <p class="proof">21 schemas. Tested against real fixtures.</p>
-      </div>
-
-      <section id="quick-start">
-        <h2>Quick Start</h2>
-        <div class="install">
-          <code
-            >bin/rails app:template
-            LOCATION=https://www.rubyschema.org/rails.rb</code
-          >
-        </div>
-        <p class="install-hint">
-          Injects schema comments into your Rails config files. Safe to re-run
-          when new schemas are added.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-secondary" href="/rails.rb">View rails.rb template</a>
-        </div>
-      </section>
-
-      <section>
-        <h2>Manual Setup</h2>
-        <div class="setup-grid">
-          <div class="setup-item">
-            <label>YAML</label>
-            <code># yaml-language-server: $schema=&lt;url&gt;</code>
+      <main>
+        <section id="quick-start">
+          <h2>Quick start</h2>
+          <div class="snippet snippet-large">
+            <code>bin/rails app:template LOCATION=https://www.rubyschema.org/rails.rb</code>
+            <button type="button" class="copy" data-copy="bin/rails app:template LOCATION=https://www.rubyschema.org/rails.rb" hidden>Copy</button>
           </div>
-          <div class="setup-item">
-            <label>JSON</label>
-            <code>{ "$schema": "&lt;url&gt;" }</code>
+          <p class="hint">
+            Adds a schema comment to each supported config file in your Rails
+            app. Safe to re-run when new schemas are added.
+            <a href="/rails.rb">View the template</a>.
+          </p>
+        </section>
+
+        <section>
+          <h2>Manual setup</h2>
+          <div class="setup-grid">
+            <div>
+              <h3>YAML</h3>
+              <div class="snippet">
+                <code># yaml-language-server: $schema=&lt;url&gt;</code>
+                <button type="button" class="copy" data-copy="# yaml-language-server: $schema=" aria-label="Copy YAML snippet" hidden>Copy</button>
+              </div>
+            </div>
+            <div>
+              <h3>JSON</h3>
+              <div class="snippet">
+                <code>{ "$schema": "&lt;url&gt;" }</code>
+                <button type="button" class="copy" data-copy='"$schema": ""' aria-label="Copy JSON snippet" hidden>Copy</button>
+              </div>
+            </div>
+            <div>
+              <h3>TOML</h3>
+              <div class="snippet">
+                <code>#:schema &lt;url&gt;</code>
+                <button type="button" class="copy" data-copy="#:schema " aria-label="Copy TOML snippet" hidden>Copy</button>
+              </div>
+            </div>
           </div>
-          <div class="setup-item">
-            <label>TOML</label>
-            <code>#:schema &lt;url&gt;</code>
-          </div>
-        </div>
-      </section>
+          <p class="hint">
+            Works with the
+            <a href="https://github.com/redhat-developer/yaml-language-server">YAML language server</a>
+            and any JSON Schema-aware editor, including VS Code, Neovim and Zed.
+          </p>
+        </section>
 
-      <section id="schemas">
-        <h2>Schemas</h2>
-        <table class="schema-table">
-          <tr class="group-header">
-            <td colspan="3">Rails</td>
-          </tr>
-          <tr>
-            <td>Database</td>
-            <td>database.yml</td>
-            <td>
-              <a href="/rails/database.json"
-                >rubyschema.org/rails/database.json</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>Storage</td>
-            <td>storage.yml</td>
-            <td>
-              <a href="/rails/storage.json"
-                >rubyschema.org/rails/storage.json</a
-              >
-            </td>
-          </tr>
-          <tr>
-            <td>Cable</td>
-            <td>cable.yml</td>
-            <td>
-              <a href="/rails/cable.json">rubyschema.org/rails/cable.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Cache</td>
-            <td>cache.yml</td>
-            <td>
-              <a href="/rails/cache.json">rubyschema.org/rails/cache.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Queue</td>
-            <td>queue.yml</td>
-            <td>
-              <a href="/rails/queue.json">rubyschema.org/rails/queue.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Recurring</td>
-            <td>recurring.yml</td>
-            <td>
-              <a href="/rails/recurring.json"
-                >rubyschema.org/rails/recurring.json</a
-              >
-            </td>
-          </tr>
+        <section id="schemas">
+          <h2>Schemas</h2>
+          <table class="schema-table">
+            <thead class="visually-hidden">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">File</th>
+                <th scope="col">Schema</th>
+              </tr>
+            </thead>
 
-          <tr class="group-header">
-            <td colspan="3">Deployment &amp; CI</td>
-          </tr>
-          <tr>
-            <td>Kamal</td>
-            <td>deploy.yml</td>
-            <td>
-              <a href="/kamal/deploy.json">rubyschema.org/kamal/deploy.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Lefthook</td>
-            <td>lefthook.yml</td>
-            <td><a href="/lefthook.json">rubyschema.org/lefthook.json</a></td>
-          </tr>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Rails</th>
+                </tr>
+                <tr>
+                  <td>Database</td>
+                  <td><code>config/<wbr />database.yml</code></td>
+                  <td>
+                    <a href="/rails/database.json">/rails/database.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/database.json" aria-label="Copy Database schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Storage</td>
+                  <td><code>config/<wbr />storage.yml</code></td>
+                  <td>
+                    <a href="/rails/storage.json">/rails/storage.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/storage.json" aria-label="Copy Storage schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cable</td>
+                  <td><code>config/<wbr />cable.yml</code></td>
+                  <td>
+                    <a href="/rails/cable.json">/rails/cable.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/cable.json" aria-label="Copy Cable schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cache</td>
+                  <td><code>config/<wbr />cache.yml</code></td>
+                  <td>
+                    <a href="/rails/cache.json">/rails/cache.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/cache.json" aria-label="Copy Cache schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Queue</td>
+                  <td><code>config/<wbr />queue.yml</code></td>
+                  <td>
+                    <a href="/rails/queue.json">/rails/queue.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/queue.json" aria-label="Copy Queue schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Recurring</td>
+                  <td><code>config/<wbr />recurring.yml</code></td>
+                  <td>
+                    <a href="/rails/recurring.json">/rails/recurring.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rails/recurring.json" aria-label="Copy Recurring schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
 
-          <tr class="group-header">
-            <td colspan="3">Code Quality</td>
-          </tr>
-          <tr>
-            <td>RuboCop</td>
-            <td>.rubocop.yml</td>
-            <td><a href="/rubocop.json">rubyschema.org/rubocop.json</a></td>
-          </tr>
-          <tr>
-            <td>RuboCop</td>
-            <td>.rubocop_todo.yml</td>
-            <td><a href="/rubocop.json">rubyschema.org/rubocop.json</a></td>
-          </tr>
-          <tr>
-            <td>Standard</td>
-            <td>.standard.yml</td>
-            <td><a href="/standard.json">rubyschema.org/standard.json</a></td>
-          </tr>
-          <tr>
-            <td>ERB Lint</td>
-            <td>.erb_lint.yml</td>
-            <td><a href="/erb_lint.json">rubyschema.org/erb_lint.json</a></td>
-          </tr>
-          <tr>
-            <td>Packwerk</td>
-            <td>package.yml</td>
-            <td>
-              <a href="/packwerk/package.json"
-                >rubyschema.org/packwerk/package.json</a
-              >
-            </td>
-          </tr>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Deployment &amp; CI</th>
+                </tr>
+                <tr>
+                  <td>Kamal</td>
+                  <td><code>config/<wbr />deploy.yml</code></td>
+                  <td>
+                    <a href="/kamal/deploy.json">/kamal/deploy.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/kamal/deploy.json" aria-label="Copy Kamal schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lefthook</td>
+                  <td><code>lefthook.yml</code><br /><code>lefthook.json</code><br /><code>lefthook.toml</code></td>
+                  <td>
+                    <a href="/lefthook.json">/lefthook.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/lefthook.json" aria-label="Copy Lefthook schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
 
-          <tr class="group-header">
-            <td colspan="3">Background Jobs</td>
-          </tr>
-          <tr>
-            <td>Sidekiq</td>
-            <td>sidekiq.yml</td>
-            <td><a href="/sidekiq.json">rubyschema.org/sidekiq.json</a></td>
-          </tr>
-          <tr>
-            <td>Shoryuken</td>
-            <td>shoryuken.yml</td>
-            <td><a href="/shoryuken.json">rubyschema.org/shoryuken.json</a></td>
-          </tr>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Code Quality</th>
+                </tr>
+                <tr>
+                  <td>Brakeman</td>
+                  <td><code>config/<wbr />brakeman.yml</code></td>
+                  <td>
+                    <a href="/brakeman.json">/brakeman.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/brakeman.json" aria-label="Copy Brakeman schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ERB Lint</td>
+                  <td><code>.erb_lint.yml</code><br /><code>.erb-lint.yml</code></td>
+                  <td>
+                    <a href="/erb_lint.json">/erb_lint.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/erb_lint.json" aria-label="Copy ERB Lint schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RuboCop</td>
+                  <td><code>.rubocop.yml</code><br /><code>.rubocop_todo.yml</code></td>
+                  <td>
+                    <a href="/rubocop.json">/rubocop.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rubocop.json" aria-label="Copy RuboCop schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Standard</td>
+                  <td><code>.standard.yml</code></td>
+                  <td>
+                    <a href="/standard.json">/standard.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/standard.json" aria-label="Copy Standard schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Packwerk</td>
+                  <td><code>package.yml</code></td>
+                  <td>
+                    <a href="/packwerk/package.json">/packwerk/package.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/packwerk/package.json" aria-label="Copy Packwerk schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
 
-          <tr class="group-header">
-            <td colspan="3">Monitoring</td>
-          </tr>
-          <tr>
-            <td>Honeybadger</td>
-            <td>honeybadger.yml</td>
-            <td>
-              <a href="/honeybadger.json">rubyschema.org/honeybadger.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>RoRvsWild</td>
-            <td>rorvswild.yml</td>
-            <td><a href="/rorvswild.json">rubyschema.org/rorvswild.json</a></td>
-          </tr>
-          <tr>
-            <td>Scout APM</td>
-            <td>scout_apm.yml</td>
-            <td><a href="/scout_apm.json">rubyschema.org/scout_apm.json</a></td>
-          </tr>
-          <tr>
-            <td>PgHero</td>
-            <td>pghero.yml</td>
-            <td><a href="/pghero.json">rubyschema.org/pghero.json</a></td>
-          </tr>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Background Jobs</th>
+                </tr>
+                <tr>
+                  <td>Sidekiq</td>
+                  <td><code>config/<wbr />sidekiq.yml</code></td>
+                  <td>
+                    <a href="/sidekiq.json">/sidekiq.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/sidekiq.json" aria-label="Copy Sidekiq schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shoryuken</td>
+                  <td><code>shoryuken.yml</code></td>
+                  <td>
+                    <a href="/shoryuken.json">/shoryuken.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/shoryuken.json" aria-label="Copy Shoryuken schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
 
-          <tr class="group-header">
-            <td colspan="3">I18n</td>
-          </tr>
-          <tr>
-            <td>Locale files</td>
-            <td>locales/*.yml</td>
-            <td>
-              <a href="/i18n/locale.json">rubyschema.org/i18n/locale.json</a>
-            </td>
-          </tr>
-          <tr>
-            <td>i18n-tasks</td>
-            <td>i18n-tasks.yml</td>
-            <td>
-              <a href="/i18n-tasks.json">rubyschema.org/i18n-tasks.json</a>
-            </td>
-          </tr>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Monitoring</th>
+                </tr>
+                <tr>
+                  <td>Honeybadger</td>
+                  <td><code>config/<wbr />honeybadger.yml</code><br /><code>.honeybadger.yml</code></td>
+                  <td>
+                    <a href="/honeybadger.json">/honeybadger.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/honeybadger.json" aria-label="Copy Honeybadger schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RoRvsWild</td>
+                  <td><code>config/<wbr />rorvswild.yml</code></td>
+                  <td>
+                    <a href="/rorvswild.json">/rorvswild.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/rorvswild.json" aria-label="Copy RoRvsWild schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Scout APM</td>
+                  <td><code>config/<wbr />scout_apm.yml</code></td>
+                  <td>
+                    <a href="/scout_apm.json">/scout_apm.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/scout_apm.json" aria-label="Copy Scout APM schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PgHero</td>
+                  <td><code>config/<wbr />pghero.yml</code></td>
+                  <td>
+                    <a href="/pghero.json">/pghero.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/pghero.json" aria-label="Copy PgHero schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
 
-          <tr class="group-header">
-            <td colspan="3">Other</td>
-          </tr>
-          <tr>
-            <td>Mongoid</td>
-            <td>mongoid.yml</td>
-            <td><a href="/mongoid.json">rubyschema.org/mongoid.json</a></td>
-          </tr>
-          <tr>
-            <td>Vite Ruby</td>
-            <td>vite.json</td>
-            <td><a href="/vite.json">rubyschema.org/vite.json</a></td>
-          </tr>
-        </table>
-      </section>
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">I18n</th>
+                </tr>
+                <tr>
+                  <td>Locale files</td>
+                  <td><code>config/<wbr />locales/<wbr />**/<wbr />*.yml</code></td>
+                  <td>
+                    <a href="/i18n/locale.json">/i18n/locale.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/i18n/locale.json" aria-label="Copy Locale files schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>i18n-tasks</td>
+                  <td><code>config/<wbr />i18n-tasks.yml</code></td>
+                  <td>
+                    <a href="/i18n-tasks.json">/i18n-tasks.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/i18n-tasks.json" aria-label="Copy i18n-tasks schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody>
+                <tr class="group-header">
+                  <th colspan="3" scope="colgroup">Other</th>
+                </tr>
+                <tr>
+                  <td>Mongoid</td>
+                  <td><code>config/<wbr />mongoid.yml</code></td>
+                  <td>
+                    <a href="/mongoid.json">/mongoid.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/mongoid.json" aria-label="Copy Mongoid schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Vite Ruby</td>
+                  <td><code>config/<wbr />vite.json</code></td>
+                  <td>
+                    <a href="/vite.json">/vite.json</a>
+                    <button type="button" class="copy" data-copy="https://www.rubyschema.org/vite.json" aria-label="Copy Vite Ruby schema URL" hidden>Copy</button>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+        </section>
+      </main>
 
       <footer>
-        <a href="https://github.com/yippee-fun/rubyschema">GitHub</a> &middot;
-        by <a href="https://joel.drapper.me">Joel Drapper</a>
+        <a href="https://github.com/yippee-fun/rubyschema">GitHub</a>
+        <a href="https://github.com/yippee-fun/rubyschema/issues">Report a problem</a>
+        <span class="by">by <a href="https://joel.drapper.me">Joel Drapper</a></span>
       </footer>
     </div>
+
+    <script>
+      if (navigator.clipboard) {
+        for (const button of document.querySelectorAll("button.copy")) {
+          button.hidden = false;
+          button.addEventListener("click", async () => {
+            await navigator.clipboard.writeText(button.dataset.copy);
+            button.textContent = "Copied";
+            button.dataset.copied = "";
+            setTimeout(() => {
+              button.textContent = "Copy";
+              delete button.dataset.copied;
+            }, 1500);
+          });
+        }
+      }
+    </script>
   </body>
 </html>
