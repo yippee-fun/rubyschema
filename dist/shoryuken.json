@@ -147,6 +147,14 @@
       "type": "object",
       "markdownDescription": "Options passed to `Aws::SQS::Client.new` when Shoryuken creates its default SQS client.\n\nExample:\n```yaml\naws:\n  region: us-east-1\n```\n\nAWS credentials are usually better configured outside Shoryuken (environment variables, `~/.aws/credentials`, instance profiles, or `Shoryuken.sqs_client = ...` in Ruby).\n\n[Configure the AWS Client](https://github.com/ruby-shoryuken/shoryuken/wiki/Configure-the-AWS-Client) | [Aws::SQS::Client options](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SQS/Client.html#initialize-instance_method)",
       "default": {}
+    },
+    "cache_visibility_timeout": {
+      "anyOf": [
+        { "type": ["integer", "boolean"] },
+        { "$ref": "#/definitions/erb" }
+      ],
+      "markdownDescription": "Cache the queue visibility timeout instead of fetching it from SQS.\n\nShoryuken never reads this key from the YAML file. Set it in Ruby instead:\n```ruby\nShoryuken.cache_visibility_timeout = true\n```",
+      "deprecationMessage": "Ignored in shoryuken.yml. Set `Shoryuken.cache_visibility_timeout = true` in Ruby instead."
     }
   },
   "additionalProperties": false

@@ -413,40 +413,25 @@
           }
         },
         "auth_mech": {
-          "anyOf": [
-            {
-              "enum": [
-                "scram",
-                "scram256",
-                "mongodb_cr",
-                "mongodb_x509",
-                "gssapi",
-                "aws",
-                "plain"
-              ],
-              "markdownEnumDescriptions": [
-                "SCRAM-SHA-1 authentication (MongoDB 3.0+)",
-                "SCRAM-SHA-256 authentication (MongoDB 4.0+, more secure)",
-                "MongoDB Challenge-Response (deprecated, pre-3.0)",
-                "X.509 certificate authentication",
-                "Kerberos/GSSAPI authentication",
-                "AWS IAM authentication (MongoDB Atlas)",
-                "LDAP PLAIN authentication"
-              ]
-            },
-            {
-              "enum": [
-                ":scram",
-                ":scram256",
-                ":mongodb_cr",
-                ":mongodb_x509",
-                ":gssapi",
-                ":aws",
-                ":plain"
-              ]
-            }
+          "markdownDescription": "Authentication mechanism to use. Must be written as a Ruby symbol (e.g. `:scram256`); a plain string raises `Mongo::Auth::InvalidMechanism`. **Default:** negotiated with the server (SCRAM-SHA-256 if available, otherwise SCRAM-SHA-1)",
+          "enum": [
+            ":scram",
+            ":scram256",
+            ":mongodb_cr",
+            ":mongodb_x509",
+            ":gssapi",
+            ":aws",
+            ":plain"
           ],
-          "markdownDescription": "Authentication mechanism to use. The driver expects a symbol (e.g. `:scram256`); strings are converted with a warning. **Default:** negotiated with the server (SCRAM-SHA-256 if available, otherwise SCRAM-SHA-1)"
+          "markdownEnumDescriptions": [
+            "SCRAM-SHA-1 authentication (MongoDB 3.0+)",
+            "SCRAM-SHA-256 authentication (MongoDB 4.0+, more secure)",
+            "MongoDB Challenge-Response (deprecated, pre-3.0)",
+            "X.509 certificate authentication",
+            "Kerberos/GSSAPI authentication",
+            "AWS IAM authentication (MongoDB Atlas)",
+            "LDAP PLAIN authentication"
+          ]
         },
         "auth_mech_properties": {
           "type": "object",
@@ -681,7 +666,7 @@
           "markdownDescription": "Requested Stable API version.",
           "properties": {
             "version": {
-              "enum": ["1"],
+              "enum": ["1", 1],
               "markdownDescription": "Server API version."
             },
             "strict": {

@@ -581,7 +581,10 @@
             "execution_out",
             "execution_info",
             "skips",
-            "setup"
+            "setup",
+            "jobs",
+            "jobs_out",
+            "jobs_info"
           ]
         },
         {
@@ -602,7 +605,10 @@
               "execution_out",
               "execution_info",
               "skips",
-              "setup"
+              "setup",
+              "jobs",
+              "jobs_out",
+              "jobs_info"
             ]
           }
         }

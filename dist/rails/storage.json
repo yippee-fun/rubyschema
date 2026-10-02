@@ -9,8 +9,8 @@
       "markdownDescription": "Local disk storage service. Files are stored directly on the server's filesystem at the specified root path.",
       "properties": {
         "service": {
-          "const": "Disk",
-          "markdownDescription": "Service type for local disk storage."
+          "markdownDescription": "Service type for local disk storage.",
+          "enum": ["Disk", "disk"]
         },
         "root": {
           "type": "string",
@@ -30,8 +30,8 @@
       "markdownDescription": "Amazon S3 or S3-compatible storage service. Requires the `aws-sdk-s3` gem. For S3-compatible services like DigitalOcean Spaces, provide the `endpoint` option.\n\nAll options other than `service`, `bucket`, `upload` and `public` are passed to the AWS S3 client, so any [AWS S3 Client option](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Client.html#initialize-instance_method) may be used. `access_key_id`, `secret_access_key` and `region` may be omitted to use environment variables, shared config files, profiles, or IAM roles.",
       "properties": {
         "service": {
-          "const": "S3",
-          "markdownDescription": "Service type for Amazon S3 or S3-compatible storage."
+          "markdownDescription": "Service type for Amazon S3 or S3-compatible storage.",
+          "enum": ["S3", "s3"]
         },
         "endpoint": {
           "type": "string",
@@ -240,9 +240,9 @@
       "deprecationMessage": "AzureStorage was deprecated in Rails 8.0 and removed in Rails 8.1. Use a third-party Azure service gem instead.",
       "properties": {
         "service": {
-          "const": "AzureStorage",
           "markdownDescription": "Service type for Azure Storage. Removed in Rails 8.1.",
-          "deprecationMessage": "AzureStorage was deprecated in Rails 8.0 and removed in Rails 8.1. Use a third-party Azure service gem instead."
+          "deprecationMessage": "AzureStorage was deprecated in Rails 8.0 and removed in Rails 8.1. Use a third-party Azure service gem instead.",
+          "enum": ["AzureStorage", "azure_storage"]
         },
         "storage_account_name": {
           "type": "string",
@@ -274,8 +274,8 @@
       "markdownDescription": "Mirror service that replicates uploads and deletes across multiple storage services. Intended for temporary use during migrations between services. Uploads go to all services, but downloads are always handled by the primary service. Not atomic - verify all files are copied before switching services.",
       "properties": {
         "service": {
-          "const": "Mirror",
-          "markdownDescription": "Service type for mirroring across multiple storage services."
+          "markdownDescription": "Service type for mirroring across multiple storage services.",
+          "enum": ["Mirror", "mirror"]
         },
         "primary": {
           "type": "string",
@@ -299,7 +299,7 @@
         "service": {
           "type": "string",
           "not": {
-            "enum": ["Disk", "S3", "GCS", "AzureStorage", "Mirror"]
+            "pattern": "^(?:[Dd]isk|[Ss]3|GCS|[Gg]cs|AzureStorage|azure_storage|[Mm]irror)$"
           },
           "markdownDescription": "Name of the third-party service adapter."
         }

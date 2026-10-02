@@ -82,7 +82,21 @@
                 "$ref": "#/definitions/environment/properties/queues"
               }
             },
-            "additionalProperties": false
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "anyOf": [
+                  { "required": ["concurrency"] },
+                  { "required": [":concurrency"] }
+                ]
+              },
+              {
+                "anyOf": [
+                  { "required": ["queues"] },
+                  { "required": [":queues"] }
+                ]
+              }
+            ]
           }
         },
         "max_retries": {
@@ -183,9 +197,17 @@
         },
         ":skip_default_job_logging": {
           "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+        },
+        "strict": {
+          "type": "boolean",
+          "markdownDescription": "Accepted for compatibility with older Sidekiq versions and ignored."
+        },
+        ":strict": {
+          "$ref": "#/definitions/environment/properties/strict"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "type": "object"
     }
   },
   "properties": {
@@ -289,7 +311,13 @@
     },
     "development": { "$ref": "#/definitions/environment" },
     "production": { "$ref": "#/definitions/environment" },
-    "staging": { "$ref": "#/definitions/environment" }
+    "staging": { "$ref": "#/definitions/environment" },
+    "strict": {
+      "$ref": "#/definitions/environment/properties/strict"
+    },
+    ":strict": {
+      "$ref": "#/definitions/environment/properties/strict"
+    }
   },
   "additionalProperties": { "$ref": "#/definitions/environment" }
 }

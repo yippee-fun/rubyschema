@@ -508,8 +508,8 @@
           "markdownDescription": "The minimum Ruby version your code must support. Cops that detect version-specific features will adjust their behavior accordingly. If not specified, RuboCop will try to detect it from `*.gemspec`, `.ruby-version`, `mise.toml`, `.tool-versions`, or `Gemfile.lock` (in that order). The `RUBOCOP_TARGET_RUBY_VERSION` environment variable overrides all of these. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version)"
         },
         "TargetRailsVersion": {
-          "type": "number",
-          "examples": [7.2, 8.0],
+          "type": ["number", "string", "null"],
+          "examples": [7.2, 8.0, "8.1"],
           "markdownDescription": "The Rails version your code targets, used by Rails-aware cops (mainly from `rubocop-rails`). If not specified, RuboCop detects it from `Gemfile.lock`."
         },
         "ParserEngine": {
