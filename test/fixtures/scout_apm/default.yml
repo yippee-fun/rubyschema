@@ -1,49 +1,80 @@
 # yaml-language-server: $schema=../../../dist/scout_apm.json
 %YAML 1.1
 ---
-name: Photos App
-key: "<%= Rails.application.credentials.dig(:scout, :key) %>"
-monitor: true
-auto_instruments: true
-log_level: INFO
-detailed_middleware: false
-hostname: web-01
-revision_sha: abc123def456
-scm_subdirectory: app
-sample_rate: 80
-endpoint_sample_rate: 90
-job_sample_rate: 50
-ignore_endpoints:
-  - "/health"
-  - "/status"
-ignore_jobs:
-  - CleanupJob
-sample_endpoints:
-  - "/busy_endpoint:50"
-sample_jobs:
-  - "HeavyJob:70"
-max_traces: 100
-enable_background_jobs: true
-collect_remote_ip: true
-record_queue_time: true
-auto_instruments_ignore:
-  - application_controller
-errors_ignored_exceptions:
-  - ActiveRecord::RecordNotFound
-  - ActionController::RoutingError
-errors_filtered_params:
-  - password
-  - s3-key
-log_file_path: stdout
-proxy: "http://proxy.example.com:8080"
-host: "https://scoutapm.com"
-uri_reporting: filtered_params
-disabled_instruments:
-  - Elasticsearch
-  - HttpClient
-timeline_traces: true
-use_prepend: true
-alias_method_instruments:
-  - Elasticsearch
-prepend_instruments:
-  - HttpClient
+common: &defaults
+  name: Photos App
+  key: "<%= Rails.application.credentials.dig(:scout, :key) %>"
+  monitor: true
+  auto_instruments: true
+  log_level: INFO
+  detailed_middleware: false
+  hostname: web-01
+  revision_sha: abc123def456
+  scm_subdirectory: app
+  sample_rate: 80
+  endpoint_sample_rate: 0.9
+  job_sample_rate: 0.5
+  ignore_endpoints:
+    - "/health"
+    - "/status"
+  ignore_jobs:
+    - CleanupJob
+    - HardWorker
+  sample_endpoints:
+    - "/busy_endpoint:50"
+    - "/other_endpoint:0.25"
+  sample_jobs:
+    - "HeavyJob:70"
+    - "LightWorker:0.1"
+  max_traces: 100
+  enable_background_jobs: true
+  collect_remote_ip: true
+  record_queue_time: true
+  auto_instruments_ignore:
+    - application_controller
+  errors_enabled: true
+  errors_ignored_exceptions:
+    - ActiveRecord::RecordNotFound
+    - ActionController::RoutingError
+  errors_filtered_params:
+    - password
+    - s3-key
+  errors_env_capture:
+    - HTTP_X_REQUEST_ID
+  log_file_path: stdout
+  proxy: "http://proxy.example.com:8080"
+  host: "https://checkin.scoutapp.com"
+  uri_reporting: filtered_params
+  disabled_instruments:
+    - Elasticsearch
+    - HttpClient
+  timeline_traces: true
+  use_prepend: true
+  alias_method_instruments:
+    - Elasticsearch
+  prepend_instruments:
+    - HttpClient
+  job_params_capture: true
+  job_filtered_params:
+    - token
+  backtrace_additional_directories:
+    - engines
+
+production:
+  <<: *defaults
+
+development:
+  <<: *defaults
+  monitor: false
+  dev_trace: true
+  log_level: debug
+
+test:
+  <<: *defaults
+  monitor: false
+
+staging:
+  <<: *defaults
+  uri_reporting: path
+  async_recording: true
+  instrument_http_url_length: 500
