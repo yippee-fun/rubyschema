@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../../../../dist/rails/cable.json
+%YAML 1.1
+---
+development:
+  adapter: postgresql
+
+production:
+  adapter: postgresql
+  channel_prefix: myapp_production

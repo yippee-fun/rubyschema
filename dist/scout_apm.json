@@ -2,321 +2,453 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/scout_apm.json",
   "title": "Scout APM configuration",
-  "markdownDescription": "Configuration for Scout APM, an application performance monitoring (APM) service for Ruby applications.\n\nConfigure via `config/scout_apm.yml` or environment variables (prefix config keys with `SCOUT_` and uppercase).\n\nSupports ERB templating for dynamic values.\n\n[Scout APM Ruby Documentation](https://scoutapm.com/docs/ruby/configuration)",
+  "markdownDescription": "Configuration for Scout APM, an application performance monitoring (APM) service for Ruby applications.\n\nSettings are grouped under top-level keys named after the application environment (e.g. `production`, `development`). YAML anchors and merge keys (`<<: *defaults`) can be used to share common settings.\n\nConfigure via `config/scout_apm.yml` or environment variables (prefix config keys with `SCOUT_` and uppercase).\n\nSupports ERB templating for dynamic values.\n\n[Scout APM Ruby Documentation](https://scoutapm.com/docs/ruby/configuration)",
   "type": "object",
   "definitions": {
     "erb": { "type": "string", "pattern": "^<%=.*%>$" },
     "constant": {
       "type": "string",
       "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$"
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "markdownDescription": "Name of the application displayed in Scout APM.\n\nDefault: the framework application name (for Rails, derived from `Rails.application.class`), or `App`\n\nExample: `'Photos App'` or `'ProjectPlanner.io (#{Rails.env})'`\n\n**Tip:** Include environment in the name to treat each environment as a separate app in Scout.\n\n**Env Var:** `SCOUT_NAME`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
+          "examples": ["Photos App"]
+        },
+        "key": {
+          "type": "string",
+          "markdownDescription": "The organization API key for Scout APM.\n\n**Required**\n\nFind your API key in your Scout account's install instructions.\n\n**Security:** Use ERB to load from credentials:\n```yaml\nkey: <%= Rails.application.credentials.dig(:scout, :key) %>\n```\n\n**Env Var:** `SCOUT_KEY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
+          "examples": ["<%= Rails.application.credentials.dig(:scout, :key) %>"]
+        },
+        "monitor": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable/disable monitoring.\n\n**Required**\n\nDefault: `false`\n\nSet to `true` in production to enable monitoring. Typically `false` in development/test.\n\nExample:\n```yaml\nproduction:\n  monitor: true\ndevelopment:\n  monitor: false\n```\n\n**Env Var:** `SCOUT_MONITOR`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
+          "default": false
+        },
+        "auto_instruments": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable Auto Instruments for custom code.\n\nDefault: `false`\n\nWhen enabled, Scout automatically instruments methods in your custom code beyond the default library instrumentation.\n\nUse `auto_instruments_ignore` to exclude specific files.\n\n**Env Var:** `SCOUT_AUTO_INSTRUMENTS`\n\n[Auto Instruments Documentation](https://scoutapm.com/docs/ruby/features#auto-instruments)",
+          "default": false
+        },
+        "log_level": {
+          "anyOf": [
+            {
+              "enum": [
+                "debug",
+                "info",
+                "warn",
+                "error",
+                "fatal",
+                "DEBUG",
+                "INFO",
+                "WARN",
+                "ERROR",
+                "FATAL"
+              ],
+              "markdownEnumDescriptions": [
+                "Most verbose logging - debugging information",
+                "Standard informational messages (default)",
+                "Warning messages only",
+                "Error messages only",
+                "Fatal error messages only",
+                "Most verbose logging - debugging information",
+                "Standard informational messages (default)",
+                "Warning messages only",
+                "Error messages only",
+                "Fatal error messages only"
+              ]
+            },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Logging level for the Scout APM agent. Case-insensitive; unrecognised values fall back to `info`.\n\nDefault: `info`\n\n**Env Var:** `SCOUT_LOG_LEVEL`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
+          "default": "info"
+        },
+        "detailed_middleware": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Show individual middleware timing in transaction traces.\n\nDefault: `false`\n\nWhen `true`, shows time spent in each middleware separately. When `false`, shows aggregate time across all middlewares.\n\n**Note:** Adds overhead. Disable unless middleware is a bottleneck.\n\n**Env Var:** `SCOUT_DETAILED_MIDDLEWARE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "default": false
+        },
+        "hostname": {
+          "type": "string",
+          "markdownDescription": "Custom hostname/node name for this server.\n\nDefault: `Socket.gethostname` (on Heroku, the `DYNO` environment variable)\n\nUseful for renaming servers in Scout's UI.\n\n**Env Var:** `SCOUT_HOSTNAME`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "revision_sha": {
+          "type": "string",
+          "markdownDescription": "Git SHA for deployment tracking.\n\nLinks deployments to specific code versions in Scout.\n\nDefault: Auto-detected from git, Heroku, or Capistrano.\n\nExample: `<%= `git rev-parse HEAD`.chomp %>`\n\n**Env Var:** `SCOUT_REVISION_SHA`\n\n[Deploy Tracking Documentation](https://scoutapm.com/docs/ruby/features/#deploy-tracking)"
+        },
+        "scm_subdirectory": {
+          "type": "string",
+          "markdownDescription": "Relative path from Git repo root to application code directory.\n\nUseful for monorepos where app code is in a subdirectory.\n\nExample: `'backend/api'`\n\n**Env Var:** `SCOUT_SCM_SUBDIRECTORY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "sample_rate": {
+          "anyOf": [
+            { "type": "number", "minimum": 0, "maximum": 100 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 1,
+          "markdownDescription": "Global sample rate for all requests and jobs.\n\nDefault: `1` (capture 100% of requests)\n\nRange: `0.0-1.0` (fraction of requests to capture). Values above `1` are treated as a percentage for backwards compatibility (e.g. `80` is `0.8`).\n\nExample: `0.8` captures 80% of requests, reducing overhead.\n\n**Note:** Since 6.0, a rate of exactly 1% must be written as `0.01`, since `1` means 100%.\n\n**Note:** Overridden by `endpoint_sample_rate`, `job_sample_rate`, `sample_endpoints`, and `sample_jobs`.\n\n**Env Var:** `SCOUT_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "endpoint_sample_rate": {
+          "anyOf": [
+            { "type": "number", "minimum": 0, "maximum": 100 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Sample rate for all web endpoints.\n\nDefault: not set (falls back to `sample_rate`)\n\nRange: `0.0-1.0` (fraction of requests). Values above `1` are treated as a percentage.\n\nOverrides `sample_rate` for endpoints. Use `sample_endpoints` for per-endpoint rates.\n\n**Env Var:** `SCOUT_ENDPOINT_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "job_sample_rate": {
+          "anyOf": [
+            { "type": "number", "minimum": 0, "maximum": 100 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Sample rate for all background jobs.\n\nDefault: not set (falls back to `sample_rate`)\n\nRange: `0.0-1.0` (fraction of jobs). Values above `1` are treated as a percentage.\n\nOverrides `sample_rate` for jobs. Use `sample_jobs` for per-job rates.\n\n**Env Var:** `SCOUT_JOB_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "ignore_endpoints": {
+          "type": "array",
+          "markdownDescription": "Web endpoints to exclude from monitoring.\n\nDefault: `[]`\n\nEach entry is a path prefix, interpreted as a regular expression anchored at the start of the URI.\n\nExample:\n```yaml\nignore_endpoints:\n  - '/health'\n  - '/status'\n  - '/admin/metrics'\n```\n\n**Note:** Replaces deprecated `ignore` configuration.\n\n**Env Var:** `SCOUT_IGNORE_ENDPOINTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "ignore_jobs": {
+          "type": "array",
+          "markdownDescription": "Background job names to exclude from monitoring.\n\nDefault: `[]`\n\nJobs with exact name match will be ignored.\n\nExample:\n```yaml\nignore_jobs:\n  - HealthCheckJob\n  - CleanupJob\n```\n\n**Env Var:** `SCOUT_IGNORE_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "sample_endpoints": {
+          "type": "array",
+          "markdownDescription": "Per-endpoint sample rates.\n\nDefault: `[]`\n\nFormat: `['endpoint_path:rate']` where rate is `0.0-1.0` (values above `1` are treated as a percentage). Endpoints are matched by path prefix.\n\nOverrides `endpoint_sample_rate` for matching endpoints.\n\nExample:\n```yaml\nsample_endpoints:\n  - '/api/heavy_endpoint:0.5'\n  - '/api/light_endpoint:1'\n```\n\n**Env Var:** `SCOUT_SAMPLE_ENDPOINTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^.+:(\\d+(\\.\\d+)?|\\.\\d+)$"
+              },
+              { "$ref": "#/definitions/erb" }
+            ]
+          }
+        },
+        "sample_jobs": {
+          "type": "array",
+          "markdownDescription": "Per-job sample rates.\n\nDefault: `[]`\n\nFormat: `['JobName:rate']` where rate is `0.0-1.0` (values above `1` are treated as a percentage). Jobs are matched by exact name.\n\nOverrides `job_sample_rate` for matching jobs.\n\nExample:\n```yaml\nsample_jobs:\n  - 'HeavyProcessingJob:0.5'\n  - 'QuickJob:1'\n```\n\n**Env Var:** `SCOUT_SAMPLE_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^.+:(\\d+(\\.\\d+)?|\\.\\d+)$"
+              },
+              { "$ref": "#/definitions/erb" }
+            ]
+          }
+        },
+        "max_traces": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 10,
+          "markdownDescription": "Maximum number of traces to collect per reporting period.\n\nDefault: `10`\n\n**Internal:** this also requires a server-side setting; raising it makes your app server work harder for no benefit.\n\n**Env Var:** `SCOUT_MAX_TRACES`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "enable_background_jobs": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Enable/disable background job monitoring.\n\nDefault: `true`\n\n**Env Var:** `SCOUT_ENABLE_BACKGROUND_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "collect_remote_ip": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Capture end user IP addresses in trace context.\n\nDefault: `true`\n\n**Privacy:** Disable if IP collection violates privacy requirements.\n\n**Env Var:** `SCOUT_COLLECT_REMOTE_IP`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "record_queue_time": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Capture request queue time from HTTP headers.\n\nDefault: `true`\n\nRequires `X-Queue-Start` or `X-Request-Start` header from your web server/load balancer.\n\n**Env Var:** `SCOUT_RECORD_QUEUE_TIME`\n\n[Queue Time Setup](https://scoutapm.com/docs/features#setup)"
+        },
+        "auto_instruments_ignore": {
+          "type": "array",
+          "markdownDescription": "Files to exclude from Auto Instruments.\n\nDefault: `[]`\n\nProvide file names (without `.rb` extension) to exclude from automatic instrumentation.\n\nExample:\n```yaml\nauto_instruments_ignore:\n  - application_controller\n  - base_model\n```\n\n**Env Var:** `SCOUT_AUTO_INSTRUMENTS_IGNORE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "examples": [["application_controller"]]
+        },
+        "errors_ignored_exceptions": {
+          "type": "array",
+          "markdownDescription": "Exception classes to exclude from error monitoring.\n\nDefault: `[ActiveRecord::RecordNotFound, ActionController::RoutingError]`\n\nExample:\n```yaml\nerrors_ignored_exceptions:\n  - ActiveRecord::RecordNotFound\n  - ActionController::RoutingError\n  - CustomNotFoundError\n```\n\n**Env Var:** `SCOUT_ERRORS_IGNORED_EXCEPTIONS`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/constant"
+          },
+          "examples": [
+            ["ActiveRecord::RecordNotFound", "ActionController::RoutingError"]
+          ]
+        },
+        "errors_filtered_params": {
+          "type": "array",
+          "markdownDescription": "Parameter names to filter in error reports.\n\nDefault: `[password, s3-key]`\n\nSensitive parameter values will be redacted from error context.\n\nExample:\n```yaml\nerrors_filtered_params:\n  - password\n  - credit_card\n  - api_key\n```\n\n**Env Var:** `SCOUT_ERRORS_FILTERED_PARAMS`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "examples": [["password", "s3-key"]]
+        },
+        "log_file_path": {
+          "anyOf": [
+            { "type": "string" },
+            { "enum": ["STDOUT", "STDERR", "stdout", "stderr"] }
+          ],
+          "markdownDescription": "Directory in which Scout APM writes its `scout_apm.log` file.\n\nDefault: `<application root>/log` (or `STDOUT` on Heroku and Cloud Foundry)\n\nSet to `STDOUT` or `STDERR` (case-insensitive) to log to standard output or standard error instead of a file. If the directory is not writable, logs go to STDOUT.\n\nExample: `/var/log/my_app`\n\n**Env Var:** `SCOUT_LOG_FILE_PATH`\n\n[Logging Documentation](https://scoutapm.com/docs/ruby/logging)"
+        },
+        "proxy": {
+          "type": "string",
+          "markdownDescription": "Proxy URL for Scout APM agent connections.\n\nRequired only if your network requires a proxy.\n\nExample: `https://proxy.example.com:8080`\n\n**Env Var:** `SCOUT_PROXY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "host": {
+          "type": "string",
+          "default": "https://checkin.scoutapp.com",
+          "markdownDescription": "Scout APM reporting endpoint.\n\nDefault: `https://checkin.scoutapp.com`\n\nOnly change if instructed by Scout support.\n\n**Env Var:** `SCOUT_HOST`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "examples": ["https://checkin.scoutapp.com"]
+        },
+        "uri_reporting": {
+          "anyOf": [
+            {
+              "enum": ["full_path", "filtered_params", "path"],
+              "markdownEnumDescriptions": [
+                "Report URL with query parameters (sensitive params redacted) - default",
+                "Report URL with query parameters (sensitive params redacted) - same as `full_path`",
+                "Report URL path only, exclude all query parameters"
+              ]
+            },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": "full_path",
+          "markdownDescription": "Control how URLs are reported in transaction traces.\n\nDefault: `full_path`\n\n- `full_path` (or any value other than `path`) - Include query params with sensitive values redacted\n- `path` - Exclude query params entirely\n\n**Env Var:** `SCOUT_URI_REPORTING`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
+        },
+        "disabled_instruments": {
+          "type": "array",
+          "markdownDescription": "Instrument classes to disable.\n\nDefault: `[]`\n\nProvide case-sensitive class names of instruments to not install.\n\nExample:\n```yaml\ndisabled_instruments:\n  - Elasticsearch\n  - HttpClient\n  - Redis\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_DISABLED_INSTRUMENTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/constant" },
+              { "$ref": "#/definitions/erb" }
+            ]
+          },
+          "examples": [["Elasticsearch", "HttpClient"]]
+        },
+        "timeline_traces": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Send traces in both summary and timeline formats.\n\nDefault: `true`\n\nEnables the detailed timeline view in Scout's UI.\n\n**Env Var:** `SCOUT_TIMELINE_TRACES`\n\n[Timeline View Documentation](https://scoutapm.com/docs/features#timeline-view)"
+        },
+        "use_prepend": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Use `Module#prepend` for instrumentation instead of `alias_method`.\n\nDefault: `false`\n\n**Note:** Switching can help avoid conflicts with other gems but may cause issues. Test thoroughly.\n\nUse `prepend_instruments` or `alias_method_instruments` for selective control.\n\n**Env Var:** `SCOUT_USE_PREPEND`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)"
+        },
+        "alias_method_instruments": {
+          "type": "array",
+          "markdownDescription": "Instruments to use `alias_method` when `use_prepend` is `true`.\n\nDefault: `[]`\n\nSelectively override `use_prepend` for specific instruments.\n\nExample:\n```yaml\nuse_prepend: true\nalias_method_instruments:\n  - Elasticsearch\n  - HttpClient\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_ALIAS_METHOD_INSTRUMENTS`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/constant" },
+              { "$ref": "#/definitions/erb" }
+            ]
+          },
+          "examples": [["Elasticsearch", "HttpClient"]]
+        },
+        "prepend_instruments": {
+          "type": "array",
+          "markdownDescription": "Instruments to use `Module#prepend` when `use_prepend` is `false`.\n\nDefault: `[]`\n\nSelectively use `prepend` for specific instruments when `alias_method` is the default.\n\nExample:\n```yaml\nuse_prepend: false\nprepend_instruments:\n  - Redis\n  - MongoDB\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_PREPEND_INSTRUMENTS`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              { "$ref": "#/definitions/constant" },
+              { "$ref": "#/definitions/erb" }
+            ]
+          },
+          "examples": [["Elasticsearch", "HttpClient"]]
+        },
+        "application_root": {
+          "type": "string",
+          "markdownDescription": "Override the detected root directory of the application.\n\n**Env Var:** `SCOUT_APPLICATION_ROOT`"
+        },
+        "async_recording": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Record transactions asynchronously in a background thread instead of synchronously at the end of each request.\n\nDefault: `false`\n\n**Env Var:** `SCOUT_ASYNC_RECORDING`"
+        },
+        "backtrace_additional_directories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "examples": [["engines", "packs"]],
+          "markdownDescription": "Additional directories (relative to the application root) to include when parsing backtraces, beyond `lib/`, `app/` and `config/`.\n\nDefault: `[]`\n\n**Env Var:** `SCOUT_BACKTRACE_ADDITIONAL_DIRECTORIES`"
+        },
+        "compress_payload": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": true,
+          "markdownDescription": "Gzip payloads sent to Scout.\n\nDefault: `true`\n\n**Env Var:** `SCOUT_COMPRESS_PAYLOAD`"
+        },
+        "data_file": {
+          "type": "string",
+          "markdownDescription": "Override the default temporary storage location for collected data. Must be in a writable directory; if a file path is given, its directory is used.\n\nDefault: the application's `tmp/` directory, falling back to `/tmp`\n\n**Env Var:** `SCOUT_DATA_FILE`"
+        },
+        "database_metric_limit": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 5000,
+          "markdownDescription": "Hard limit on the number of database query metrics tracked.\n\nDefault: `5000`\n\n**Env Var:** `SCOUT_DATABASE_METRIC_LIMIT`"
+        },
+        "database_metric_report_limit": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 1000,
+          "markdownDescription": "Maximum number of database query metrics reported per period.\n\nDefault: `1000`\n\n**Env Var:** `SCOUT_DATABASE_METRIC_REPORT_LIMIT`"
+        },
+        "dev_trace": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Enable DevTrace, always-on tracing displayed in the browser, in the development environment only.\n\nDefault: `false`\n\n**Env Var:** `SCOUT_DEV_TRACE`"
+        },
+        "direct_host": {
+          "type": "string",
+          "default": "https://apm.scoutapp.com",
+          "markdownDescription": "Override the \"direct\" host, which bypasses the ingestion pipeline. Primarily used for features under development.\n\nDefault: `https://apm.scoutapp.com`\n\n**Env Var:** `SCOUT_DIRECT_HOST`"
+        },
+        "errors_enabled": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Enable Scout's error monitoring service.\n\nDefault: `false`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)\n\n**Env Var:** `SCOUT_ERRORS_ENABLED`"
+        },
+        "errors_env_capture": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "examples": [["HTTP_X_REQUEST_ID"]],
+          "markdownDescription": "Additional Rack environment keys to capture in error reports.\n\nDefault: `[]`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)\n\n**Env Var:** `SCOUT_ERRORS_ENV_CAPTURE`"
+        },
+        "errors_host": {
+          "type": "string",
+          "default": "https://errors.scoutapm.com",
+          "markdownDescription": "Host that error reports are sent to.\n\nDefault: `https://errors.scoutapm.com`\n\n**Env Var:** `SCOUT_ERRORS_HOST`"
+        },
+        "external_service_metric_limit": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 5000,
+          "markdownDescription": "Hard limit on the number of external service metrics tracked.\n\nDefault: `5000`\n\n**Env Var:** `SCOUT_EXTERNAL_SERVICE_METRIC_LIMIT`"
+        },
+        "external_service_metric_report_limit": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 1000,
+          "markdownDescription": "Maximum number of external service metrics reported per period.\n\nDefault: `1000`\n\n**Env Var:** `SCOUT_EXTERNAL_SERVICE_METRIC_REPORT_LIMIT`"
+        },
+        "instrument_http_url_length": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 300,
+          "markdownDescription": "Maximum length of URLs recorded by HTTP client instruments (Net::HTTP, HTTPClient, HTTPX, Typhoeus, etc).\n\nDefault: `300`\n\n**Env Var:** `SCOUT_INSTRUMENT_HTTP_URL_LENGTH`"
+        },
+        "job_params_capture": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Capture Sidekiq job arguments as context.\n\nDefault: `false`\n\n**Env Var:** `SCOUT_JOB_PARAMS_CAPTURE`"
+        },
+        "job_filtered_params": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "examples": [["password", "token"]],
+          "markdownDescription": "Job argument names to filter out of captured job arguments (see `job_params_capture`). Rails' `filter_parameters` are always included.\n\nDefault: `[]`\n\n**Env Var:** `SCOUT_JOB_FILTERED_PARAMS`"
+        },
+        "log_class": {
+          "type": "string",
+          "examples": ["Logger"],
+          "markdownDescription": "Ruby logger class to use for the agent's log, e.g. a custom `Logger` subclass.\n\nDefault: `Logger`\n\n**Env Var:** `SCOUT_LOG_CLASS`"
+        },
+        "log_stdout": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Force the agent's log to be written to STDOUT (overrides `log_file_path`).\n\nDefault: `false` (`true` on Heroku and Cloud Foundry)\n\n**Env Var:** `SCOUT_LOG_STDOUT`"
+        },
+        "log_stderr": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": false,
+          "markdownDescription": "Force the agent's log to be written to STDERR (overrides `log_file_path`).\n\nDefault: `false`\n\n**Env Var:** `SCOUT_LOG_STDERR`"
+        },
+        "remote_agent_host": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "markdownDescription": "**Internal:** host the remote agent server binds to and that forked workers (e.g. Resque) report to.\n\nDefault: `127.0.0.1`\n\n**Env Var:** `SCOUT_REMOTE_AGENT_HOST`"
+        },
+        "remote_agent_port": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1, "maximum": 65535 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "default": 7721,
+          "markdownDescription": "Port the remote agent server binds to.\n\nDefault: `7721`\n\n**Env Var:** `SCOUT_REMOTE_AGENT_PORT`"
+        },
+        "report_format": {
+          "enum": ["json", "marshal"],
+          "default": "json",
+          "markdownDescription": "Payload format sent to Scout. `marshal` is legacy.\n\nDefault: `json`\n\n**Env Var:** `SCOUT_REPORT_FORMAT`"
+        },
+        "ssl_cert_file": {
+          "type": "string",
+          "markdownDescription": "Path to the CA certificate bundle used when reporting to Scout.\n\nDefault: the bundled `data/cacert.pem`\n\n**Env Var:** `SCOUT_SSL_CERT_FILE`"
+        },
+        "start_resque_server_instrument": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "default": true,
+          "markdownDescription": "Start the remote agent server used to instrument forking Resque workers. Only applies when Resque is detected.\n\nDefault: `true`\n\n**Env Var:** `SCOUT_START_RESQUE_SERVER_INSTRUMENT`"
+        },
+        "ignore": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "deprecationMessage": "Use `ignore_endpoints` instead.",
+          "markdownDescription": "**Deprecated:** use `ignore_endpoints` instead. If set, takes precedence over `ignore_endpoints`.\n\n**Env Var:** `SCOUT_IGNORE`"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {
-    "name": {
-      "type": "string",
-      "markdownDescription": "Name of the application displayed in Scout APM.\n\n**Required**\n\nDefault: Rails application name (derived from `Rails.application.class`)\n\nExample: `'Photos App'` or `'ProjectPlanner.io (#{Rails.env})'`\n\n**Tip:** Include environment in the name to treat each environment as a separate app in Scout.\n\n**Env Var:** `SCOUT_NAME`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
-      "examples": ["Photos App"]
-    },
-    "key": {
-      "type": "string",
-      "markdownDescription": "The organization API key for Scout APM.\n\n**Required**\n\nFind your API key in your Scout account's install instructions.\n\n**Security:** Use ERB to load from credentials:\n```yaml\nkey: <%= Rails.application.credentials.dig(:scout, :key) %>\n```\n\n**Env Var:** `SCOUT_KEY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
-      "examples": ["<%= Rails.application.credentials.dig(:scout, :key) %>"]
-    },
-    "monitor": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Enable/disable monitoring.\n\n**Required**\n\nDefault: `false`\n\nSet to `true` in production to enable monitoring. Typically `false` in development/test.\n\nExample:\n```yaml\nproduction:\n  monitor: true\ndevelopment:\n  monitor: false\n```\n\n**Env Var:** `SCOUT_MONITOR`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
-      "default": false
-    },
-    "auto_instruments": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Enable Auto Instruments for custom code.\n\nDefault: `false`\n\nWhen enabled, Scout automatically instruments methods in your custom code beyond the default library instrumentation.\n\nUse `auto_instruments_ignore` to exclude specific files.\n\n**Env Var:** `SCOUT_AUTO_INSTRUMENTS`\n\n[Auto Instruments Documentation](https://scoutapm.com/docs/ruby/features#auto-instruments)",
-      "default": false
-    },
-    "log_level": {
-      "anyOf": [
-        {
-          "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"],
-          "markdownEnumDescriptions": [
-            "Most verbose logging - debugging information",
-            "Standard informational messages (default)",
-            "Warning messages only",
-            "Error messages only",
-            "Fatal error messages only",
-            "Unknown severity messages"
-          ]
-        },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Logging level for the Scout APM agent.\n\nDefault: `INFO`\n\n**Env Var:** `SCOUT_LOG_LEVEL`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#common-configurations)",
-      "default": "INFO"
-    },
-    "detailed_middleware": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Show individual middleware timing in transaction traces.\n\nDefault: `false`\n\nWhen `true`, shows time spent in each middleware separately. When `false`, shows aggregate time across all middlewares.\n\n**Note:** Adds overhead. Disable unless middleware is a bottleneck.\n\n**Env Var:** `SCOUT_DETAILED_MIDDLEWARE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "default": false
-    },
-    "hostname": {
-      "type": "string",
-      "markdownDescription": "Custom hostname/node name for this server.\n\nDefault: `Socket.gethostname`\n\nUseful for renaming servers in Scout's UI.\n\n**Env Var:** `SCOUT_HOSTNAME`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "revision_sha": {
-      "type": "string",
-      "markdownDescription": "Git SHA for deployment tracking.\n\nLinks deployments to specific code versions in Scout.\n\nDefault: Auto-detected from git, Heroku, or Capistrano.\n\nExample: `<%= `git rev-parse HEAD`.chomp %>`\n\n**Env Var:** `SCOUT_REVISION_SHA`\n\n[Deploy Tracking Documentation](https://scoutapm.com/docs/ruby/features/#deploy-tracking)"
-    },
-    "scm_subdirectory": {
-      "type": "string",
-      "markdownDescription": "Relative path from Git repo root to application code directory.\n\nUseful for monorepos where app code is in a subdirectory.\n\nExample: `'backend/api'`\n\n**Env Var:** `SCOUT_SCM_SUBDIRECTORY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "sample_rate": {
-      "anyOf": [
-        { "type": "integer", "minimum": 0, "maximum": 100 },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Global sample rate for all requests.\n\nDefault: `100` (capture 100% of requests)\n\nRange: `1-100` (percentage of requests to capture)\n\nExample: `80` captures 80% of requests, reducing overhead.\n\n**Note:** Overridden by `endpoint_sample_rate`, `job_sample_rate`, `sample_endpoints`, and `sample_jobs`.\n\n**Env Var:** `SCOUT_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "endpoint_sample_rate": {
-      "anyOf": [
-        { "type": "integer", "minimum": 0, "maximum": 100 },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Sample rate for all web endpoints.\n\nDefault: `100`\n\nRange: `1-100` (percentage)\n\nOverrides `sample_rate` for endpoints. Use `sample_endpoints` for per-endpoint rates.\n\n**Env Var:** `SCOUT_ENDPOINT_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "job_sample_rate": {
-      "anyOf": [
-        { "type": "integer", "minimum": 0, "maximum": 100 },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Sample rate for all background jobs.\n\nDefault: `100`\n\nRange: `1-100` (percentage)\n\nOverrides `sample_rate` for jobs. Use `sample_jobs` for per-job rates.\n\n**Env Var:** `SCOUT_JOB_SAMPLE_RATE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "ignore_endpoints": {
-      "type": "array",
-      "markdownDescription": "Web endpoints to exclude from monitoring.\n\nDefault: `[]`\n\nRoutes matching the prefixed path will be ignored.\n\nExample:\n```yaml\nignore_endpoints:\n  - '/health'\n  - '/status'\n  - '/admin/metrics'\n```\n\n**Note:** Replaces deprecated `ignore` configuration.\n\n**Env Var:** `SCOUT_IGNORE_ENDPOINTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "type": "string"
-      }
-    },
-    "ignore_jobs": {
-      "type": "array",
-      "markdownDescription": "Background job names to exclude from monitoring.\n\nDefault: `[]`\n\nJobs with exact name match will be ignored.\n\nExample:\n```yaml\nignore_jobs:\n  - HealthCheckJob\n  - CleanupJob\n```\n\n**Env Var:** `SCOUT_IGNORE_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "sample_endpoints": {
-      "type": "array",
-      "markdownDescription": "Per-endpoint sample rates.\n\nDefault: `[]`\n\nFormat: `['endpoint_path:rate']` where rate is `1-100`\n\nOverrides `endpoint_sample_rate` for matching endpoints.\n\nExample:\n```yaml\nsample_endpoints:\n  - '/api/heavy_endpoint:50'\n  - '/api/light_endpoint:100'\n```\n\n**Env Var:** `SCOUT_SAMPLE_ENDPOINTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^.+:(100|[1-9]?[0-9])$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "sample_jobs": {
-      "type": "array",
-      "markdownDescription": "Per-job sample rates.\n\nDefault: `[]`\n\nFormat: `['JobName:rate']` where rate is `1-100`\n\nOverrides `job_sample_rate` for matching jobs.\n\nExample:\n```yaml\nsample_jobs:\n  - 'HeavyProcessingJob:50'\n  - 'QuickJob:100'\n```\n\n**Env Var:** `SCOUT_SAMPLE_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job:(100|[1-9]?[0-9])$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "max_traces": {
-      "anyOf": [
-        { "type": "integer", "minimum": 0 },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Maximum number of traces to collect.\n\n**Env Var:** `SCOUT_MAX_TRACES`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "enable_background_jobs": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Enable/disable background job monitoring.\n\nDefault: `true`\n\n**Env Var:** `SCOUT_ENABLE_BACKGROUND_JOBS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "collect_remote_ip": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Capture end user IP addresses in trace context.\n\nDefault: `true`\n\n**Privacy:** Disable if IP collection violates privacy requirements.\n\n**Env Var:** `SCOUT_COLLECT_REMOTE_IP`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "record_queue_time": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Capture request queue time from HTTP headers.\n\nDefault: `true`\n\nRequires `X-Queue-Start` or `X-Request-Start` header from your web server/load balancer.\n\n**Env Var:** `SCOUT_RECORD_QUEUE_TIME`\n\n[Queue Time Setup](https://scoutapm.com/docs/features#setup)"
-    },
-    "ignore_jobs": {
-      "type": "array",
-      "markdownDescription": "An Array of job names that Scout should not instrument. Jobs with exact name match will be ignored by the agent.",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "sample_endpoints": {
-      "type": "array",
-      "markdownDescription": "An Array of web endpoints that Scout should sample at the provided rate (ex: `['/busy_endpoint:50']`). Rate should be `1` - `100` serving as a percentage of requests to capture.",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^.+:(100|[1-9]?[0-9])$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "sample_jobs": {
-      "type": "array",
-      "markdownDescription": "An Array of job names that Scout should sample at the provided rate (ex: `['MyJob:70']`). Rate should be `1` - `100` serving as a percentage of requests to capture.",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          {
-            "type": "string",
-            "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job:(100|[1-9]?[0-9])$"
-          },
-          { "$ref": "#/definitions/erb" }
-        ]
-      }
-    },
-    "max_traces": {
-      "anyOf": [
-        { "type": "integer", "minimum": 0 },
-        { "$ref": "#/definitions/erb" }
-      ]
-    },
-    "enable_background_jobs": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Indicates if background jobs should be monitored."
-    },
-    "collect_remote_ip": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Automatically capture end user IP addresses as part of each trace’s context."
-    },
-    "record_queue_time": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Automatically capture request queue time when a queuing request header is found."
-    },
-    "auto_instruments_ignore": {
-      "type": "array",
-      "markdownDescription": "Files to exclude from Auto Instruments.\n\nDefault: `[]`\n\nProvide file names (without `.rb` extension) to exclude from automatic instrumentation.\n\nExample:\n```yaml\nauto_instruments_ignore:\n  - application_controller\n  - base_model\n```\n\n**Env Var:** `SCOUT_AUTO_INSTRUMENTS_IGNORE`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "type": "string"
-      },
-      "examples": [["application_controller"]]
-    },
-    "errors_ignored_exceptions": {
-      "type": "array",
-      "markdownDescription": "Exception classes to exclude from error monitoring.\n\nDefault: `[ActiveRecord::RecordNotFound, ActionController::RoutingError]`\n\nExample:\n```yaml\nerrors_ignored_exceptions:\n  - ActiveRecord::RecordNotFound\n  - ActionController::RoutingError\n  - CustomNotFoundError\n```\n\n**Env Var:** `SCOUT_ERRORS_IGNORED_EXCEPTIONS`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)",
-      "uniqueItems": true,
-      "items": {
-        "$ref": "#/definitions/constant"
-      },
-      "examples": [
-        ["ActiveRecord::RecordNotFound", "ActionController::RoutingError"]
-      ]
-    },
-    "errors_filtered_params": {
-      "type": "array",
-      "markdownDescription": "Parameter names to filter in error reports.\n\nDefault: `[password, s3-key]`\n\nSensitive parameter values will be redacted from error context.\n\nExample:\n```yaml\nerrors_filtered_params:\n  - password\n  - credit_card\n  - api_key\n```\n\n**Env Var:** `SCOUT_ERRORS_FILTERED_PARAMS`\n\n[Error Monitoring Documentation](https://scoutapm.com/docs/ruby/error-monitoring)",
-      "uniqueItems": true,
-      "items": {
-        "type": "string"
-      },
-      "examples": [["password", "s3-key"]]
-    },
-    "log_file_path": {
-      "anyOf": [{ "type": "string" }, { "enum": ["stdout"] }],
-      "markdownDescription": "Path to Scout APM log file directory.\n\nDefault: `log/` (or `STDOUT` on Heroku)\n\nSet to `stdout` to log to STDOUT instead of a file.\n\nExample: `log/scout_apm.log`\n\n**Env Var:** `SCOUT_LOG_FILE_PATH`\n\n[Logging Documentation](https://scoutapm.com/docs/ruby/logging)"
-    },
-    "proxy": {
-      "type": "string",
-      "markdownDescription": "Proxy URL for Scout APM agent connections.\n\nRequired only if your network requires a proxy.\n\nExample: `https://proxy.example.com:8080`\n\n**Env Var:** `SCOUT_PROXY`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "host": {
-      "type": "string",
-      "markdownDescription": "Scout APM reporting endpoint.\n\nDefault: `https://scoutapm.com`\n\nOnly change if using a self-hosted Scout instance.\n\n**Env Var:** `SCOUT_HOST`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "examples": ["https://scoutapm.com"]
-    },
-    "uri_reporting": {
-      "anyOf": [
-        {
-          "enum": ["filtered_params", "path"],
-          "markdownEnumDescriptions": [
-            "Report URL with query parameters (sensitive params redacted) - default",
-            "Report URL path only, exclude all query parameters"
-          ]
-        },
-        { "$ref": "#/definitions/erb" }
-      ],
-      "markdownDescription": "Control how URLs are reported in transaction traces.\n\nDefault: `filtered_params`\n\n- `filtered_params` - Include query params with sensitive values redacted\n- `path` - Exclude query params entirely\n\n**Env Var:** `SCOUT_URI_REPORTING`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)"
-    },
-    "disabled_instruments": {
-      "type": "array",
-      "markdownDescription": "Instrument classes to disable.\n\nDefault: `[]`\n\nProvide case-sensitive class names of instruments to not install.\n\nExample:\n```yaml\ndisabled_instruments:\n  - Elasticsearch\n  - HttpClient\n  - Redis\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_DISABLED_INSTRUMENTS`\n\n[Configuration Documentation](https://scoutapm.com/docs/ruby/configuration#additional-configurations)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          { "$ref": "#/definitions/constant" },
-          { "$ref": "#/definitions/erb" }
-        ]
-      },
-      "examples": [["Elasticsearch", "HttpClient"]]
-    },
-    "timeline_traces": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Send traces in both summary and timeline formats.\n\nDefault: `true`\n\nEnables the detailed timeline view in Scout's UI.\n\n**Env Var:** `SCOUT_TIMELINE_TRACES`\n\n[Timeline View Documentation](https://scoutapm.com/docs/features#timeline-view)"
-    },
-    "use_prepend": {
-      "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Use `Module#prepend` for instrumentation instead of `alias_method`.\n\nDefault: `false`\n\n**Note:** Switching can help avoid conflicts with other gems but may cause issues. Test thoroughly.\n\nUse `prepend_instruments` or `alias_method_instruments` for selective control.\n\n**Env Var:** `SCOUT_USE_PREPEND`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)"
-    },
-    "alias_method_instruments": {
-      "type": "array",
-      "markdownDescription": "Instruments to use `alias_method` when `use_prepend` is `true`.\n\nDefault: `[]`\n\nSelectively override `use_prepend` for specific instruments.\n\nExample:\n```yaml\nuse_prepend: true\nalias_method_instruments:\n  - Elasticsearch\n  - HttpClient\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_ALIAS_METHOD_INSTRUMENTS`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          { "$ref": "#/definitions/constant" },
-          { "$ref": "#/definitions/erb" }
-        ]
-      },
-      "examples": [["Elasticsearch", "HttpClient"]]
-    },
-    "prepend_instruments": {
-      "type": "array",
-      "markdownDescription": "Instruments to use `Module#prepend` when `use_prepend` is `false`.\n\nDefault: `[]`\n\nSelectively use `prepend` for specific instruments when `alias_method` is the default.\n\nExample:\n```yaml\nuse_prepend: false\nprepend_instruments:\n  - Redis\n  - MongoDB\n```\n\n[Available Instruments](https://github.com/scoutapp/scout_apm_ruby/tree/master/lib/scout_apm/instruments)\n\n**Env Var:** `SCOUT_PREPEND_INSTRUMENTS`\n\n[Library Instrumentation Method Documentation](https://scoutapm.com/docs/ruby/configuration#library-instrumentation-method)",
-      "uniqueItems": true,
-      "items": {
-        "anyOf": [
-          { "$ref": "#/definitions/constant" },
-          { "$ref": "#/definitions/erb" }
-        ]
-      },
-      "examples": [["Elasticsearch", "HttpClient"]]
-    }
+    "production": { "$ref": "#/definitions/environment" },
+    "development": { "$ref": "#/definitions/environment" },
+    "test": { "$ref": "#/definitions/environment" },
+    "staging": { "$ref": "#/definitions/environment" }
   },
-  "additionalProperties": false,
-  "required": ["key"]
+  "additionalProperties": {
+    "$ref": "#/definitions/environment"
+  }
 }

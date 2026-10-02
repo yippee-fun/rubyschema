@@ -15,17 +15,20 @@
       "properties": {
         "dispatchers": {
           "type": "array",
-          "markdownDescription": "Dispatchers select jobs scheduled to run in the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also manage concurrency-related maintenance.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#dispatchers-and-workers)",
+          "markdownDescription": "Dispatchers select jobs scheduled to run in the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also perform maintenance work related to concurrency controls and batches.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#workers-dispatchers-and-scheduler)",
           "items": {
             "$ref": "#/definitions/dispatcher"
           }
         },
         "workers": {
           "type": "array",
-          "markdownDescription": "Workers pick up jobs that are ready to run from the `solid_queue_ready_executions` table.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#dispatchers-and-workers)",
+          "markdownDescription": "Workers pick up jobs that are ready to run from the `solid_queue_ready_executions` table.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#workers-dispatchers-and-scheduler)",
           "items": {
             "$ref": "#/definitions/worker"
           }
+        },
+        "scheduler": {
+          "$ref": "#/definitions/scheduler"
         }
       },
       "additionalProperties": false
@@ -62,7 +65,20 @@
             }
           ],
           "default": 3,
-          "markdownDescription": "Maximum number of threads in the worker's thread pool. Determines how many jobs a worker can execute concurrently.\n\n**Default:** `3`"
+          "markdownDescription": "Maximum number of threads in the worker's thread pool. Determines how many jobs a worker can execute concurrently. Can't be combined with `fibers`.\n\nIt is recommended to set this value less than or equal to the queue database's connection pool size minus 2.\n\n**Default:** `3`"
+        },
+        "fibers": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "markdownDescription": "Run claimed jobs as fibers on a single fiber reactor thread, with this value as the maximum number of in-flight jobs. Can't be combined with `threads`.\n\nRequires the `async` gem and `config.active_support.isolation_level = :fiber`. Best suited for cooperative, mostly I/O-bound jobs.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#threads-processes-and-signals)",
+          "examples": [100]
         },
         "processes": {
           "oneOf": [
@@ -75,7 +91,7 @@
             }
           ],
           "default": 1,
-          "markdownDescription": "Number of worker processes forked by the supervisor. Each process can dedicate a CPU core. Only applicable when running in fork mode.\n\n**Default:** `1`"
+          "markdownDescription": "Number of worker processes forked by the supervisor with these settings. Each process can dedicate a CPU core. Works with both `threads` and `fibers` workers, but is ignored when the supervisor runs in `async` mode.\n\n**Default:** `1`"
         },
         "polling_interval": {
           "oneOf": [
@@ -90,6 +106,9 @@
           "default": 0.1,
           "markdownDescription": "Time in seconds the worker waits before checking for more jobs when idle.\n\n**Default:** `0.1`"
         }
+      },
+      "not": {
+        "required": ["threads", "fibers"]
       },
       "additionalProperties": false
     },
@@ -146,13 +165,74 @@
             }
           ],
           "default": 600,
-          "markdownDescription": "Time in seconds the dispatcher waits before checking for blocked jobs that can be unblocked. Only relevant when `concurrency_maintenance` is enabled.\n\n**Default:** `600`"
+          "markdownDescription": "Time in seconds the dispatcher waits between maintenance runs: checking for blocked jobs that can be unblocked (when `concurrency_maintenance` is enabled) and sweeping stalled batches (when `batch_maintenance` is enabled).\n\n**Default:** `600`"
+        },
+        "batch_maintenance": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": true,
+          "markdownDescription": "Whether this dispatcher sweeps stalled [batches](https://github.com/rails/solid_queue#batch-jobs) as part of its maintenance work, on the same timer as concurrency maintenance. Disable it if you don't use batches, or if you run multiple dispatchers and want only some of them doing maintenance work.\n\n**Default:** `true`"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scheduler": {
+      "type": "object",
+      "markdownDescription": "Optional configuration for the scheduler process, which enqueues [recurring tasks](https://github.com/rails/solid_queue#recurring-tasks) when they're due.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#optional-scheduler-configuration)",
+      "properties": {
+        "dynamic_tasks_enabled": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": false,
+          "markdownDescription": "Whether the scheduler polls the database for recurring tasks scheduled dynamically via `SolidQueue.schedule_recurring_task`.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#scheduling-and-unscheduling-recurring-tasks-dynamically)\n\n**Default:** `false`"
+        },
+        "polling_interval": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "$ref": "#/definitions/erb"
+            }
+          ],
+          "default": 5,
+          "markdownDescription": "How frequently (in seconds) the scheduler checks for dynamic task changes. Only relevant when `dynamic_tasks_enabled` is `true`.\n\n**Default:** `5`"
         }
       },
       "additionalProperties": false
     }
   },
   "properties": {
+    "dispatchers": {
+      "type": "array",
+      "markdownDescription": "Dispatchers select jobs scheduled to run in the future. When it's time for these jobs to run, dispatchers move them from the `solid_queue_scheduled_executions` table to the `solid_queue_ready_executions` table so workers can pick them up. They also perform maintenance work related to concurrency controls and batches.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#workers-dispatchers-and-scheduler)",
+      "items": {
+        "$ref": "#/definitions/dispatcher"
+      }
+    },
+    "workers": {
+      "type": "array",
+      "markdownDescription": "Workers pick up jobs that are ready to run from the `solid_queue_ready_executions` table.\n\n[Solid Queue Docs](https://github.com/rails/solid_queue#workers-dispatchers-and-scheduler)",
+      "items": {
+        "$ref": "#/definitions/worker"
+      }
+    },
+    "scheduler": {
+      "$ref": "#/definitions/scheduler"
+    },
     "default": {
       "$ref": "#/definitions/environment",
       "markdownDescription": "Default configuration shared across all environments via YAML anchors."

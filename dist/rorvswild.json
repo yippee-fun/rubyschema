@@ -15,6 +15,18 @@
           "type": "string",
           "markdownDescription": "Your RoRvsWild API key for authenticating with the monitoring service. Get your API key by creating an app on [rorvswild.com](https://www.rorvswild.com).\n\n**Required for production/staging monitoring.**\n\nRun `rorvswild-install YOUR_API_KEY` to automatically configure your application.\n\n**⚠️ Security:** Store this securely using environment variables (e.g., `ENV['RORVSWILD_API_KEY']`) instead of committing it directly.\n\n[Installation Guide](https://www.rorvswild.com/docs/get-started/installation)"
         },
+        "api_url": {
+          "type": "string",
+          "format": "uri",
+          "default": "https://www.rorvswild.com/api/v1",
+          "markdownDescription": "URL of the RoRvsWild API that monitoring data is sent to. You should not need to change this."
+        },
+        "timeout": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 10,
+          "markdownDescription": "Timeout in seconds for HTTP requests sent to the RoRvsWild API."
+        },
         "ignore_requests": {
           "type": "array",
           "uniqueItems": true,
@@ -53,14 +65,20 @@
               "ActiveRecord",
               "DelayedJob",
               "Elasticsearch",
+              "Faktory",
               "Mongo",
               "NetHttp",
+              "Rack",
+              "RailsCache",
+              "RailsEngine",
+              "RailsError",
               "Redis",
               "Resque",
-              "Sidekiq"
+              "Sidekiq",
+              "ViewComponent"
             ]
           },
-          "markdownDescription": "Disable monitoring for specific RoRvsWild plugins. Each plugin instruments a different part of your stack.\n\n**Available plugins:**\n\n- **ActionController** - HTTP request/response tracking\n- **ActionMailer** - Email delivery monitoring\n- **ActionView** - Template rendering performance\n- **ActiveJob** - Background job execution (generic)\n- **ActiveRecord** - Database query tracking\n- **DelayedJob** - DelayedJob background processor\n- **Elasticsearch** - Elasticsearch query monitoring\n- **Mongo** - MongoDB query tracking\n- **NetHttp** - HTTP client request monitoring\n- **Redis** - Redis command tracking\n- **Resque** - Resque background processor\n- **Sidekiq** - Sidekiq background processor\n\n**Example - Disable Sidekiq monitoring:**\n\n```yaml\nignore_plugins:\n  - Sidekiq\n```\n\n**Example - Disable external HTTP tracking:**\n\n```yaml\nignore_plugins:\n  - NetHttp\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
+          "markdownDescription": "Disable monitoring for specific RoRvsWild plugins. Each plugin instruments a different part of your stack.\n\n**Available plugins:**\n\n- **ActionController** - HTTP request/response tracking\n- **ActionMailer** - Email delivery monitoring\n- **ActionView** - Template rendering performance\n- **ActiveJob** - Background job execution (generic)\n- **ActiveRecord** - Database query tracking\n- **DelayedJob** - DelayedJob background processor\n- **Elasticsearch** - Elasticsearch query monitoring\n- **Faktory** - Faktory background processor\n- **Mongo** - MongoDB query tracking\n- **NetHttp** - HTTP client request monitoring\n- **Rack** - Rack middleware timing\n- **RailsCache** - Rails cache operations\n- **RailsEngine** - Request tracking at the Rails engine level, including request queue time\n- **RailsError** - Errors reported via the Rails error reporter (`Rails.error`)\n- **Redis** - Redis command tracking\n- **Resque** - Resque background processor\n- **Sidekiq** - Sidekiq background processor\n- **ViewComponent** - ViewComponent rendering\n\n**Example - Disable Sidekiq monitoring:**\n\n```yaml\nignore_plugins:\n  - Sidekiq\n```\n\n**Example - Disable external HTTP tracking:**\n\n```yaml\nignore_plugins:\n  - NetHttp\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
         },
         "job_sampling_rate": {
           "type": "number",
@@ -77,15 +95,73 @@
         "logger": {
           "type": "string",
           "markdownDescription": "Custom log file path for RoRvsWild's internal logging. By default, RoRvsWild uses `Rails.logger` or standard output.\n\n**Use cases:**\n- Isolate RoRvsWild logs from application logs\n- Debug monitoring issues separately\n- Route monitoring logs to a specific destination\n\n**Example - File path:**\n\n```yaml\nlogger: log/rorvswild.log\n```\n\n**Via initializer (for custom loggers like Syslog):**\n\n```ruby\nRorVsWild.start(\n  api_key: ENV['RORVSWILD_API_KEY'],\n  logger: Logger::Syslog.new\n)\n```\n\n[Configuration Docs](https://www.rorvswild.com/docs/get-started/configuration)"
+        },
+        "widget": {
+          "type": "string",
+          "enum": [
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right",
+            "hidden"
+          ],
+          "markdownDescription": "Position of the local profiler widget injected into HTML pages in development mode (defaults to bottom left). Set to `hidden` to disable the widget; the profiler remains accessible at `/rorvswild`.\n\nIn the test environment, the widget is `hidden` by default.",
+          "examples": ["bottom-right"]
+        },
+        "editor_url": {
+          "type": "string",
+          "markdownDescription": "URL template used by the local profiler to open files in your text editor. `${path}` and `${line}` are replaced with the file path and line number.\n\nWhen not set, it is auto-detected from the `RAILS_EDITOR` or `EDITOR` environment variables (Rails 8.1+).\n\n- VSCode: `vscode://file${path}:${line}`\n- Sublime: `subl://${path}:${line}`",
+          "examples": ["vscode://file${path}:${line}", "subl://${path}:${line}"]
+        },
+        "deployment": {
+          "type": "object",
+          "additionalProperties": false,
+          "markdownDescription": "Deployment details. Deployment tracking works automatically if the app is inside a Git repository, or deployed with Capistrano, Kamal, Heroku or Scalingo. In other cases, you can provide the details here.",
+          "properties": {
+            "revision": {
+              "type": "string",
+              "markdownDescription": "The deployment version (mandatory when providing deployment details)."
+            },
+            "author": {
+              "type": "string",
+              "markdownDescription": "Name of the deployment's author."
+            },
+            "email": {
+              "type": "string",
+              "markdownDescription": "Email of the deployment's author."
+            },
+            "description": {
+              "type": "string",
+              "markdownDescription": "Description of the deployment, such as a Git commit message."
+            }
+          }
+        },
+        "server": {
+          "type": "object",
+          "markdownDescription": "Server (host) settings.",
+          "properties": {
+            "name": {
+              "type": "string",
+              "markdownDescription": "Override the host name reported to RoRvsWild. By default it is detected from `KAMAL_HOST`, `CONTAINER` (Scalingo), `GAE_INSTANCE`/`CLOUD_RUN_EXECUTION`, `DYNO` (Heroku) or the system hostname."
+            }
+          }
         }
       }
     }
   },
   "properties": {
-    "production": { "$ref": "#/definitions/environment" },
-    "development": { "$ref": "#/definitions/environment" },
-    "test": { "$ref": "#/definitions/environment" },
-    "staging": { "$ref": "#/definitions/environment" }
+    "production": {
+      "$ref": "#/definitions/environment"
+    },
+    "development": {
+      "$ref": "#/definitions/environment"
+    },
+    "test": {
+      "$ref": "#/definitions/environment"
+    },
+    "staging": {
+      "$ref": "#/definitions/environment"
+    }
   },
   "additionalProperties": {
     "$ref": "#/definitions/environment"

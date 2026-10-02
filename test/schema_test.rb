@@ -241,7 +241,7 @@ class SchemaTest < Minitest::Test
 
     case obj
     when Hash
-      if obj.key?("description") && !%w[$schema $id].include?(path.split("/").last)
+      if obj.key?("description") && !%w[$schema $id properties].include?(path.split("/").last)
         paths << "#{path}/description"
       end
 

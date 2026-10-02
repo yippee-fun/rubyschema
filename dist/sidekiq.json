@@ -2,19 +2,20 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/sidekiq.json",
   "title": "Sidekiq configuration",
-  "markdownDescription": "Configuration for Sidekiq, a background job processor for Ruby.\n\nSidekiq uses Redis to store job and queue information. This configuration file allows you to control concurrency, queue priorities, and environment-specific settings.\n\n[Sidekiq Configuration Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
+  "markdownDescription": "Configuration for Sidekiq, a background job processor for Ruby.\n\nSidekiq uses Redis to store job and queue information. This configuration file (`config/sidekiq.yml` by default) allows you to control concurrency, queue priorities, and environment-specific settings.\n\nKeys may be written with or without a leading colon (e.g. `concurrency:` or `:concurrency:`). Top-level keys that are not options are treated as environment-specific sections.\n\n[Sidekiq Configuration Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
   "definitions": {
     "environment": {
-      "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).",
+      "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).\n\nKeys may be written with or without a leading colon (e.g. `concurrency:` or `:concurrency:`).",
       "properties": {
         "concurrency": {
           "type": "integer",
-          "markdownDescription": "Number of threads Sidekiq will use to process jobs concurrently.\n\nDefault: `5`\n\n**Important:** Your database connection pool should be set to at least this value in `config/database.yml`.\n\nExample: `pool: <%= ENV['RAILS_MAX_THREADS'] || 10 %>`\n\n**Note:** Concurrency higher than 50 is not recommended.\n\n[Concurrency Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#concurrency)",
-          "minimum": 0
+          "markdownDescription": "Number of threads Sidekiq will use to process jobs concurrently.\n\nDefault: `5` (or `RAILS_MAX_THREADS` when that environment variable is set)\n\n**Important:** Your database connection pool should be set to at least this value in `config/database.yml`.\n\nExample: `pool: <%= ENV['RAILS_MAX_THREADS'] || 10 %>`\n\n**Note:** Concurrency higher than 50 is not recommended.\n\n[Concurrency Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#concurrency)",
+          "minimum": 1,
+          "default": 5
         },
         "queues": {
           "type": "array",
-          "markdownDescription": "List of queues to process, optionally with weights for priority control.\n\nQueues can be specified as:\n- **String** (equal priority): `\"default\"`\n- **Array with weight** (weighted priority): `[\"critical\", 2]` (checked twice as often)\n\n**Execution order:**\n- Without weights: Jobs in earlier queues are processed first (strict priority)\n- With weights: Queues are checked proportionally to their weights (random priority)\n\n**Example - Strict priority (critical processed first):**\n```yaml\nqueues:\n  - critical\n  - default\n  - low\n```\n\n**Example - Weighted priority (critical checked 2x as often):**\n```yaml\nqueues:\n  - [critical, 2]\n  - default\n```\n\n**Note:** Don't mix weighted and ordered modes. Use separate Sidekiq processes if you need both.\n\n[Queues Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#queues)",
+          "markdownDescription": "List of queues to process, optionally with weights for priority control.\n\nQueues can be specified as:\n- **String** (equal priority): `\"default\"`\n- **Array with weight** (weighted priority): `[\"critical\", 2]` (checked twice as often)\n- **String with weight**: `\"critical,2\"`\n\n**Execution order:**\n- Without weights: Jobs in earlier queues are processed first (strict priority)\n- All weights `1`: Queues are checked in random order\n- With other weights: Queues are checked proportionally to their weights (weighted priority)\n\n**Example - Strict priority (critical processed first):**\n```yaml\nqueues:\n  - critical\n  - default\n  - low\n```\n\n**Example - Weighted priority (critical checked 2x as often):**\n```yaml\nqueues:\n  - [critical, 2]\n  - default\n```\n\n**Note:** Don't mix weighted and ordered modes. Use separate Sidekiq processes if you need both.\n\n[Queues Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#queues)",
           "uniqueItems": true,
           "items": {
             "oneOf": [
@@ -31,19 +32,292 @@
               }
             ]
           },
-          "minItems": 1
+          "minItems": 1,
+          "default": ["default"]
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 25,
+          "markdownDescription": "Number of seconds Sidekiq waits for running jobs to finish when shutting down, before pushing them back to Redis.\n\nDefault: `25`\n\n**CLI equivalent:** `-t, --timeout NUM`"
+        },
+        "verbose": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable verbose (`DEBUG` level) logging.\n\nDefault: `false`\n\n**CLI equivalent:** `-v, --verbose`"
+        },
+        "tag": {
+          "type": "string",
+          "markdownDescription": "Process tag shown in the process title (procline) and on the Web UI's Busy page.\n\nDefaults to the name of the application's root directory.\n\n**CLI equivalent:** `-g, --tag TAG`"
+        },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true,
+          "markdownDescription": "Labels shown next to this process on the Web UI's Busy page.\n\nExample:\n```yaml\nlabels:\n  - reports\n  - eu-west\n```"
+        },
+        "require": {
+          "type": "string",
+          "default": ".",
+          "markdownDescription": "Location of the Rails application, or a Ruby file to require to load your job classes.\n\nDefault: `.`\n\n**CLI equivalent:** `-r, --require [PATH|DIR]`"
+        },
+        "capsules": {
+          "type": "object",
+          "markdownDescription": "Additional capsules, keyed by name. Each capsule processes its own set of queues with its own concurrency, e.g. a single-threaded capsule for jobs that are not thread-safe.\n\nThe top-level `queues` and `concurrency` configure the `default` capsule.\n\nExample:\n```yaml\ncapsules:\n  unsafe:\n    concurrency: 1\n    queues:\n      - thread_unsafe\n```\n\n**Do not declare a capsule for each queue.**\n\n[Capsules Documentation](https://github.com/sidekiq/sidekiq/blob/main/docs/capsule.md)",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "concurrency": {
+                "type": "integer",
+                "minimum": 1,
+                "markdownDescription": "Number of threads this capsule uses to process jobs."
+              },
+              "queues": {
+                "$ref": "#/definitions/environment/properties/queues"
+              },
+              ":concurrency": {
+                "$ref": "#/definitions/environment/properties/capsules/additionalProperties/properties/concurrency"
+              },
+              ":queues": {
+                "$ref": "#/definitions/environment/properties/queues"
+              }
+            },
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "anyOf": [
+                  { "required": ["concurrency"] },
+                  { "required": [":concurrency"] }
+                ]
+              },
+              {
+                "anyOf": [
+                  { "required": ["queues"] },
+                  { "required": [":queues"] }
+                ]
+              }
+            ]
+          }
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 25,
+          "markdownDescription": "Default maximum number of retry attempts for a failed job (roughly 3 weeks with the default of `25`).\n\nIndividual jobs can override this with `sidekiq_options retry: N`.\n\nDefault: `25`"
+        },
+        "dead_max_jobs": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 10000,
+          "markdownDescription": "Maximum number of jobs kept in the Dead set. The oldest jobs are removed beyond this limit.\n\nDefault: `10000`"
+        },
+        "dead_timeout_in_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 15552000,
+          "markdownDescription": "Number of seconds a job is kept in the Dead set before being removed.\n\nDefault: `15552000` (180 days)"
+        },
+        "average_scheduled_poll_interval": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 5,
+          "markdownDescription": "Average number of seconds between checks for scheduled jobs and retries, **per process**. The actual poll interval is scaled by the number of running Sidekiq processes.\n\nDefault: `5`"
+        },
+        "poll_interval_average": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "markdownDescription": "Fixed average number of seconds between checks for scheduled jobs and retries, regardless of the number of Sidekiq processes. Overrides `average_scheduled_poll_interval`.\n\nDefault: unset (scaled by process count)"
+        },
+        "max_iteration_runtime": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "markdownDescription": "Maximum number of seconds an iterable job (`Sidekiq::IterableJob`) runs before it is interrupted after the current iteration and re-enqueued to continue later.\n\nDefault: unset (no limit)"
+        },
+        "redis_idle_timeout": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "markdownDescription": "Close Redis connections that have been idle for this many seconds. Checked on every heartbeat.\n\nDefault: unset (idle connections are kept open)\n\nEquivalent to `config.reap_idle_redis_connections(seconds)`."
+        },
+        "logged_job_attributes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["bid", "tags"],
+          "markdownDescription": "Job attributes added to the logging context for each job, when present in the job payload.\n\nDefault: `[\"bid\", \"tags\"]`"
+        },
+        "skip_default_job_logging": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Disable Sidekiq's default `start`, `done` and `fail` log lines for each job.\n\nDefault: `false`"
+        },
+        ":concurrency": {
+          "$ref": "#/definitions/environment/properties/concurrency"
+        },
+        ":queues": {
+          "$ref": "#/definitions/environment/properties/queues"
+        },
+        ":timeout": {
+          "$ref": "#/definitions/environment/properties/timeout"
+        },
+        ":verbose": {
+          "$ref": "#/definitions/environment/properties/verbose"
+        },
+        ":tag": { "$ref": "#/definitions/environment/properties/tag" },
+        ":labels": {
+          "$ref": "#/definitions/environment/properties/labels"
+        },
+        ":require": {
+          "$ref": "#/definitions/environment/properties/require"
+        },
+        ":capsules": {
+          "$ref": "#/definitions/environment/properties/capsules"
+        },
+        ":max_retries": {
+          "$ref": "#/definitions/environment/properties/max_retries"
+        },
+        ":dead_max_jobs": {
+          "$ref": "#/definitions/environment/properties/dead_max_jobs"
+        },
+        ":dead_timeout_in_seconds": {
+          "$ref": "#/definitions/environment/properties/dead_timeout_in_seconds"
+        },
+        ":average_scheduled_poll_interval": {
+          "$ref": "#/definitions/environment/properties/average_scheduled_poll_interval"
+        },
+        ":poll_interval_average": {
+          "$ref": "#/definitions/environment/properties/poll_interval_average"
+        },
+        ":max_iteration_runtime": {
+          "$ref": "#/definitions/environment/properties/max_iteration_runtime"
+        },
+        ":redis_idle_timeout": {
+          "$ref": "#/definitions/environment/properties/redis_idle_timeout"
+        },
+        ":logged_job_attributes": {
+          "$ref": "#/definitions/environment/properties/logged_job_attributes"
+        },
+        ":skip_default_job_logging": {
+          "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+        },
+        "strict": {
+          "type": "boolean",
+          "markdownDescription": "Accepted for compatibility with older Sidekiq versions and ignored."
+        },
+        ":strict": {
+          "$ref": "#/definitions/environment/properties/strict"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "type": "object"
     }
   },
-  "allOf": [{ "$ref": "#/definitions/environment" }],
   "properties": {
+    "concurrency": {
+      "$ref": "#/definitions/environment/properties/concurrency"
+    },
+    "queues": {
+      "$ref": "#/definitions/environment/properties/queues"
+    },
+    "timeout": {
+      "$ref": "#/definitions/environment/properties/timeout"
+    },
+    "verbose": {
+      "$ref": "#/definitions/environment/properties/verbose"
+    },
+    "tag": { "$ref": "#/definitions/environment/properties/tag" },
+    "labels": {
+      "$ref": "#/definitions/environment/properties/labels"
+    },
+    "require": {
+      "$ref": "#/definitions/environment/properties/require"
+    },
+    "capsules": {
+      "$ref": "#/definitions/environment/properties/capsules"
+    },
+    "max_retries": {
+      "$ref": "#/definitions/environment/properties/max_retries"
+    },
+    "dead_max_jobs": {
+      "$ref": "#/definitions/environment/properties/dead_max_jobs"
+    },
+    "dead_timeout_in_seconds": {
+      "$ref": "#/definitions/environment/properties/dead_timeout_in_seconds"
+    },
+    "average_scheduled_poll_interval": {
+      "$ref": "#/definitions/environment/properties/average_scheduled_poll_interval"
+    },
+    "poll_interval_average": {
+      "$ref": "#/definitions/environment/properties/poll_interval_average"
+    },
+    "max_iteration_runtime": {
+      "$ref": "#/definitions/environment/properties/max_iteration_runtime"
+    },
+    "redis_idle_timeout": {
+      "$ref": "#/definitions/environment/properties/redis_idle_timeout"
+    },
+    "logged_job_attributes": {
+      "$ref": "#/definitions/environment/properties/logged_job_attributes"
+    },
+    "skip_default_job_logging": {
+      "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+    },
+    ":concurrency": {
+      "$ref": "#/definitions/environment/properties/concurrency"
+    },
+    ":queues": {
+      "$ref": "#/definitions/environment/properties/queues"
+    },
+    ":timeout": {
+      "$ref": "#/definitions/environment/properties/timeout"
+    },
+    ":verbose": {
+      "$ref": "#/definitions/environment/properties/verbose"
+    },
+    ":tag": { "$ref": "#/definitions/environment/properties/tag" },
+    ":labels": {
+      "$ref": "#/definitions/environment/properties/labels"
+    },
+    ":require": {
+      "$ref": "#/definitions/environment/properties/require"
+    },
+    ":capsules": {
+      "$ref": "#/definitions/environment/properties/capsules"
+    },
+    ":max_retries": {
+      "$ref": "#/definitions/environment/properties/max_retries"
+    },
+    ":dead_max_jobs": {
+      "$ref": "#/definitions/environment/properties/dead_max_jobs"
+    },
+    ":dead_timeout_in_seconds": {
+      "$ref": "#/definitions/environment/properties/dead_timeout_in_seconds"
+    },
+    ":average_scheduled_poll_interval": {
+      "$ref": "#/definitions/environment/properties/average_scheduled_poll_interval"
+    },
+    ":poll_interval_average": {
+      "$ref": "#/definitions/environment/properties/poll_interval_average"
+    },
+    ":max_iteration_runtime": {
+      "$ref": "#/definitions/environment/properties/max_iteration_runtime"
+    },
+    ":redis_idle_timeout": {
+      "$ref": "#/definitions/environment/properties/redis_idle_timeout"
+    },
+    ":logged_job_attributes": {
+      "$ref": "#/definitions/environment/properties/logged_job_attributes"
+    },
+    ":skip_default_job_logging": {
+      "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+    },
     "development": { "$ref": "#/definitions/environment" },
     "production": { "$ref": "#/definitions/environment" },
-    "staging": { "$ref": "#/definitions/environment" }
+    "staging": { "$ref": "#/definitions/environment" },
+    "strict": {
+      "$ref": "#/definitions/environment/properties/strict"
+    },
+    ":strict": {
+      "$ref": "#/definitions/environment/properties/strict"
+    }
   },
-  "additionalProperties": {
-    "$ref": "#/definitions/environment"
-  }
+  "additionalProperties": { "$ref": "#/definitions/environment" }
 }

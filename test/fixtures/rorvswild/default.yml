@@ -20,3 +20,22 @@ development:
   api_key: "dev-key"
   ignore_plugins:
     - NetHttp
+  widget: bottom-right
+  editor_url: "vscode://file${path}:${line}"
+
+staging:
+  api_key: "staging-key"
+  timeout: 5
+  request_sampling_rate: 0.25
+  job_sampling_rate: 0.5
+  logger: log/rorvswild.log
+  ignore_plugins:
+    - RailsCache
+    - ViewComponent
+  server:
+    name: staging-1
+  deployment:
+    revision: "abc123"
+    description: "Fix bug"
+    author: "Jane Doe"
+    email: "jane@example.com"

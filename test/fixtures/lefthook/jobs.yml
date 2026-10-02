@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../dist/lefthook.json
+%YAML 1.1
+---
+min_version: "2.1.2"
+colors:
+  cyan: 14
+  green: "#32CD32"
+output:
+  - meta
+  - summary
+  - empty_summary
+  - failure
+  - setup
+glob_matcher: doublestar
+no_auto_install: true
+install_non_git_hooks: false
+extends:
+  - configs/*.yml
+templates:
+  wrapper: docker compose run --rm app
+  dip:
+remotes:
+  - git_url: https://github.com/evilmartians/lefthook
+    ref: v2.1.16
+    refetch_frequency: 1h30m
+    configs:
+      - examples/remote/ping.yml
+
+ai:
+  claude:
+    Stop: validate
+  cursor:
+    stop: validate
+
+validate:
+  jobs:
+    - run: bundle exec rake test
+
+pre-commit:
+  parallel: true
+  fail_on_changes: ci
+  fail_on_changes_diff: true
+  exclude:
+    - db/schema.rb
+  skip:
+    - merge
+    - ref: release/*
+  setup:
+    - run: bundle check || bundle install
+  jobs:
+    - name: rubocop
+      run: bundle exec rubocop
+      args: "{staged_files}"
+      glob: "**/*.rb"
+      exclude: config/routes.rb
+      file_types:
+        - text
+        - text/x-sh
+      timeout: 1m30s
+      tags: style
+      skip: true
+    - name: frontend
+      root: frontend/
+      env:
+        NODE_ENV: test
+      group:
+        root: frontend/
+        piped: true
+        jobs:
+          - run: "{wrapper} yarn lint"
+          - script: check.sh
+            runner: bash
+            only: rebase
+
+pre-push:
+  scripts:
+    "audit.sh":
+      runner: bash
+      args: "{push_files}"
+      timeout: 30s
+      skip:
+        - run: test "$SKIP_AUDIT" = 1

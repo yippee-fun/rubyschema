@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../dist/rails/database.json
+%YAML 1.1
+---
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  min_connections: 1
+  keepalive: 300
+  max_age: 3600
+  pool_jitter: 0.1
+  username: root
+  password:
+  host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+  ssl_mode: required
+  flags:
+    - -MULTI_STATEMENTS
+  variables:
+    sql_mode: TRADITIONAL
+
+development:
+  <<: *default
+  database: myapp_development
+  query_cache: 200
+
+test:
+  primary:
+    adapter: sqlite3
+    database: storage/test.sqlite3
+    timeout: 5000
+    strict: true
+    pragmas:
+      journal_mode: wal
+      synchronous: normal
+    extensions:
+      - SQLean::UUID
+  analytics:
+    adapter: sqlite3
+    database: storage/test_analytics.sqlite3
+    migrations_paths: db/analytics_migrate
+    schema_dump: false
+    database_tasks: true
+    seeds: false
+
+production:
+  url: <%= ENV["DATABASE_URL"] %>
+  checkout_timeout: 10
+  idle_timeout: 0
+  query_cache: false
+  schema_format: sql
+  use_metadata_table: false
+  default_timezone: utc

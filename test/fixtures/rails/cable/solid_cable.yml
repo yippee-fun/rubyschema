@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../../../dist/rails/cable.json
+%YAML 1.1
+---
+development:
+  adapter: async
+
+test:
+  adapter: test
+
+staging:
+  adapter: redis
+  url: rediss://redis.example.com:6380/1
+  channel_prefix: myapp_staging
+  reconnect_attempts: 3
+  ssl_params:
+    verify_mode: <%= OpenSSL::SSL::VERIFY_NONE %>
+
+production:
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable
+  polling_interval: 0.1.seconds
+  message_retention: 1.day
+  writer_batch_size: 4
+  writer_batch_delay: 0.001.seconds
+  reconnect_attempts: [0, 0.5, 1]
+  encrypt: true

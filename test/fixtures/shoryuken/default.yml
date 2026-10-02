@@ -3,10 +3,27 @@
 ---
 logfile: log/shoryuken.log
 pidfile: tmp/pids/shoryuken.pid
+require: ./app/workers
+verbose: false
 queues:
   - default
   - [high_priority, 6]
   - [low_priority, 1]
 delay: 25
 concurrency: 25
-cache_visibility_timeout: true
+timeout: 8
+polling_strategy: WeightedRoundRobin
+groups:
+  serial:
+    concurrency: 1
+    polling_strategy: StrictPriority
+    queues:
+      - critical
+      - mailers
+  slow:
+    concurrency: <%= ENV.fetch("SHORYUKEN_SLOW_CONCURRENCY", 5) %>
+    delay: 2.5
+    queues:
+      - [reports, 2]
+aws:
+  region: us-east-1

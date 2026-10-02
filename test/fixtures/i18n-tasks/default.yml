@@ -2,6 +2,7 @@
 %YAML 1.1
 ---
 base_locale: en
+internal_locale: en
 locales:
   - en
   - fr
@@ -14,8 +15,10 @@ data:
     - config/locales/**/%{locale}.yml
   write:
     - "config/locales/%{locale}.yml"
-    - - "config/locales/devise.%{locale}.yml"
-      - "{devise}.*"
+    - - "{devise}.*"
+      - "config/locales/devise.%{locale}.yml"
+  router: conservative_router
+  keep_order: true
   external:
     - "<%=`bundle show gema`.chomp%>/config/locales/%{locale}.yml"
   yaml:
@@ -47,6 +50,36 @@ search:
     - "*.html.erb"
   strict: false
   prism: rails
+  ast_matchers:
+    - I18n::Tasks::Scanners::AstMatchers::RailsModelMatcher
+    - I18n::Tasks::Scanners::AstMatchers::DefaultI18nSubjectMatcher
+  scanners:
+    - ["::I18n::Tasks::Scanners::RubyScanner", { only: ["*.rb"] }]
+    - ["::I18n::Tasks::Scanners::PatternWithScopeScanner", { exclude: ["*.erb", "*.rb"] }]
 translation:
   backend: deepl
   deepl_api_key: "abc123"
+  deepl_options:
+    formality: prefer_less
+  openai_api_key: "sk-abc123"
+  openai_model: gpt-4o-mini
+  openai_temperature: 0.0
+  openai_system_prompt: >-
+    You are a professional translator that translates content from the %{from} locale
+    to the %{to} locale in an i18n locale array.
+  openai_locale_prompts:
+    es: Translate from %{from} to Latin American Spanish.
+ignore_missing:
+  - "errors.messages.{accepted,blank,invalid,too_short,too_long}"
+  - "{devise,simple_form}.*"
+ignore_unused:
+  - "activerecord.attributes.*"
+ignore_eq_base:
+  all:
+    - common.ok
+  fr,es:
+    - common.brand
+ignore_inconsistent_interpolations:
+  - "activerecord.attributes.*"
+ignore:
+  - kaminari.*

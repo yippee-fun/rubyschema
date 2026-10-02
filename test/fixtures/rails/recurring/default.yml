@@ -17,3 +17,16 @@ production:
     schedule: every 6 hours
     queue: critical
     priority: 0
+  a_periodic_job:
+    class: MyJob
+    args: [ 42, { status: "custom_status" } ]
+    schedule: every second
+    description: Runs MyJob with a custom status
+  my_periodic_resque_job:
+    class: Reports::NightlyExport
+    args: 22
+    schedule: "*/5 * * * *"
+  batch_maintenance:
+    command: "SolidQueue::Batch.sweep_stalled"
+    schedule: every 5 minutes
+    description: Sweep stalled batches

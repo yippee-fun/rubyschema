@@ -2,31 +2,36 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://www.rubyschema.org/rails/storage.json",
   "title": "Rails Storage Configuration",
-  "markdownDescription": "Configuration for Active Storage services. Each service defines where uploaded files are stored (disk, S3, Google Cloud Storage, Azure, or mirrored across multiple services). Set the active service per environment in `config/environments/*.rb` with `config.active_storage.service = :service_name`.",
+  "markdownDescription": "Configuration for Active Storage services. Each service defines where uploaded files are stored (disk, S3, Google Cloud Storage, Azure (Rails 8.0 and earlier), or mirrored across multiple services). Third-party gems may provide additional services. Set the active service per environment in `config/environments/*.rb` with `config.active_storage.service = :service_name`.",
   "type": "object",
   "definitions": {
     "disk_service": {
       "markdownDescription": "Local disk storage service. Files are stored directly on the server's filesystem at the specified root path.",
       "properties": {
         "service": {
-          "const": "Disk",
-          "markdownDescription": "Service type for local disk storage."
+          "markdownDescription": "Service type for local disk storage.",
+          "enum": ["Disk", "disk"]
         },
         "root": {
           "type": "string",
           "default": "<%= Rails.root.join(\"storage\") %>",
           "markdownDescription": "The root directory where uploaded files will be stored. Use an absolute path or ERB to generate one relative to your Rails app (e.g., `<%= Rails.root.join(\"storage\") %>`)."
+        },
+        "public": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Whether files should be publicly accessible. When `true`, generated file URLs are permanent public URLs instead of signed private URLs."
         }
       },
       "required": ["service", "root"],
       "additionalProperties": false
     },
     "s3_service": {
-      "markdownDescription": "Amazon S3 or S3-compatible storage service. Requires the `aws-sdk-s3` gem. For S3-compatible services like DigitalOcean Spaces, provide the `endpoint` option.",
+      "markdownDescription": "Amazon S3 or S3-compatible storage service. Requires the `aws-sdk-s3` gem. For S3-compatible services like DigitalOcean Spaces, provide the `endpoint` option.\n\nAll options other than `service`, `bucket`, `upload` and `public` are passed to the AWS S3 client, so any [AWS S3 Client option](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Client.html#initialize-instance_method) may be used. `access_key_id`, `secret_access_key` and `region` may be omitted to use environment variables, shared config files, profiles, or IAM roles.",
       "properties": {
         "service": {
-          "const": "S3",
-          "markdownDescription": "Service type for Amazon S3 or S3-compatible storage."
+          "markdownDescription": "Service type for Amazon S3 or S3-compatible storage.",
+          "enum": ["S3", "s3"]
         },
         "endpoint": {
           "type": "string",
@@ -35,12 +40,12 @@
         "access_key_id": {
           "type": "string",
           "default": "<%= Rails.application.credentials.dig(:aws, :access_key_id) %>",
-          "markdownDescription": "AWS access key ID for authentication. Store securely using Rails encrypted credentials."
+          "markdownDescription": "AWS access key ID for authentication. Store securely using Rails encrypted credentials. Omit to use the AWS SDK's default credential chain."
         },
         "secret_access_key": {
           "type": "string",
           "default": "<%= Rails.application.credentials.dig(:aws, :secret_access_key) %>",
-          "markdownDescription": "AWS secret access key for authentication. Store securely using Rails encrypted credentials."
+          "markdownDescription": "AWS secret access key for authentication. Store securely using Rails encrypted credentials. Omit to use the AWS SDK's default credential chain."
         },
         "region": {
           "anyOf": [
@@ -110,8 +115,14 @@
         },
         "upload": {
           "type": "object",
-          "markdownDescription": "Upload options for controlling how files are stored in S3.",
+          "markdownDescription": "Upload options for controlling how files are stored in S3. Options other than `multipart_threshold` are passed to S3 `put_object` / multipart upload requests.",
           "properties": {
+            "multipart_threshold": {
+              "type": ["integer", "string"],
+              "default": 104857600,
+              "markdownDescription": "File size in bytes above which uploads use multipart upload instead of a single request.\n\nDefault: `100.megabytes` (104857600)",
+              "examples": [104857600, "<%= 250.megabytes %>"]
+            },
             "server_side_encryption": {
               "enum": ["aws:kms", "AES256"],
               "markdownDescription": "Server-side encryption method. Use `aws:kms` for AWS KMS encryption or `AES256` for S3-managed encryption."
@@ -124,11 +135,11 @@
           }
         }
       },
-      "required": ["service", "access_key_id", "secret_access_key", "bucket"],
-      "additionalProperties": false
+      "required": ["service", "bucket"],
+      "additionalProperties": true
     },
     "gcs_service": {
-      "markdownDescription": "Google Cloud Storage (GCS) service. Requires the `google-cloud-storage` gem. Provide either credentials (keyfile path or inline JSON) or use IAM authentication.",
+      "markdownDescription": "Google Cloud Storage (GCS) service. Requires the `google-cloud-storage` gem. Provide credentials (keyfile path or inline JSON), or omit them to use Application Default Credentials.\n\nAll options other than `service`, `bucket`, `cache_control`, `iam`, `gsa_email` and `public` are passed to `Google::Cloud::Storage.new`.",
       "properties": {
         "service": {
           "const": "GCS",
@@ -201,7 +212,12 @@
         },
         "iam": {
           "type": "boolean",
-          "markdownDescription": "Use IAM authentication instead of credentials when signing URLs. Useful for GKE applications with Workload Identity. When enabled, the metadata server provides the service account email."
+          "markdownDescription": "Use IAM authentication instead of credentials when signing URLs. Useful for GKE applications with Workload Identity. When enabled, the metadata server provides the service account email unless `gsa_email` is set."
+        },
+        "gsa_email": {
+          "type": "string",
+          "markdownDescription": "Google service account email to use when signing URLs with `iam: true`. Use this when the metadata server is unavailable (e.g. local tests) or to use a non-default service account.",
+          "examples": ["foobar@baz.iam.gserviceaccount.com"]
         },
         "bucket": {
           "type": "string",
@@ -216,22 +232,17 @@
           "markdownDescription": "Cache-Control header value for uploaded files. Controls how browsers and CDNs cache the content (e.g., `public, max-age=3600`)."
         }
       },
-      "anyOf": [
-        {
-          "required": ["service", "project", "bucket", "credentials"]
-        },
-        {
-          "required": ["service", "project", "bucket", "iam"]
-        }
-      ],
-      "additionalProperties": false
+      "required": ["service", "bucket"],
+      "additionalProperties": true
     },
     "azure_storage_service": {
-      "markdownDescription": "Microsoft Azure Storage service. Files are stored in Azure Blob Storage containers.",
+      "markdownDescription": "Microsoft Azure Storage service. Files are stored in Azure Blob Storage containers.\n\n**Deprecated in Rails 8.0 and removed in Rails 8.1.** Only available on Rails 8.0 and earlier.",
+      "deprecationMessage": "AzureStorage was deprecated in Rails 8.0 and removed in Rails 8.1. Use a third-party Azure service gem instead.",
       "properties": {
         "service": {
-          "const": "AzureStorage",
-          "markdownDescription": "Service type for Azure Storage."
+          "markdownDescription": "Service type for Azure Storage. Removed in Rails 8.1.",
+          "deprecationMessage": "AzureStorage was deprecated in Rails 8.0 and removed in Rails 8.1. Use a third-party Azure service gem instead.",
+          "enum": ["AzureStorage", "azure_storage"]
         },
         "storage_account_name": {
           "type": "string",
@@ -263,8 +274,8 @@
       "markdownDescription": "Mirror service that replicates uploads and deletes across multiple storage services. Intended for temporary use during migrations between services. Uploads go to all services, but downloads are always handled by the primary service. Not atomic - verify all files are copied before switching services.",
       "properties": {
         "service": {
-          "const": "Mirror",
-          "markdownDescription": "Service type for mirroring across multiple storage services."
+          "markdownDescription": "Service type for mirroring across multiple storage services.",
+          "enum": ["Mirror", "mirror"]
         },
         "primary": {
           "type": "string",
@@ -282,6 +293,20 @@
       "required": ["service", "primary", "mirrors"],
       "additionalProperties": false
     },
+    "custom_service": {
+      "markdownDescription": "A service provided by a third-party gem. Active Storage loads `active_storage/service/<name>_service` and instantiates `ActiveStorage::Service::<Name>Service` with the remaining options.",
+      "properties": {
+        "service": {
+          "type": "string",
+          "not": {
+            "pattern": "^(?:[Dd]isk|[Ss]3|GCS|[Gg]cs|AzureStorage|azure_storage|[Mm]irror)$"
+          },
+          "markdownDescription": "Name of the third-party service adapter."
+        }
+      },
+      "required": ["service"],
+      "additionalProperties": true
+    },
     "service": {
       "type": "object",
       "anyOf": [
@@ -289,7 +314,8 @@
         { "$ref": "#/definitions/s3_service" },
         { "$ref": "#/definitions/gcs_service" },
         { "$ref": "#/definitions/azure_storage_service" },
-        { "$ref": "#/definitions/mirror_service" }
+        { "$ref": "#/definitions/mirror_service" },
+        { "$ref": "#/definitions/custom_service" }
       ]
     }
   },
@@ -333,7 +359,7 @@
     },
     "microsoft": {
       "$ref": "#/definitions/service",
-      "markdownDescription": "Microsoft Azure Storage service. Alternative cloud storage option to S3 and GCS.",
+      "markdownDescription": "Microsoft Azure Storage service. Alternative cloud storage option to S3 and GCS.\n\n**The built-in `AzureStorage` service was deprecated in Rails 8.0 and removed in Rails 8.1.**",
       "default": {
         "service": "AzureStorage",
         "storage_account_name": "your_account_name",
