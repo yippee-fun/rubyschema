@@ -18,7 +18,7 @@
               ]
             }
           ],
-          "markdownDescription": "Enable or disable this cop. When set to `false`, the cop will not run. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
+          "markdownDescription": "Enable or disable this cop. When set to `false`, the cop will not run. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#enabled)"
         },
         "Include": {
           "type": "array",
@@ -53,14 +53,14 @@
             "Error level. Indicates a problem that should be fixed.",
             "Fatal level. Indicates a critical issue that must be fixed."
           ],
-          "markdownDescription": "Severity level for offenses detected by this cop. Cops with `info` severity will not cause RuboCop to return a non-zero exit code. [Docs](https://docs.rubocop.org/rubocop/configuration.html#severity)"
+          "markdownDescription": "Severity level for offenses detected by this cop. Cops with `info` severity will not cause RuboCop to return a non-zero exit code. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#severity)"
         },
         "Details": {
           "type": "string",
-          "markdownDescription": "Additional details about this cop that will be shown when RuboCop is run with the `--extra-details` flag or when `ExtraDetails` is set to `true` in your global configuration. [Docs](https://docs.rubocop.org/rubocop/configuration.html#details)"
+          "markdownDescription": "Additional details about this cop that will be shown when RuboCop is run with the `--extra-details` flag or when `ExtraDetails` is set to `true` in your global configuration. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#details)"
         },
         "AutoCorrect": {
-          "markdownDescription": "Configure Rubocop’s autocorrection behavior. [Docs](https://docs.rubocop.org/rubocop/configuration.html#autocorrect)",
+          "markdownDescription": "Configure Rubocop’s autocorrection behavior. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#autocorrect)",
           "oneOf": [
             {
               "type": "boolean"
@@ -88,6 +88,41 @@
           "type": "string",
           "pattern": "^\\d+\\.\\d+$",
           "markdownDescription": "The latest RuboCop version in which this cop was changed in a user-impacting way (new config, updated defaults, etc), in the format `major.minor`."
+        },
+        "Safe": {
+          "type": "boolean",
+          "markdownDescription": "Whether the cop is safe, i.e. free of false positives. Unsafe cops (and their autocorrection) are skipped by `--safe` and `--safe-autocorrect`. [Docs](https://docs.rubocop.org/rubocop/usage/autocorrect.html#safe-vs-unsafe)"
+        },
+        "SafeAutoCorrect": {
+          "type": "boolean",
+          "markdownDescription": "Whether the cop's autocorrection is safe. Unsafe autocorrections only run with `-A`/`--autocorrect-all`. Cannot be `true` when `Safe` is `false`. [Docs](https://docs.rubocop.org/rubocop/usage/autocorrect.html#safe-vs-unsafe)"
+        },
+        "References": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "URLs with further information about the cop, shown with the offense when `DisplayStyleGuide` is enabled."
+        },
+        "Reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "markdownDescription": "**Deprecated.** Legacy form of `References`.",
+          "deprecationMessage": "Use `References` instead."
+        },
+        "inherit_mode": {
+          "$ref": "#/properties/inherit_mode"
         }
       }
     },
@@ -112,7 +147,7 @@
               "pattern": "^\\d+(\\.\\d+)*$"
             }
           ],
-          "markdownDescription": "Overrides `AllCops: NewCops` for the pending cops in this department. Can also be a version (e.g. `'1.80'`) to enable pending cops added in that version or earlier. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enabling-new-cops)"
+          "markdownDescription": "Overrides `AllCops: NewCops` for the pending cops in this department. Can also be a version (e.g. `'1.80'`) to enable pending cops added in that version or earlier. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enablingdisabling-pending-cops-per-department)"
         },
         "StyleGuideBaseURL": {
           "type": "string",
@@ -187,7 +222,7 @@
           }
         ]
       },
-      "markdownDescription": "Inherit configuration from one or more gems. Allows you to share RuboCop configuration across multiple projects. The key is the gem name and the value is the relative path to the config file within the gem. [Docs](https://docs.rubocop.org/rubocop/configuration.html#inheriting-configuration-from-a-dependency-gem)"
+      "markdownDescription": "Inherit configuration from one or more gems. Allows you to share RuboCop configuration across multiple projects. The key is the gem name and the value is the relative path to the config file within the gem. [Docs](https://docs.rubocop.org/rubocop/configuration/inheritance.html#inheriting-configuration-from-a-dependency-gem)"
     },
     "inherit_from": {
       "anyOf": [
@@ -202,7 +237,7 @@
           }
         }
       ],
-      "markdownDescription": "Inherit configuration from one or more files. Can be local file paths or remote URLs. Files can be given with absolute paths or paths relative to the file where they are referenced. Also accepts glob patterns. [Docs](https://docs.rubocop.org/rubocop/configuration.html#inheriting-from-another-configuration-file-in-the-project)"
+      "markdownDescription": "Inherit configuration from one or more files. Can be local file paths or remote URLs. Files can be given with absolute paths or paths relative to the file where they are referenced. Also accepts glob patterns. [Docs](https://docs.rubocop.org/rubocop/configuration/inheritance.html#inheriting-from-another-configuration-file-in-the-project)"
     },
     "inherit_mode": {
       "type": "object",
@@ -211,16 +246,99 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "enum": ["Exclude", "Include"],
-            "markdownEnumDescriptions": [
-              "Merge `Exclude` arrays from inherited configs instead of overriding",
-              "Merge `Include` arrays from inherited configs instead of overriding"
+            "anyOf": [
+              {
+                "enum": ["Exclude", "Include"],
+                "markdownEnumDescriptions": [
+                  "Merge `Exclude` arrays from inherited configs instead of overriding",
+                  "Merge `Include` arrays from inherited configs instead of overriding"
+                ]
+              },
+              {
+                "type": "string"
+              }
             ]
           },
-          "markdownDescription": "Array configuration keys that should be merged with inherited values rather than overriding them"
+          "markdownDescription": "Array configuration keys that should be merged with inherited values rather than overriding them. Any array-valued parameter (e.g. `AllowedMethods`) can be listed."
+        },
+        "override": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "enum": ["Exclude", "Include"],
+                "markdownEnumDescriptions": [
+                  "Override inherited `Exclude` arrays instead of merging them",
+                  "Override inherited `Include` arrays instead of merging them"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "markdownDescription": "Array configuration keys whose inherited values should be replaced rather than merged. Takes precedence over `merge` set in an inherited config."
         }
       },
-      "markdownDescription": "Specifies which configuration keys with array values should be merged together instead of overriding the inherited value. This applies to both explicit inheritance via `inherit_from` and implicit inheritance from the default config. [Docs](https://docs.rubocop.org/rubocop/configuration.html#merging-arrays-using-inherit_mode)"
+      "markdownDescription": "Specifies which configuration keys with array values should be merged together instead of overriding the inherited value. This applies to both explicit inheritance via `inherit_from` and implicit inheritance from the default config. Can also be set inside an individual cop's configuration. [Docs](https://docs.rubocop.org/rubocop/configuration/inheritance.html#merging-arrays-using-inherit-mode)"
+    },
+    "plugins": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "minProperties": 1,
+                "maxProperties": 1,
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "markdownDescription": "Set to `false` to skip loading this plugin."
+                    },
+                    "require_path": {
+                      "type": "string",
+                      "markdownDescription": "Path to require to load the plugin. Defaults to the plugin name."
+                    },
+                    "plugin_class_name": {
+                      "type": "string",
+                      "markdownDescription": "Plugin class to instantiate. Defaults to the gem's `default_lint_roller_plugin` metadata."
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "examples": [["rubocop-performance", "rubocop-rails"]],
+      "markdownDescription": "RuboCop plugin extensions (built on `lint_roller`) to load, such as `rubocop-rails` or `rubocop-rspec`. [Docs](https://docs.rubocop.org/rubocop/plugins.html#loading-plugin-extensions)"
+    },
+    "require": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "markdownDescription": "Ruby files or gems to require, such as custom cops or legacy extensions that don't support `plugins`. Extensions that support plugins should be listed under `plugins` instead. [Docs](https://docs.rubocop.org/rubocop/plugins.html#loading-legacy-extensions-via-require)"
     },
     "AllCops": {
       "type": "object",
@@ -231,7 +349,7 @@
           "items": {
             "type": "string"
           },
-          "markdownDescription": "File patterns (globs) to exclude from all cops. Files matching these patterns will not be inspected. To apply exclusions when specific files are passed as arguments, use `--force-exclusion`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#includingexcluding-files)"
+          "markdownDescription": "File patterns (globs) to exclude from all cops. Files matching these patterns will not be inspected. To apply exclusions when specific files are passed as arguments, use `--force-exclusion`. [Docs](https://docs.rubocop.org/rubocop/configuration/include_exclude.html)"
         },
         "Include": {
           "type": "array",
@@ -239,7 +357,7 @@
           "items": {
             "type": "string"
           },
-          "markdownDescription": "File patterns (globs) to include for all cops. Files matching these patterns will be inspected. Overrides the default patterns from RuboCop. [Docs](https://docs.rubocop.org/rubocop/configuration.html#includingexcluding-files)"
+          "markdownDescription": "File patterns (globs) to include for all cops. Files matching these patterns will be inspected. Overrides the default patterns from RuboCop. [Docs](https://docs.rubocop.org/rubocop/configuration/include_exclude.html)"
         },
         "RubyInterpreters": {
           "type": "array",
@@ -322,11 +440,11 @@
         },
         "DisabledByDefault": {
           "type": "boolean",
-          "markdownDescription": "When `true`, all cops except `Lint/Syntax` are disabled by default. Only cops explicitly enabled in configuration files will run. Cannot be used with `EnabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
+          "markdownDescription": "When `true`, all cops except `Lint/Syntax` are disabled by default. Only cops explicitly enabled in configuration files will run. Cannot be used with `EnabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#enabled)"
         },
         "EnabledByDefault": {
           "type": "boolean",
-          "markdownDescription": "When `true`, all cops are enabled by default, including those that are normally disabled. Cannot be used with `DisabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#enabled)"
+          "markdownDescription": "When `true`, all cops are enabled by default, including those that are normally disabled. Cannot be used with `DisabledByDefault`. [Docs](https://docs.rubocop.org/rubocop/configuration/cop_settings.html#enabled)"
         },
         "NewCops": {
           "enum": ["pending", "disable", "enable"],
@@ -336,7 +454,7 @@
             "Enable all pending cops."
           ],
           "default": "pending",
-          "markdownDescription": "How to treat new cops that are marked `Enabled: pending` between major releases. Can be overridden with `--enable-pending-cops` or `--disable-pending-cops`. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enabling-new-cops)"
+          "markdownDescription": "How to treat new cops that are marked `Enabled: pending` between major releases. Can be overridden with `--enable-pending-cops` or `--disable-pending-cops`. [Docs](https://docs.rubocop.org/rubocop/versioning.html#enablingdisabling-pending-cops-in-bulk)"
         },
         "UseProjectIndex": {
           "type": "boolean",
@@ -364,8 +482,18 @@
               "type": "number"
             },
             {
-              "enum": [2.7, 3.0, 3.1, 3.2, 3.3, 3.4, 4.0, 4.1],
+              "enum": [
+                2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 3.0, 3.1, 3.2, 3.3, 3.4,
+                4.0, 4.1
+              ],
               "markdownEnumDescriptions": [
+                "Ruby 2.0",
+                "Ruby 2.1",
+                "Ruby 2.2",
+                "Ruby 2.3",
+                "Ruby 2.4",
+                "Ruby 2.5",
+                "Ruby 2.6",
                 "Ruby 2.7",
                 "Ruby 3.0",
                 "Ruby 3.1",
@@ -377,7 +505,12 @@
               ]
             }
           ],
-          "markdownDescription": "The minimum Ruby version your code must support. Cops that detect version-specific features will adjust their behavior accordingly. If not specified, RuboCop will try to detect it from `.ruby-version`, `Gemfile.lock`, `*.gemspec`, or `.tool-versions`. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version)"
+          "markdownDescription": "The minimum Ruby version your code must support. Cops that detect version-specific features will adjust their behavior accordingly. If not specified, RuboCop will try to detect it from `*.gemspec`, `.ruby-version`, `mise.toml`, `.tool-versions`, or `Gemfile.lock` (in that order). The `RUBOCOP_TARGET_RUBY_VERSION` environment variable overrides all of these. [Docs](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version)"
+        },
+        "TargetRailsVersion": {
+          "type": "number",
+          "examples": [7.2, 8.0],
+          "markdownDescription": "The Rails version your code targets, used by Rails-aware cops (mainly from `rubocop-rails`). If not specified, RuboCop detects it from `Gemfile.lock`."
         },
         "ParserEngine": {
           "enum": ["default", "parser_whitequark", "parser_prism"],
@@ -1598,6 +1731,10 @@
         },
         {
           "properties": {
+            "AllowMultipleStyles": {
+              "type": "boolean",
+              "markdownDescription": "Allow `EnforcedHashRocketStyle` and `EnforcedColonStyle` to be arrays of styles, accepting a hash that matches any of them."
+            },
             "EnforcedHashRocketStyle": {
               "anyOf": [
                 {
@@ -1902,6 +2039,28 @@
         },
         {
           "properties": {
+            "SupportedTypes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "block",
+                      "case",
+                      "class",
+                      "if",
+                      "kwbegin",
+                      "module"
+                    ]
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "markdownDescription": "Node types on the right-hand side of an assignment that this cop checks."
+            },
             "EnforcedStyle": {
               "enum": ["same_line", "new_line"],
               "markdownEnumDescriptions": [
@@ -2046,7 +2205,7 @@
       ]
     },
     "Layout/MultilineOperationIndentation": {
-      "markdownDescription": "Enforces consistent indentation for multi-line operations. Improves alignment. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layout/multilineoperationindentation)",
+      "markdownDescription": "Enforces consistent indentation for multi-line operations. Improves alignment. [Docs](https://docs.rubocop.org/rubocop/cops_layout#layoutmultilineoperationindentation)",
       "allOf": [
         {
           "$ref": "#/definitions/cop"
@@ -2635,18 +2794,68 @@
         {
           "properties": {
             "DebuggerMethods": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "anyOf": [
+                {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "markdownDescription": "Debugger method calls to flag, either as a flat list or grouped by name (e.g. `Pry`, `Byebug`). Set a default group to `~` to disable it."
             },
             "DebuggerRequires": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string"
-              }
+              "anyOf": [
+                {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "markdownDescription": "Requires that start a debugging session (e.g. `debug/start`), either as a flat list or grouped by name like `DebuggerMethods`."
             }
           }
         }
@@ -3716,6 +3925,7 @@
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessRuby2Keywords": {
+      "markdownDescription": "Finds unnecessary uses of `ruby2_keywords`, such as on methods that don't take a `*args` splat with no keyword arguments. [Docs](https://docs.rubocop.org/rubocop/cops_lint#lintuselessruby2keywords)",
       "$ref": "#/definitions/cop"
     },
     "Lint/UselessSetterCall": {
@@ -4034,6 +4244,7 @@
       ]
     },
     "Migration/DepartmentName": {
+      "markdownDescription": "Checks that cop names in `rubocop:disable` (etc.) comments are given with a department name. [Docs](https://docs.rubocop.org/rubocop/cops_migration#migrationdepartmentname)",
       "$ref": "#/definitions/cop"
     },
     "Naming/AccessorMethodName": {
@@ -4159,7 +4370,8 @@
               }
             },
             "Regex": {
-              "type": "string"
+              "type": ["string", "null"],
+              "markdownDescription": "When set, any file name that does not match this regular expression is flagged."
             },
             "IgnoreExecutableScripts": {
               "type": "boolean"
@@ -4411,6 +4623,11 @@
           }
         }
       ]
+    },
+    "Naming/PredicateName": {
+      "markdownDescription": "**Renamed** to `Naming/PredicatePrefix`.",
+      "$ref": "#/definitions/cop",
+      "deprecationMessage": "Renamed to `Naming/PredicatePrefix`."
     },
     "Naming/PredicatePrefix": {
       "markdownDescription": "Enforces proper predicate prefix handling. Improves code quality. [Docs](https://docs.rubocop.org/rubocop/cops_naming#namingpredicateprefix)",
@@ -5273,8 +5490,8 @@
             },
             "AllowTrailingComment": {
               "type": "boolean",
-              "markdownDescription": "**Removed.** Use `AllowWithReason` instead.",
-              "deprecationMessage": "Removed in RuboCop 1.91. Use `AllowWithReason` instead."
+              "markdownDescription": "**Deprecated** since RuboCop 1.91. Use `AllowWithReason` instead.",
+              "deprecationMessage": "Renamed to `AllowWithReason` in RuboCop 1.91."
             }
           }
         }
@@ -6884,8 +7101,9 @@
             "Methods": {
               "type": "object",
               "additionalProperties": {
-                "type": "string"
-              }
+                "type": ["string", "number", "boolean"]
+              },
+              "markdownDescription": "Map of method names to the argument value that is redundant for them (e.g. `join: ''`, `to_i: 10`, `exit: true`)."
             }
           }
         }
@@ -7297,14 +7515,19 @@
         {
           "properties": {
             "Methods": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "type": "string"
+              "type": "array",
+              "items": {
+                "type": "object",
+                "minProperties": 1,
+                "maxProperties": 1,
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
-              }
+              },
+              "markdownDescription": "List of single-key hashes mapping a method name to the expected block parameter names, e.g. `- reduce: [acc, elem]`."
             }
           }
         }
@@ -7777,7 +8000,23 @@
     },
     "Style/YodaExpression": {
       "markdownDescription": "Detects 'yoda expressions' with literal on left side. Suggests normal order. [Docs](https://docs.rubocop.org/rubocop/cops_style#styleyodaexpression)",
-      "$ref": "#/definitions/cop"
+      "allOf": [
+        {
+          "$ref": "#/definitions/cop"
+        },
+        {
+          "properties": {
+            "SupportedOperators": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": ["*", "+", "&", "|", "^"]
+              },
+              "markdownDescription": "Binary operators checked for Yoda expressions."
+            }
+          }
+        }
+      ]
     },
     "Style/ZeroLengthPredicate": {
       "markdownDescription": "Enforces using empty? instead of length == 0. Improves code idiomaticity. [Docs](https://docs.rubocop.org/rubocop/cops_style#stylezerolengthpredicate)",
