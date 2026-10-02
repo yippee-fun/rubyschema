@@ -17,31 +17,61 @@
         },
         "options": {
           "type": "object",
-          "markdownDescription": "Application-level Mongoid configuration options that control ODM behavior, callbacks, validation, and serialization.",
+          "markdownDescription": "Application-level Mongoid configuration options that control ODM behavior, callbacks, validation, and serialization. Unknown option names raise `Mongoid::Errors::InvalidConfigOption`.",
           "properties": {
             "allow_bson5_decimal128": {
               "type": "boolean",
-              "markdownDescription": "Allow BSON 5 Decimal128 type. When `true`, uses BSON::Decimal128 instead of BigDecimal for `Decimal128` BSON type. **Default:** `false`"
+              "markdownDescription": "Allow BSON 5 Decimal128 type. When `true`, uses BSON::Decimal128 instead of BigDecimal for `Decimal128` BSON type. Only has an effect when BSON 5+ is present. **Default:** `false`"
             },
             "allow_duplicate_index_declarations": {
               "type": "boolean",
-              "markdownDescription": "Allow duplicate index declarations across models. When `false`, raises an error if the same index is defined multiple times. **Default:** `false`"
+              "markdownDescription": "Allow duplicate index declarations to be sent to the server. When `false`, indexes are (roughly) validated on the client to prevent duplicates, which can result in some indexes being silently ignored. When `true`, all declared indexes are sent and the server raises an error if duplicates are detected. **Default:** `false`"
+            },
+            "allow_reparenting_via_nested_attributes": {
+              "type": "boolean",
+              "markdownDescription": "Allow adding a record to a `has_many` or `has_and_belongs_to_many` association by passing its id in nested attributes, even when the record does not already belong to that association (for `has_many`, this moves the record to the new parent). When `false`, an id in nested attributes is only resolved within the association itself, and anything else raises an error. **Default:** `false`\n\n⚠️ **Security:** Allowing reparenting could let a malicious user move records they do not own. This option will be removed in Mongoid 10."
+            },
+            "allow_scopes_to_unset_default_scope": {
+              "type": "boolean",
+              "markdownDescription": "Allow named scopes to unset a default scope. When `false`, named scopes cannot unset a default scope (the traditional behavior). This will be the default in Mongoid 10. **Default:** `false`"
+            },
+            "allow_short_circuit_queries": {
+              "type": "boolean",
+              "markdownDescription": "Skip sending queries to the database for criteria that are guaranteed to return no results, such as those with an empty `$in` array (e.g. `Band.in(name: [])`). **Default:** `false`"
+            },
+            "allow_unsafe_query_operators": {
+              "type": "boolean",
+              "markdownDescription": "Allow unrestricted query operators when building selectors. When `false`, top-level operators must be in Mongoid's allowed list, and `$where`, `$function` and `$accumulator` are rejected at any depth, so user input cannot make MongoDB execute arbitrary JavaScript. This also blocks the string form of `where` (e.g. `where(\"this.name == 'admin'\")`). `for_js` and `js_query` are unaffected. **Default:** `false`\n\nNot tied to `load_defaults`, so it must be set explicitly to turn the guard off."
             },
             "app_name": {
               "type": ["string", "null"],
-              "markdownDescription": "Application name sent to MongoDB server for logging and profiling. Visible in MongoDB logs and `db.currentOp()`. Useful for identifying application traffic.\n\n**Example:** `\"MyRailsApp\"`"
+              "markdownDescription": "Application name sent to MongoDB server for logging and profiling. Visible in MongoDB logs and `db.currentOp()`. Cannot exceed 128 bytes. Overrides any `app_name` set in client options.\n\n**Example:** `\"MyRailsApp\"`"
             },
             "around_callbacks_for_embeds": {
               "type": "boolean",
-              "markdownDescription": "Enable `around_*` callbacks for embedded documents. When `true`, embedded documents can use `around_save`, `around_create`, etc. **Default:** `false`"
+              "markdownDescription": "Enable `around_*` callbacks for embedded documents. When `false` (the default in Mongoid 9.0), around callbacks for embedded documents are not called. Setting this to `true` restores the pre-9.0 behavior, which may lead to stack overflow errors with more than circa 1000 embedded documents. **Default:** `false`"
             },
             "async_query_executor": {
-              "enum": ["immediate", "global_thread_pool"],
-              "markdownDescription": "Strategy for executing queries asynchronously. **Default:** `\"immediate\"`",
-              "markdownEnumDescriptions": [
-                "Execute queries immediately in the same thread (synchronous)",
-                "Execute queries in a global thread pool for parallel execution"
-              ]
+              "anyOf": [
+                {
+                  "enum": ["immediate", "global_thread_pool"],
+                  "markdownEnumDescriptions": [
+                    "Execute queries immediately in the same thread (synchronous)",
+                    "Execute queries in a global thread pool for parallel execution"
+                  ]
+                },
+                { "enum": [":immediate", ":global_thread_pool"] }
+              ],
+              "markdownDescription": "Strategy for executing queries asynchronously. **Default:** `\"immediate\"`"
+            },
+            "autosave_saves_unchanged_documents": {
+              "type": "boolean",
+              "markdownDescription": "Save documents in `autosave: true` associations even if they have not been changed. When `false`, only changed autosaved documents are saved. This option will be removed in Mongoid 10. **Default:** `false`"
+            },
+            "background_indexing": {
+              "type": "boolean",
+              "markdownDescription": "In MongoDB 4.0 and earlier, set whether to create indexes in the background by default. **Default:** `false`",
+              "deprecationMessage": "Deprecated: background index builds only apply to MongoDB 4.0 and earlier."
             },
             "belongs_to_required_by_default": {
               "type": "boolean",
@@ -53,15 +83,19 @@
             },
             "duplicate_fields_exception": {
               "type": "boolean",
-              "markdownDescription": "Raise an exception when duplicate field names are defined in a model. When `true`, prevents accidental field redefinition. **Default:** `true`"
+              "markdownDescription": "Raise an exception when duplicate field names are defined in a model. When `true`, prevents accidental field redefinition. **Default:** `false`"
             },
             "global_executor_concurrency": {
               "type": ["integer", "null"],
-              "markdownDescription": "Number of threads in the global executor thread pool for async queries. Only used when `async_query_executor` is `\"global_thread_pool\"`. `null` uses Ruby's default thread pool size. **Default:** `null`"
+              "markdownDescription": "Number of threads in the global executor thread pool for async queries. Only used when `async_query_executor` is `\"global_thread_pool\"` (setting it with `immediate` raises an error). `null` uses a pool of 4 threads. **Default:** `null`"
             },
             "immutable_ids": {
               "type": "boolean",
               "markdownDescription": "Prevent modification of document `_id` field after creation. When `true`, attempting to change `_id` raises an error. **Default:** `true`"
+            },
+            "in_memory_regexp_time_limit": {
+              "type": ["number", "null"],
+              "markdownDescription": "Maximum number of seconds that evaluating a single query in memory (e.g. against an embedded association) may spend executing regular expressions. The limit is cumulative over the whole query. Set to `null` to remove the limit. **Default:** `5.0`"
             },
             "include_root_in_json": {
               "type": "boolean",
@@ -71,72 +105,120 @@
               "type": "boolean",
               "markdownDescription": "Include the `_type` field in JSON/XML serialization. When `true`, the discriminator field is included in serialized output. **Default:** `false`"
             },
+            "isolation_level": {
+              "enum": [":rails", ":thread", ":fiber"],
+              "markdownDescription": "Isolation level Mongoid uses to store its internal state. Must be given as a YAML symbol (e.g. `:fiber`). `:fiber` may be necessary with fiber-based servers such as Falcon and requires Ruby 3.2+. **Default:** `:rails`",
+              "markdownEnumDescriptions": [
+                "Use the isolation level Rails currently has configured",
+                "Use thread-local storage",
+                "Use fiber-local storage (Ruby 3.2+)"
+              ]
+            },
             "join_contexts": {
               "type": "boolean",
-              "markdownDescription": "Use join contexts for association queries (experimental). When `true`, enables more efficient association loading. **Default:** `false`"
+              "markdownDescription": "Join nested persistence contexts for atomic operations to parent contexts by default. **Default:** `false`"
             },
             "legacy_persistence_context_behavior": {
               "type": "boolean",
-              "markdownDescription": "Use legacy persistence context behavior. When `true`, models use persistence context from client configuration instead of thread-local context. **Default:** `false`"
+              "markdownDescription": "Use the pre-9.0 persistence context behavior. When `false`, a document remembers the storage options (e.g. collection set via `Model.with`) that were active when it was created or loaded, and uses them when saving or reloading. When `true`, documents do not remember those options. **Default:** `false`"
             },
             "legacy_readonly": {
               "type": "boolean",
-              "markdownDescription": "Use legacy readonly behavior. When `true`, readonly documents can still be deleted. When `false`, readonly prevents all persistence operations. **Default:** `false`"
+              "markdownDescription": "Use legacy readonly behavior. When `false`, a document becomes read-only only once `#readonly!` is called, and saving, updating or deleting it raises an error. When `true`, a document is read-only only if it was projected using `#only` or `#without`, and read-only documents cannot be deleted/destroyed but can still be saved/updated. **Default:** `false`"
             },
             "log_level": {
-              "enum": ["debug", "info", "warn", "error", "fatal", "unknown"],
-              "markdownDescription": "Logging level for Mongoid operations. Controls verbosity of database query logs. **Default:** `\"info\"`",
-              "markdownEnumDescriptions": [
-                "Most verbose, includes all query details",
-                "Normal verbosity, logs queries and operations",
-                "Only warnings and errors",
-                "Only errors and fatal messages",
-                "Only fatal errors",
-                "Catch-all for uncategorized messages"
-              ]
+              "anyOf": [
+                {
+                  "enum": [
+                    "debug",
+                    "info",
+                    "warn",
+                    "error",
+                    "fatal",
+                    "unknown"
+                  ],
+                  "markdownEnumDescriptions": [
+                    "Most verbose, includes all query details",
+                    "Normal verbosity, logs queries and operations",
+                    "Only warnings and errors",
+                    "Only errors and fatal messages",
+                    "Only fatal errors",
+                    "Catch-all for uncategorized messages"
+                  ]
+                },
+                {
+                  "enum": [
+                    ":debug",
+                    ":info",
+                    ":warn",
+                    ":error",
+                    ":fatal",
+                    ":unknown"
+                  ]
+                }
+              ],
+              "markdownDescription": "Logging level for Mongoid operations. Controls verbosity of database query logs. Only honored when clients are configured via the configuration file. **Default:** `\"info\"`"
             },
             "map_big_decimal_to_decimal128": {
               "type": "boolean",
-              "markdownDescription": "Map Ruby `BigDecimal` to BSON `Decimal128` type. When `true`, `BigDecimal` fields are stored as `Decimal128` instead of `String`. Provides better precision for financial calculations. **Default:** `false`"
+              "markdownDescription": "Map Ruby `BigDecimal` to BSON `Decimal128` type. When `true`, `BigDecimal` fields are stored as `Decimal128` instead of `String`. Provides better precision for financial calculations. **Default:** `true`"
             },
             "preload_models": {
-              "type": "boolean",
-              "markdownDescription": "Preload all model classes at application startup. When `true` (recommended for production), loads all models to avoid threading issues. **Default:** `false`"
+              "anyOf": [
+                { "type": "boolean" },
+                {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              ],
+              "markdownDescription": "Preload model classes, needed when models use inheritance. `true` loads all models; an array of model names loads only those models. **Default:** `false`"
             },
             "prevent_multiple_calls_of_embedded_callbacks": {
               "type": "boolean",
-              "markdownDescription": "Prevent embedded document callbacks from being called multiple times. When `true`, ensures callbacks like `after_save` only fire once per operation. **Default:** `false`"
+              "markdownDescription": "Prevent embedded document callbacks from being called multiple times. When `true`, callbacks for every embedded document are called only once, even if it is embedded in multiple documents in the root document's dependency graph. **Default:** `true`"
             },
             "raise_not_found_error": {
               "type": "boolean",
-              "markdownDescription": "Raise `Mongoid::Errors::DocumentNotFound` when queries expecting a result find nothing. When `true`, `.find`, `.first!`, etc. raise errors instead of returning `nil`. **Default:** `true`"
+              "markdownDescription": "Raise `Mongoid::Errors::DocumentNotFound` when `find` or `find_by` cannot find the requested document(s). When `false`, they return `nil` instead. **Default:** `true`"
             },
             "scope_overwrite_exception": {
               "type": "boolean",
               "markdownDescription": "Raise an exception when a scope name conflicts with an existing method. When `true`, prevents accidental method overrides. **Default:** `false`"
             },
+            "serializable_hash_with_legacy_only": {
+              "type": "boolean",
+              "markdownDescription": "When `true`, `serializable_hash(only: [])` includes all fields (the traditional behavior). When `false`, it suppresses all fields, which will be the default in Mongoid 10. **Default:** `true`"
+            },
             "use_utc": {
               "type": "boolean",
-              "markdownDescription": "Store and retrieve times in UTC. When `true`, all `Time` objects are converted to UTC before storage. **Default:** `false`"
+              "markdownDescription": "Return stored times in UTC. When `true`, times read from the database are returned in UTC rather than converted to the application time zone. **Default:** `false`"
             }
           },
           "additionalProperties": false
         },
         "driver_options": {
           "type": "object",
-          "markdownDescription": "MongoDB Ruby driver compatibility options for handling MongoDB server bugs and behavior changes.",
+          "markdownDescription": "MongoDB Ruby driver (`mongo` gem) feature flags, passed to `Mongo.options`. Unknown option names raise an error.",
           "properties": {
             "broken_view_aggregate": {
               "type": "boolean",
-              "markdownDescription": "Workaround for MongoDB view aggregation bug in older server versions. When `true`, uses alternative aggregation method for views. **Default:** `false`"
+              "markdownDescription": "When `false`, an aggregation done on a view is executed over the documents included in that view, instead of all documents in the collection. When `true`, the view filter is ignored. **Default:** `true`"
             },
             "broken_view_options": {
               "type": "boolean",
-              "markdownDescription": "Workaround for MongoDB view options bug in older server versions. When `true`, avoids using certain view options. **Default:** `false`"
+              "markdownDescription": "When `false`, the view options are correctly propagated to readable methods. **Default:** `true`"
+            },
+            "csfle_convert_to_ruby_types": {
+              "type": "boolean",
+              "markdownDescription": "When `true`, client-side field level encryption uses Ruby types for decryption instead of BSON types. **Default:** `false`"
+            },
+            "include_server_address_in_errors": {
+              "type": "boolean",
+              "markdownDescription": "When `true`, the `host:port` of the server that produced the error is appended to `OperationFailure` and `BulkWriteError` messages. **Default:** `false`"
             },
             "validate_update_replace": {
               "type": "boolean",
-              "markdownDescription": "Validate update/replace operations before sending to server. When `true`, checks for invalid operators and field names. **Default:** `false`"
+              "markdownDescription": "When `true`, the update and replace methods validate their parameters and raise an error if they are invalid. **Default:** `false`"
             }
           },
           "additionalProperties": false
@@ -148,11 +230,11 @@
       "properties": {
         "uri": {
           "type": "string",
-          "markdownDescription": "Supplies your connection URI, including the database name."
+          "markdownDescription": "Supplies your connection URI, including the database name. Cannot be combined with `database` or `hosts`."
         },
         "database": {
           "type": "string",
-          "markdownDescription": "Defines the name of the default database. (required)"
+          "markdownDescription": "Defines the name of the default database. Required unless `uri` is specified."
         },
         "hosts": {
           "type": "array",
@@ -167,46 +249,92 @@
       },
       "anyOf": [
         {
-          "required": ["uri"]
+          "required": ["uri"],
+          "not": {
+            "anyOf": [{ "required": ["database"] }, { "required": ["hosts"] }]
+          }
         },
         {
-          "required": ["database", "hosts"]
+          "required": ["database", "hosts"],
+          "not": { "required": ["uri"] }
         }
       ],
       "additionalProperties": false
     },
-    "clientOptions": {
+    "writeConcern": {
       "type": "object",
       "properties": {
+        "w": {
+          "anyOf": [{ "type": "integer", "minimum": 0 }, { "type": "string" }],
+          "examples": [1, "majority"],
+          "markdownDescription": "Number of replica set members that must acknowledge writes, `\"majority\"`, or a custom write concern tag name. `0` = no acknowledgment, `1` = primary only, `2+` = primary plus secondaries. **Default:** `1`"
+        },
+        "j": {
+          "type": "boolean",
+          "markdownDescription": "Request acknowledgment that the write has been written to the on-disk journal."
+        },
+        "fsync": {
+          "type": "boolean",
+          "markdownDescription": "Request acknowledgment that the write has been flushed to disk."
+        },
+        "wtimeout": {
+          "type": "integer",
+          "minimum": 0,
+          "markdownDescription": "Time limit in milliseconds for the write concern. Deprecated by the driver in favor of `timeout_ms`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "clientOptions": {
+      "type": "object",
+      "markdownDescription": "Options passed to the MongoDB Ruby driver's `Mongo::Client`. Unsupported options are ignored with a warning.\n\n[Ruby Driver Client Options](https://www.mongodb.com/docs/ruby-driver/current/connect/connection-options/)",
+      "properties": {
+        "app_name": {
+          "type": "string",
+          "markdownDescription": "Application name printed to the server logs upon establishing a connection. Overridden by the top-level Mongoid `app_name` option when that is set."
+        },
         "write": {
-          "type": "object",
-          "markdownDescription": "Write concern options for this client. Controls acknowledgment behavior for write operations.\n\n[MongoDB Write Concern Documentation](https://www.mongodb.com/docs/manual/reference/write-concern/)",
-          "properties": {
-            "w": {
-              "type": "integer",
-              "markdownDescription": "Number of replica set members that must acknowledge writes. `0` = no acknowledgment, `1` = primary only, `2+` = primary plus N secondaries, `-1` = majority. **Default:** `1`"
-            }
-          },
-          "additionalProperties": false
+          "allOf": [{ "$ref": "#/definitions/writeConcern" }],
+          "markdownDescription": "Write concern options for this client. Equivalent to `write_concern`.\n\n[MongoDB Write Concern Documentation](https://www.mongodb.com/docs/manual/reference/write-concern/)",
+          "deprecationMessage": "Deprecated by the driver. Use `write_concern` instead."
+        },
+        "write_concern": {
+          "allOf": [{ "$ref": "#/definitions/writeConcern" }],
+          "markdownDescription": "Write concern options for this client. Controls acknowledgment behavior for write operations.\n\n[MongoDB Write Concern Documentation](https://www.mongodb.com/docs/manual/reference/write-concern/)"
         },
         "read": {
           "type": "object",
           "markdownDescription": "Read preference options for this client. Controls which replica set members are used for read operations.\n\n[MongoDB Read Preference Documentation](https://www.mongodb.com/docs/manual/core/read-preference/)",
           "properties": {
             "mode": {
-              "enum": [
-                "secondary_preferred",
-                "primary",
-                "primary_preferred",
-                "nearest"
+              "anyOf": [
+                {
+                  "enum": [
+                    "primary",
+                    "primary_preferred",
+                    "secondary",
+                    "secondary_preferred",
+                    "nearest"
+                  ],
+                  "markdownEnumDescriptions": [
+                    "All reads from primary only (strongly consistent)",
+                    "Prefer primary, fall back to secondary if primary unavailable",
+                    "All reads from secondaries only",
+                    "Prefer secondaries, fall back to primary if no secondaries available",
+                    "Read from member with lowest network latency"
+                  ]
+                },
+                {
+                  "enum": [
+                    ":primary",
+                    ":primary_preferred",
+                    ":secondary",
+                    ":secondary_preferred",
+                    ":nearest"
+                  ]
+                }
               ],
-              "markdownDescription": "Read preference mode. Determines which replica set members can serve read operations. **Default:** `\"primary\"`",
-              "markdownEnumDescriptions": [
-                "Prefer secondaries, fall back to primary if no secondaries available",
-                "All reads from primary only (strongly consistent)",
-                "Prefer primary, fall back to secondary if primary unavailable",
-                "Read from member with lowest network latency"
-              ]
+              "markdownDescription": "Read preference mode. Determines which replica set members can serve read operations. **Default:** `\"primary\"`"
             },
             "tag_sets": {
               "type": "array",
@@ -214,13 +342,56 @@
               "markdownDescription": "Array of tag sets for targeting specific replica set members. Each tag set is a document of tags that must match a replica set member.\n\n**Example:** `[{\"use\": \"reporting\"}, {\"datacenter\": \"east\"}]`",
               "items": {
                 "type": "object",
-                "properties": {
-                  "use": {
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false
+                "additionalProperties": { "type": "string" }
               }
+            },
+            "local_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "markdownDescription": "Latency window in seconds for selecting a near server for this read preference."
+            },
+            "max_staleness": {
+              "type": "integer",
+              "markdownDescription": "Maximum replication lag, in seconds, that a secondary can suffer and still be eligible for a read. `-1` means no maximum."
+            },
+            "hedge": {
+              "type": "object",
+              "markdownDescription": "Whether to enable hedged reads on the server, in the format `{ enabled: true }`.",
+              "deprecationMessage": "Hedged reads are deprecated in MongoDB Server 8.0 and will be removed in a future version.",
+              "properties": {
+                "enabled": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "read_concern": {
+          "type": "object",
+          "markdownDescription": "Read concern options for this client.\n\n[MongoDB Read Concern Documentation](https://www.mongodb.com/docs/manual/reference/read-concern/)",
+          "properties": {
+            "level": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "local",
+                    "available",
+                    "majority",
+                    "linearizable",
+                    "snapshot"
+                  ]
+                },
+                {
+                  "enum": [
+                    ":local",
+                    ":available",
+                    ":majority",
+                    ":linearizable",
+                    ":snapshot"
+                  ]
+                }
+              ],
+              "markdownDescription": "Read concern level."
             }
           },
           "additionalProperties": false
@@ -242,16 +413,16 @@
           }
         },
         "auth_mech": {
+          "markdownDescription": "Authentication mechanism to use. Must be written as a Ruby symbol (e.g. `:scram256`); a plain string raises `Mongo::Auth::InvalidMechanism`. **Default:** negotiated with the server (SCRAM-SHA-256 if available, otherwise SCRAM-SHA-1)",
           "enum": [
-            "scram",
-            "scram256",
-            "mongodb_cr",
-            "mongodb_x509",
-            "gssapi",
-            "aws",
-            "plain"
+            ":scram",
+            ":scram256",
+            ":mongodb_cr",
+            ":mongodb_x509",
+            ":gssapi",
+            ":aws",
+            ":plain"
           ],
-          "markdownDescription": "Authentication mechanism to use. **Default:** `\"scram\"` (automatically negotiated between SCRAM-SHA-1 and SCRAM-SHA-256)",
           "markdownEnumDescriptions": [
             "SCRAM-SHA-1 authentication (MongoDB 3.0+)",
             "SCRAM-SHA-256 authentication (MongoDB 4.0+, more secure)",
@@ -262,18 +433,107 @@
             "LDAP PLAIN authentication"
           ]
         },
+        "auth_mech_properties": {
+          "type": "object",
+          "markdownDescription": "Additional properties for the authentication mechanism (e.g. `service_name` for GSSAPI, `aws_session_token` for AWS)."
+        },
         "auth_source": {
           "type": "string",
-          "markdownDescription": "Database name for authentication. Specifies which database contains the user credentials. **Default:** `\"admin\"`\n\n**Example:** `\"admin\"` for administrative users"
+          "markdownDescription": "Database name for authentication. Specifies which database contains the user credentials. **Default:** the client's database, or `\"admin\"` if none (`\"$external\"` for `aws`, `gssapi` and `mongodb_x509`)\n\n**Example:** `\"admin\"` for administrative users"
+        },
+        "auto_encryption_options": {
+          "type": "object",
+          "markdownDescription": "Options for automatic client-side field level encryption (CSFLE). When `schema_map` is not given, Mongoid generates it from the encryption settings of its models.\n\n[Mongoid Encryption Documentation](https://www.mongodb.com/docs/mongoid/current/security/encryption/)",
+          "properties": {
+            "key_vault_client": {
+              "type": "string",
+              "markdownDescription": "Name of the Mongoid client (from `clients`) connected to the key vault."
+            },
+            "key_vault_namespace": {
+              "type": "string",
+              "markdownDescription": "Namespace of the key vault collection, in the format `database.collection`.",
+              "examples": ["encryption.__keyVault"]
+            },
+            "kms_providers": {
+              "type": "object",
+              "markdownDescription": "Key management service (KMS) configuration. Valid keys are `aws`, `azure`, `gcp`, `kmip` and `local`."
+            },
+            "kms_tls_options": {
+              "type": "object",
+              "markdownDescription": "TLS options to authenticate to KMS providers, usually used for KMIP servers."
+            },
+            "schema_map": {
+              "type": "object",
+              "markdownDescription": "JSON Schema for one or more collections specifying which fields should be encrypted. When set, encryption settings in Mongoid documents are ignored. Mutually exclusive with `schema_map_path`."
+            },
+            "schema_map_path": {
+              "type": "string",
+              "markdownDescription": "Path to a file containing the JSON schema of collections that store auto-encrypted documents. Mutually exclusive with `schema_map`."
+            },
+            "bypass_auto_encryption": {
+              "type": "boolean",
+              "markdownDescription": "Disable automatic encryption (automatic decryption still happens). **Default:** `false`"
+            },
+            "bypass_query_analysis": {
+              "type": "boolean",
+              "markdownDescription": "Disable automatic analysis of outgoing commands."
+            },
+            "encrypted_fields_map": {
+              "type": "object",
+              "markdownDescription": "Maps a collection namespace to a document describing encrypted fields for Queryable Encryption."
+            },
+            "extra_options": {
+              "type": "object",
+              "markdownDescription": "Options related to spawning `mongocryptd` or loading the `crypt_shared` library."
+            },
+            "crypt_shared_lib_path": {
+              "type": "string",
+              "markdownDescription": "Path used to load the `crypt_shared` library, overriding the default load paths."
+            },
+            "crypt_shared_lib_required": {
+              "type": "boolean",
+              "markdownDescription": "Raise an error if the `crypt_shared` library cannot be loaded."
+            },
+            "key_expiration_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "markdownDescription": "Lifetime of the data encryption key cache in milliseconds. `0` means the cache never expires. **Default:** `60000`"
+            }
+          }
+        },
+        "bg_error_backtrace": {
+          "anyOf": [
+            { "type": "boolean" },
+            { "type": "integer", "minimum": 1 },
+            { "type": "null" }
+          ],
+          "markdownDescription": "Experimental. `true` logs complete backtraces for errors in background threads; a positive integer logs up to that many backtrace lines; `false` or `null` logs none."
         },
         "connect": {
-          "enum": ["direct", "replica_set", "sharded"],
-          "markdownDescription": "MongoDB topology connection mode. **Default:** Auto-detected based on server response",
-          "markdownEnumDescriptions": [
-            "Direct connection to a single server (standalone or specific replica set member)",
-            "Connect to a replica set (auto-discovers all members)",
-            "Connect to a sharded cluster (mongos routers)"
-          ]
+          "anyOf": [
+            {
+              "enum": ["direct", "replica_set", "sharded", "load_balanced"],
+              "markdownEnumDescriptions": [
+                "Direct connection to a single server (standalone or specific replica set member)",
+                "Connect to a replica set (auto-discovers all members)",
+                "Connect to a sharded cluster (mongos routers)",
+                "Behave as if connected to a load balancer"
+              ]
+            },
+            {
+              "enum": [":direct", ":replica_set", ":sharded", ":load_balanced"]
+            }
+          ],
+          "markdownDescription": "Forces the cluster topology instead of auto-discovering it. Set to `:direct` when connecting to hidden members of a replica set. **Default:** Auto-detected based on server response",
+          "deprecationMessage": "Deprecated by the driver. Use `direct_connection` (or `load_balanced`) instead."
+        },
+        "direct_connection": {
+          "type": "boolean",
+          "markdownDescription": "Connect directly to the specified seed, bypassing topology discovery. Exactly one seed must be provided."
+        },
+        "load_balanced": {
+          "type": "boolean",
+          "markdownDescription": "Whether to expect to connect to a load balancer."
         },
         "heartbeat_frequency": {
           "type": "number",
@@ -293,23 +553,45 @@
           "default": 30,
           "markdownDescription": "Maximum time in seconds to wait for a suitable server to become available. Raises an error if timeout expires. **Default:** `30`"
         },
+        "server_monitoring_mode": {
+          "enum": [":stream", ":poll", ":auto"],
+          "default": ":auto",
+          "markdownDescription": "How server monitors check server status. Must be given as a YAML symbol. **Default:** `:auto`",
+          "markdownEnumDescriptions": [
+            "Always use streaming when the server supports it",
+            "Never use streaming",
+            "Use polling on FaaS platforms, streaming otherwise"
+          ]
+        },
         "max_pool_size": {
           "type": "integer",
           "minimum": 0,
-          "default": 5,
-          "markdownDescription": "Maximum number of connections in the connection pool per server. Increase for high-concurrency applications. **Default:** `5`"
+          "default": 20,
+          "markdownDescription": "Maximum number of connections in the connection pool per server. `0` creates an unlimited pool. Increase for high-concurrency applications. **Default:** `20`"
         },
         "min_pool_size": {
           "type": "integer",
           "minimum": 0,
-          "default": 1,
-          "markdownDescription": "Minimum number of connections to maintain in the pool per server. Connections are created up to this number even when idle. **Default:** `1`"
+          "default": 0,
+          "markdownDescription": "Minimum number of connections to maintain in the pool per server. Connections are created up to this number even when idle. Must not exceed `max_pool_size`. **Default:** `0`"
+        },
+        "max_connecting": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 2,
+          "markdownDescription": "Maximum number of connections that can be establishing simultaneously per pool. Increase if many threads share a client and time out waiting for connections. **Default:** `2`"
+        },
+        "max_idle_time": {
+          "type": "number",
+          "minimum": 0,
+          "markdownDescription": "Maximum number of seconds a connection can remain idle in the pool before being closed. **Default:** no limit"
         },
         "wait_queue_timeout": {
           "type": "number",
           "minimum": 0,
-          "default": 5,
-          "markdownDescription": "Maximum time in seconds to wait for a connection to become available from the pool. Raises an error if timeout expires. **Default:** `5`"
+          "default": 10,
+          "markdownDescription": "Maximum time in seconds to wait for a connection to become available from the pool. Raises an error if timeout expires. **Default:** `10`",
+          "deprecationMessage": "Deprecated by the driver. Use `timeout_ms` instead."
         },
         "connect_timeout": {
           "type": "number",
@@ -317,22 +599,146 @@
           "default": 10,
           "markdownDescription": "Maximum time in seconds to establish a new connection to MongoDB. Raises an error if connection cannot be established. **Default:** `10`"
         },
+        "socket_timeout": {
+          "type": "number",
+          "minimum": 0,
+          "markdownDescription": "Time in seconds to wait for a response for each operation sent to the server. This is a client-side timeout; the server may continue executing an operation after the client aborts it. **Default:** no timeout",
+          "deprecationMessage": "Deprecated by the driver. Use `timeout_ms` instead."
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "markdownDescription": "Operation timeout in milliseconds. `0` means infinite. **Default:** unset (feature disabled)"
+        },
         "replica_set": {
           "type": "string",
-          "markdownDescription": "Name of the replica set to connect to. Required when connecting to a replica set. Must match the replica set name configured in MongoDB.\n\n**Example:** `\"myReplicaSet\"`"
+          "markdownDescription": "Name of the replica set to connect to. Servers provided as seeds that do not belong to this replica set are ignored.\n\n**Example:** `\"myReplicaSet\"`"
+        },
+        "retry_reads": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable modern retryable reads. When `false`, legacy retryable reads are used instead. **Default:** `true`"
+        },
+        "retry_writes": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Retry writes once when connected to a replica set or sharded cluster. **Default:** `true`"
+        },
+        "max_read_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "markdownDescription": "Maximum number of read retries when legacy read retries are in use.",
+          "deprecationMessage": "Deprecated by the driver: only affects the legacy retry implementation."
+        },
+        "max_write_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "markdownDescription": "Maximum number of write retries when legacy write retries are in use.",
+          "deprecationMessage": "Deprecated by the driver: only affects the legacy retry implementation."
+        },
+        "read_retry_interval": {
+          "type": "number",
+          "minimum": 0,
+          "markdownDescription": "Interval in seconds in which reads on a mongos are retried.",
+          "deprecationMessage": "Deprecated by the driver: only affects the legacy retry implementation."
+        },
+        "max_adaptive_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 2,
+          "markdownDescription": "Maximum number of retries when the driver encounters overload errors. Works with MongoDB Atlas Server 9.0 and above. **Default:** `2`"
+        },
+        "enable_overload_retargeting": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Deprioritize a server that returns an overload error, reducing the likelihood of retrying on the same overloaded server. Works with MongoDB Atlas Server 9.0 and above. **Default:** `false`"
+        },
+        "monitoring": {
+          "type": "boolean",
+          "markdownDescription": "Set to `false` to initialize the client without global SDAM event subscribers, so it does not publish SDAM events. Command monitoring still works."
+        },
+        "scan": {
+          "type": ["boolean", "null"],
+          "markdownDescription": "Whether to scan all seeds in the client constructor. Driver 2.x scans by default; set to `false` to opt in to the 3.x behavior."
+        },
+        "server_api": {
+          "type": "object",
+          "markdownDescription": "Requested Stable API version.",
+          "properties": {
+            "version": {
+              "enum": ["1", 1],
+              "markdownDescription": "Server API version."
+            },
+            "strict": {
+              "type": "boolean",
+              "markdownDescription": "Raise an error for commands not part of the declared API version."
+            },
+            "deprecation_errors": {
+              "type": "boolean",
+              "markdownDescription": "Raise an error for deprecated commands or behavior."
+            }
+          },
+          "additionalProperties": false
+        },
+        "srv_max_hosts": {
+          "type": "integer",
+          "minimum": 0,
+          "markdownDescription": "Maximum number of mongoses the driver communicates with for sharded topologies resolved via SRV. `0` means no maximum."
+        },
+        "srv_service_name": {
+          "type": "string",
+          "markdownDescription": "Service name to use in the SRV DNS query. **Default:** `\"mongodb\"`"
+        },
+        "log_prefix": {
+          "type": "string",
+          "markdownDescription": "Custom log prefix for driver logging (experimental)."
+        },
+        "tracing": {
+          "type": "object",
+          "markdownDescription": "OpenTelemetry tracing options.",
+          "properties": {
+            "enabled": {
+              "type": ["boolean", "null"],
+              "markdownDescription": "Enable OpenTelemetry tracing. **Default:** taken from the `OTEL_RUBY_INSTRUMENTATION_MONGODB_ENABLED` environment variable"
+            },
+            "query_text_max_length": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "markdownDescription": "Maximum length of query text included in span attributes. `0` excludes query text. **Default:** taken from the `OTEL_RUBY_INSTRUMENTATION_MONGODB_QUERY_TEXT_MAX_LENGTH` environment variable"
+            }
+          }
+        },
+        "wrapping_libraries": {
+          "type": "array",
+          "markdownDescription": "Information about libraries wrapping the driver, added to the metadata sent to the server. Mongoid (and Rails) are always added automatically.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": "string" },
+              "platform": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
         },
         "compressors": {
           "type": "array",
           "uniqueItems": true,
-          "markdownDescription": "Network compression algorithms to use, in order of preference. Reduces bandwidth but increases CPU usage. Server must support the selected compressor.",
+          "markdownDescription": "Network compression algorithms to use, in order of preference. Reduces bandwidth but increases CPU usage. Server must support the selected compressor. `zstd` requires the `zstd-ruby` gem and `snappy` requires the `snappy` gem.",
           "items": {
-            "enum": ["zstd", "snappy", "zlib"]
-          },
-          "markdownEnumDescriptions": [
-            "Best compression ratio and speed (MongoDB 4.2+)",
-            "Fast compression with moderate ratio (MongoDB 3.6+)",
-            "Good compression ratio, slower (MongoDB 3.6+)"
-          ]
+            "enum": ["zstd", "snappy", "zlib"],
+            "markdownEnumDescriptions": [
+              "Best compression ratio and speed (MongoDB 4.2+)",
+              "Fast compression with moderate ratio (MongoDB 3.6+)",
+              "Good compression ratio, slower (MongoDB 3.6+)"
+            ]
+          }
+        },
+        "zlib_compression_level": {
+          "type": "integer",
+          "minimum": -1,
+          "maximum": 9,
+          "markdownDescription": "Zlib compression level to use when the `zlib` compressor is selected."
         },
         "ssl": {
           "type": "boolean",
@@ -342,10 +748,18 @@
           "type": "string",
           "markdownDescription": "Path to the client SSL/TLS certificate file (PEM format). Required for X.509 authentication and some secure deployments.\n\n**Example:** `\"/path/to/client.pem\"`"
         },
+        "ssl_cert_string": {
+          "type": "string",
+          "markdownDescription": "PEM-encoded client certificate (or certificate chain) used to identify the connection. `ssl_cert` takes precedence if both are set."
+        },
         "ssl_key": {
           "type": "string",
           "examples": ["/path/to/my.key"],
-          "markdownDescription": "Path to the client SSL/TLS private key file (PEM format). Used with `ssl_cert` when certificate and key are in separate files.\n\n**Example:** `\"/path/to/my.key\"`"
+          "markdownDescription": "Path to the client SSL/TLS private key file (PEM format). Even if the key is stored in the same file as the certificate, both need to be specified.\n\n**Example:** `\"/path/to/my.key\"`"
+        },
+        "ssl_key_string": {
+          "type": "string",
+          "markdownDescription": "PEM-encoded private key used to identify the connection. `ssl_key` takes precedence if both are set."
         },
         "ssl_key_pass_phrase": {
           "type": "string",
@@ -354,17 +768,33 @@
         "ssl_verify": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Verify the server's SSL/TLS certificate. When `true`, validates certificate against CA certificates. Disable only for development/testing. **Default:** `true`\n\n⚠️ **Security:** Never disable in production."
+          "markdownDescription": "Verify the server's SSL/TLS certificate and hostname. Overridden by `ssl_verify_certificate` and `ssl_verify_hostname` when those are set. Disable only for development/testing. **Default:** `true`\n\n⚠️ **Security:** Never disable in production."
+        },
+        "ssl_verify_certificate": {
+          "type": "boolean",
+          "markdownDescription": "Whether to perform peer certificate validation. Overrides `ssl_verify` for certificate validation."
+        },
+        "ssl_verify_hostname": {
+          "type": "boolean",
+          "markdownDescription": "Whether to perform peer hostname validation. Overrides `ssl_verify` for hostname validation."
+        },
+        "ssl_verify_ocsp_endpoint": {
+          "type": "boolean",
+          "markdownDescription": "Whether to contact the OCSP endpoint specified in the server certificate to verify its revocation status."
         },
         "ssl_ca_cert": {
           "type": "string",
           "examples": ["/path/to/ca.cert"],
           "markdownDescription": "Path to the Certificate Authority (CA) certificate file (PEM format). Used to verify the server's certificate when `ssl_verify` is `true`.\n\n**Example:** `\"/path/to/ca.cert\"`"
         },
+        "ssl_ca_cert_string": {
+          "type": "string",
+          "markdownDescription": "PEM-encoded CA certificate used to validate the server's certificate. Only one CA certificate can be passed this way."
+        },
         "truncate_logs": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Truncate long log messages. When `true`, limits log entry length to prevent excessive logging. **Default:** `true`"
+          "markdownDescription": "Truncate logged commands at 250 characters. **Default:** `true`"
         }
       },
       "additionalProperties": false

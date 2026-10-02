@@ -42,3 +42,49 @@ breadcrumbs:
   enabled: true
   logging:
     enabled: true
+development_environments:
+  - development
+  - test
+sync: false
+skipped_plugins:
+  - passenger
+events:
+  batch_size: 500
+  timeout: 10000
+  sample_rate: 50
+  ignore:
+    - sql.active_record
+    - event_type: process_action.action_controller
+      controller: Rails::HealthController
+sql:
+  max_length: 500000
+insights:
+  enabled: true
+  console:
+    enabled: false
+  registry_flush_interval: 60
+puma:
+  insights:
+    enabled: true
+    collection_interval: 1
+ruby_llm:
+  insights:
+    subscriber: MyRubyLLMSubscriber
+sidekiq:
+  attempt_threshold: 3
+  insights:
+    collection_interval: 5
+    metrics: true
+resque:
+  resque_retry:
+    send_exceptions_when_retrying: false
+
+production:
+  logging:
+    level: warn
+    debug: false
+  connection:
+    ui_host: "app.honeybadger.io"
+    system_ssl_cert_chain: true
+  exceptions:
+    backtrace_limit: 500

@@ -10,17 +10,35 @@
       "type": "object",
       "markdownDescription": "Environment-specific Solid Cache configuration.",
       "properties": {
+        "database": {
+          "type": "string",
+          "markdownDescription": "Name of a single database (from `config/database.yml`) to store the cache in. Shorthand for `connects_to: { database: { writing: <name> } }`.\n\nOnly one of `database`, `databases` or `connects_to` can be set. If none are set, Solid Cache uses the `ActiveRecord::Base` connection pool.\n\n[Solid Cache Docs](https://github.com/rails/solid_cache#connection-configuration)",
+          "examples": ["cache"]
+        },
         "databases": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "type": "string"
           },
-          "markdownDescription": "Array of database shard names for multi-database cache setup. Uses Maglev consistent hashing to distribute cache entries.\n\nExample: `[cache_shard1, cache_shard2, cache_shard3]`"
+          "markdownDescription": "Array of database shard names for multi-database cache setup. Uses Maglev consistent hashing to distribute cache entries.\n\nOnly one of `database`, `databases` or `connects_to` can be set.\n\nExample: `[cache_shard1, cache_shard2, cache_shard3]`\n\n[Solid Cache Docs](https://github.com/rails/solid_cache#sharding-the-cache)"
+        },
+        "connects_to": {
+          "type": "object",
+          "markdownDescription": "Passed directly to `SolidCache::Record.connects_to`. Use this for full control over the cache database connection (e.g. `database: { writing: :cache, reading: :cache_replica }` or `shards: { ... }`).\n\nOnly one of `database`, `databases` or `connects_to` can be set. `config.solid_cache.connects_to` overrides this value.\n\n[Solid Cache Docs](https://github.com/rails/solid_cache#connection-configuration)"
+        },
+        "size_estimate_samples": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
+          "markdownDescription": "Number of samples used to estimate the cache size when `max_size` is set.\n\nDefault: `10000`",
+          "default": 10000
         },
         "encrypt": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Enable encryption for cached values using Active Record Encryption. Requires setting up [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).\n\nSolid Cache uses optimized encryptor and serializer by default."
+          "markdownDescription": "Enable encryption for cached values using Active Record Encryption. Requires setting up [Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html).\n\nSolid Cache uses optimized encryptor and serializer by default.\n\nDefault: `false`",
+          "default": false
         },
         "store_options": {
           "type": "object",
@@ -29,6 +47,7 @@
             "max_age": {
               "anyOf": [
                 { "type": "integer", "minimum": 0 },
+                { "type": "null" },
                 { "$ref": "#/definitions/erb" }
               ],
               "markdownDescription": "Maximum age of cache entries in seconds before they're eligible for deletion.\n\nDefault: `2.weeks` (1,209,600 seconds)\n\nCan be set to `nil` but not recommended unless using `max_entries` to limit cache size.",
@@ -38,10 +57,130 @@
             "max_size": {
               "anyOf": [
                 { "type": "integer", "minimum": 0 },
+                { "type": "null" },
                 { "$ref": "#/definitions/erb" }
               ],
               "markdownDescription": "Maximum total size of cache entries in bytes. When exceeded, Solid Cache will delete old entries.\n\nDefault: `nil` (no limit)\n\nSize is estimated by sampling entries, so this is approximate.",
               "examples": [1073741824, 268435456000]
+            },
+            "max_entries": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "type": "null" },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Maximum number of entries allowed in the cache. When exceeded, Solid Cache will delete old entries.\n\nDefault: `nil` (no limit)\n\nThe number of entries is estimated from the difference between the maximum and minimum entry IDs."
+            },
+            "expiry_batch_size": {
+              "anyOf": [
+                { "type": "integer", "minimum": 1 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Batch size used when deleting old records. Expiry is triggered once the write counter reaches 50% of this value.\n\nDefault: `100`\n\n[Solid Cache Docs](https://github.com/rails/solid_cache#cache-expiry)",
+              "default": 100
+            },
+            "expiry_method": {
+              "type": "string",
+              "enum": [":thread", ":job"],
+              "markdownDescription": "How cache expiry is run: on a background thread, or by enqueuing a `SolidCache::ExpiryJob`.\n\nMust be a Ruby symbol (e.g. `:job`) — plain strings are rejected.\n\nDefault: `:thread`",
+              "default": ":thread"
+            },
+            "expiry_queue": {
+              "type": "string",
+              "markdownDescription": "Queue that expiry jobs are added to when `expiry_method` is `:job`.\n\nDefault: `default`",
+              "default": "default"
+            },
+            "shards": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string" },
+              "markdownDescription": "The database shards (from the configured `connects_to`/`databases`) that this cache store uses."
+            },
+            "cluster": {
+              "type": "object",
+              "properties": {
+                "shards": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "markdownDescription": "Options for the cache database cluster, e.g. `{ shards: [database1, database2] }`.",
+              "deprecationMessage": "`cluster` is deprecated, use `shards` instead."
+            },
+            "clusters": {
+              "type": "array",
+              "maxItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "shards": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "markdownDescription": "An array of cluster option hashes. Multiple clusters are no longer supported.",
+              "deprecationMessage": "`clusters` is deprecated, use `shards` instead."
+            },
+            "active_record_instrumentation": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Whether to instrument the cache's Active Record queries.\n\nDefault: `true`",
+              "default": true
+            },
+            "clear_with": {
+              "type": "string",
+              "enum": ["truncate", "delete", ":truncate", ":delete"],
+              "markdownDescription": "How `Rails.cache.clear` deletes entries: by truncating the table or with `DELETE`.\n\nDefault: `truncate`, except in the test environment where it is `delete` (truncating breaks transactional tests in MySQL)."
+            },
+            "max_key_bytesize": {
+              "anyOf": [
+                { "type": "integer", "minimum": 1 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Maximum size of a normalized key in bytes. Lower this if your database can't create the 1024-byte key index.\n\nDefault: `1024`\n\n[Solid Cache Docs](https://github.com/rails/solid_cache#index-size-limits)",
+              "default": 1024
+            },
+            "expires_in": {
+              "anyOf": [
+                { "type": "number", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Default relative expiration time for cache entries, in seconds (standard `ActiveSupport::Cache::Store` option)."
+            },
+            "race_condition_ttl": {
+              "anyOf": [
+                { "type": "number", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Default number of seconds during which an expired value can be reused while a new value is being regenerated (standard `ActiveSupport::Cache::Store` option)."
+            },
+            "compress": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Whether to compress cache entries larger than `compress_threshold` (standard `ActiveSupport::Cache::Store` option).\n\nDefault: `true`",
+              "default": true
+            },
+            "compress_threshold": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Size in bytes above which cache entries are compressed (standard `ActiveSupport::Cache::Store` option).\n\nDefault: `1024` (`1.kilobyte`)",
+              "default": 1024
+            },
+            "serializer": {
+              "type": "string",
+              "enum": [
+                ":message_pack",
+                ":marshal_7_1",
+                ":marshal_7_0",
+                ":passthrough"
+              ],
+              "markdownDescription": "Preconfigured serializer for cached values, as a Ruby symbol (standard `ActiveSupport::Cache::Store` option). Defaults to the serializer for `config.active_support.cache_format_version`. `:message_pack` requires the `msgpack` gem."
+            },
+            "skip_nil": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Prevent caching `nil` results from `fetch` (standard `ActiveSupport::Cache::Store` option).\n\nDefault: `false`",
+              "default": false
             },
             "namespace": {
               "type": "string",
@@ -50,6 +189,13 @@
           },
           "additionalProperties": false
         }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["database", "databases"] },
+          { "required": ["database", "connects_to"] },
+          { "required": ["databases", "connects_to"] }
+        ]
       },
       "additionalProperties": false
     }

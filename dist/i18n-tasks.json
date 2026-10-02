@@ -8,128 +8,30 @@
       "type": "string",
       "pattern": "^<%=.*%>$"
     },
-    "google": {
-      "type": "object",
-      "properties": {
-        "backend": {
-          "const": "google",
-          "markdownDescription": "Use Google Translate API for automatic translation.\n\n[Get API Key](https://console.cloud.google.com/apis/credentials)"
-        },
-        "google_translate_api_key": {
-          "type": "string",
-          "markdownDescription": "Google Translate API key. Get it from [Google API Console](https://console.cloud.google.com/apis/credentials).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `GOOGLE_TRANSLATE_API_KEY`\n\n**Example:**\n```yaml\ngoogle_translate_api_key: <%= ENV['GOOGLE_TRANSLATE_API_KEY'] %>\n```"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["google_translate_api_key"]
+    "keyPatterns": {
+      "type": "array",
+      "items": { "type": "string" }
     },
-    "deepl": {
-      "type": "object",
-      "properties": {
-        "backend": {
-          "const": "deepl",
-          "markdownDescription": "Use DeepL Pro API for high-quality automatic translation.\n\n[Get API Key](https://www.deepl.com/pro)"
-        },
-        "deepl_api_key": {
-          "type": "string",
-          "markdownDescription": "DeepL Pro API authentication key. Get it from [DeepL Pro](https://www.deepl.com/pro).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `DEEPL_AUTH_KEY`\n\n**Example:**\n```yaml\ndeepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```"
-        },
-        "deepl_host": {
-          "type": "string",
-          "markdownDescription": "DeepL API host URL. Use this for DeepL Pro API servers or custom endpoints.\n\n**Env Var:** `DEEPL_HOST`\n\n**Default:** `https://api.deepl.com` (Free) or `https://api-free.deepl.com` (Pro)\n\n**Example:**\n```yaml\ndeepl_host: https://api.deepl.com\n```"
-        },
-        "deepl_version": {
-          "type": "string",
-          "markdownDescription": "DeepL API version to use.\n\n**Env Var:** `DEEPL_VERSION`\n\n**Default:** `v2`"
-        },
-        "deepl_glossary_ids": {
-          "type": "array",
-          "uniqueItems": true,
-          "markdownDescription": "List of DeepL glossary IDs to use for translations. Glossaries ensure consistent terminology across translations.\n\n**Example:**\n```yaml\ndeepl_glossary_ids:\n  - f28106eb-0e06-489e-82c6-8215d6f95089\n  - 2c6415be-1852-4f54-9e1b-d800463496b4\n```\n\n[DeepL Glossaries Documentation](https://www.deepl.com/docs-api/glossaries)",
-          "items": { "type": "string" }
-        },
-        "deepl_options": {
-          "type": "object",
-          "markdownDescription": "Additional options for DeepL API calls.",
-          "properties": {
-            "formality": {
-              "anyOf": [{ "enum": ["prefer_less"] }, { "type": "string" }],
-              "markdownDescription": "Control formality level of translations.\n\n**Options:**\n- `prefer_less` - Less formal\n- `prefer_more` - More formal\n- `default` - Default formality\n\n**Example:**\n```yaml\nformality: prefer_less\n```"
-            }
-          }
-        },
-        "deepl_locale_aliases": {
+    "keyPatternsByLocale": {
+      "anyOf": [
+        { "$ref": "#/definitions/keyPatterns" },
+        {
           "type": "object",
           "propertyNames": { "type": "string" },
-          "additionalProperties": { "type": "string" },
-          "markdownDescription": "Map internal locale codes to DeepL-supported locale codes. Useful when your app uses simplified locale codes.\n\n**Example:**\n```yaml\ndeepl_locale_aliases:\n  en: en-us  # Map 'en' to 'en-us'\n  pt: pt-br  # Map 'pt' to 'pt-br'\n```"
+          "additionalProperties": { "$ref": "#/definitions/keyPatterns" }
         }
-      },
-      "additionalProperties": false,
-      "required": ["deepl_api_key"]
-    },
-    "yandex": {
-      "type": "object",
-      "properties": {
-        "backend": {
-          "const": "yandex",
-          "markdownDescription": "Use Yandex Translate API for automatic translation.\n\n[Get API Key](https://tech.yandex.com/translate)"
-        },
-        "yandex_api_key": {
-          "type": "string",
-          "markdownDescription": "Yandex Translate API key. Get it from [Yandex](https://tech.yandex.com/translate).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `YANDEX_API_KEY`\n\n**Example:**\n```yaml\nyandex_api_key: <%= ENV['YANDEX_API_KEY'] %>\n```"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["yandex_api_key"]
-    },
-    "openai": {
-      "type": "object",
-      "properties": {
-        "backend": {
-          "const": "openai",
-          "markdownDescription": "Use OpenAI API for AI-powered translation.\n\n[Get API Key](https://platform.openai.com/api-keys)"
-        },
-        "openai_api_key": {
-          "type": "string",
-          "markdownDescription": "OpenAI API key. Get it from [OpenAI](https://platform.openai.com/api-keys).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `OPENAI_API_KEY`\n\n**Example:**\n```yaml\nopenai_api_key: <%= ENV['OPENAI_API_KEY'] %>\n```"
-        },
-        "openai_model": {
-          "type": "string",
-          "markdownDescription": "OpenAI model to use for translations.\n\n**Env Var:** `OPENAI_MODEL`\n\n**Default:** `gpt-3.5-turbo`\n\n**Example:**\n```yaml\nopenai_model: gpt-4\n```"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["openai_api_key"]
-    },
-    "watsonx": {
-      "type": "object",
-      "properties": {
-        "backend": {
-          "const": "watsonx",
-          "markdownDescription": "Use IBM watsonx AI for translation.\n\n[Get Started with watsonx](https://www.ibm.com/watsonx)"
-        },
-        "watsonx_api_key": {
-          "type": "string",
-          "markdownDescription": "IBM watsonx API key. Get it from [IBM watsonx](https://www.ibm.com/watsonx).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `WATSONX_API_KEY`\n\n**Example:**\n```yaml\nwatsonx_api_key: <%= ENV['WATSONX_API_KEY'] %>\n```"
-        },
-        "watsonx_project_id": {
-          "type": "string",
-          "markdownDescription": "IBM watsonx project ID. Required for watsonx API authentication.\n\n**Env Var:** `WATSONX_PROJECT_ID`\n\n**Example:**\n```yaml\nwatsonx_project_id: <%= ENV['WATSONX_PROJECT_ID'] %>\n```"
-        },
-        "watsonx_model": {
-          "type": "string",
-          "markdownDescription": "IBM watsonx model to use for translations.\n\n**Env Var:** `WATSONX_MODEL`\n\n**Example:**\n```yaml\nwatsonx_model: ibm/granite-13b-instruct-v2\n```"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["watsonx_api_key", "watsonx_project_id"]
+      ]
     }
   },
   "properties": {
     "base_locale": {
       "type": "string",
       "markdownDescription": "The base (default) locale for your application. This is the locale from which translations will be derived.\n\n**Default:** `en`\n\n**Example:**\n```yaml\nbase_locale: en\n```"
+    },
+    "internal_locale": {
+      "enum": ["en", "ru"],
+      "default": "en",
+      "markdownDescription": "Locale used for i18n-tasks' own report and command output.\n\n**Default:** `en`"
     },
     "locales": {
       "type": "array",
@@ -145,7 +47,32 @@
       "properties": {
         "adapter": {
           "type": "string",
-          "markdownDescription": "Data adapter for reading/writing translation files. The default adapter supports YAML and JSON files.\n\n**Default:** `file_system`\n\nFor custom storage (e.g., database, MongoDB), implement a custom adapter."
+          "default": "I18n::Tasks::Data::FileSystem",
+          "markdownDescription": "Data adapter class for reading/writing translation files. The default adapter supports YAML and JSON files. `file_system` is accepted as an alias for the default.\n\n**Default:** `I18n::Tasks::Data::FileSystem`\n\nFor custom storage (e.g., database, MongoDB), implement a custom adapter."
+        },
+        "router": {
+          "anyOf": [
+            {
+              "enum": [
+                "conservative_router",
+                "pattern_router",
+                "isolating_router"
+              ]
+            },
+            { "type": "string" }
+          ],
+          "default": "conservative_router",
+          "markdownDescription": "Router that decides which file each key is written to. Can also be the name of a custom router class.\n\n**Default:** `conservative_router`\n\n**Options:**\n- `conservative_router` - Keeps keys where they are found, or infers the path from the base locale; new keys fall back to `pattern_router` behaviour\n- `pattern_router` - Routes keys using the `write` rules, matched top to bottom\n- `isolating_router` - Treats each file as independent and writes to the same file with only `%{locale}` changed (`write` is ignored)\n\n**Example:**\n```yaml\nrouter: pattern_router\n```",
+          "markdownEnumDescriptions": [
+            "Keeps keys where they are found, or infers the path from the base locale (default)",
+            "Routes keys using the `write` rules, matched top to bottom",
+            "Each file is independent; writes to the matching file of the target locale"
+          ]
+        },
+        "keep_order": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Keep the existing key order when writing locale files instead of sorting keys alphabetically.\n\n**Default:** `false`"
         },
         "read": {
           "type": "array",
@@ -158,7 +85,7 @@
         "write": {
           "type": "array",
           "uniqueItems": true,
-          "markdownDescription": "File patterns for writing translations. Supports key-based routing to organize translations into multiple files.\n\n**Routers:**\n- `pattern_router` - Routes keys based on patterns (e.g., `models.*` → `models.%{locale}.yml`)\n- `conservative_router` (default) - Keeps keys where found\n- `isolating_router` - Each YAML file is independent with similar keys\n\n**Example:**\n```yaml\nwrite:\n  - ['{models,views}.*', 'config/locales/\\\\1.%{locale}.yml']\n  - 'config/locales/%{locale}.yml'\n```",
+          "markdownDescription": "Locale files to write keys to, as a list of `[key pattern, file]` routes matched top to bottom. A plain string is sugar for `['*', path]`. How these rules are applied depends on `router`.\n\n**Default:** `['config/locales/%{locale}.yml']`\n\n**Example:**\n```yaml\nwrite:\n  - ['{models,views}.*', 'config/locales/\\\\1.%{locale}.yml']\n  - 'config/locales/%{locale}.yml'\n```",
           "items": {
             "anyOf": [
               { "type": "string" },
@@ -280,6 +207,49 @@
             "type": "string"
           }
         },
+        "ast_matchers": {
+          "type": "array",
+          "uniqueItems": true,
+          "markdownDescription": "Additional AST matcher classes used by the Ruby scanner to find translations.\n\n**Built-in matchers:**\n- `I18n::Tasks::Scanners::AstMatchers::RailsModelMatcher` - `User.human_attribute_name(:email)` and `User.model_name.human`\n- `I18n::Tasks::Scanners::AstMatchers::DefaultI18nSubjectMatcher` - ActionMailer's `default_i18n_subject`\n\nTo implement your own, subclass `I18n::Tasks::Scanners::AstMatchers::BaseMatcher`.\n\n**Default:** `[]`",
+          "items": {
+            "anyOf": [
+              {
+                "enum": [
+                  "I18n::Tasks::Scanners::AstMatchers::RailsModelMatcher",
+                  "I18n::Tasks::Scanners::AstMatchers::DefaultI18nSubjectMatcher"
+                ]
+              },
+              { "type": "string" }
+            ]
+          }
+        },
+        "scanners": {
+          "type": "array",
+          "markdownDescription": "Scanners used to find key usages, as a list of `[ScannerClass, options]` pairs. Their results are merged. The other `search` options are passed down to each scanner and can be overridden per scanner (except `strict`).\n\n**Default:**\n```yaml\nscanners:\n  - ['::I18n::Tasks::Scanners::RubyScanner', { only: ['*.rb'] }]\n  - ['::I18n::Tasks::Scanners::ErbAstScanner', { only: ['*.erb'] }]\n  - ['::I18n::Tasks::Scanners::PatternWithScopeScanner', { exclude: ['*.erb', '*.rb'] }]\n```",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": [{ "type": "string" }, { "type": "object" }]
+          }
+        },
+        "exclude_method_name_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "deprecationMessage": "Renamed to `relative_exclude_method_name_paths`.",
+          "markdownDescription": "**Deprecated:** use `relative_exclude_method_name_paths` instead."
+        },
+        "include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "deprecationMessage": "Renamed to `only`.",
+          "markdownDescription": "**Deprecated:** use `only` instead."
+        },
+        "scanner": {
+          "type": "string",
+          "deprecationMessage": "Replaced by `scanners`, an array of `[ScannerClass, options]`.",
+          "markdownDescription": "**Deprecated:** use `scanners` instead."
+        },
         "strict": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "markdownDescription": "Enable strict mode for dynamic key inference. When `false`, dynamic keys like `t(\"cats.#{cat}.name\")` are partially recognized (wildcards for interpolated parts).\n\n**Default:** `true` (strict)\n\n- `true` - Only static keys are recognized\n- `false` - Dynamic keys are inferred with wildcards\n\n**Example:**\n```yaml\nstrict: false\n```"
@@ -294,15 +264,149 @@
       },
       "additionalProperties": false
     },
+    "ignore": {
+      "$ref": "#/definitions/keyPatterns",
+      "markdownDescription": "Keys to ignore completely (in every report). Supports i18n-tasks key patterns (`*`, `:`, `{a,b}`).\n\n**Example:**\n```yaml\nignore:\n  - kaminari.*\n```"
+    },
+    "ignore_missing": {
+      "$ref": "#/definitions/keyPatternsByLocale",
+      "markdownDescription": "Keys that should not be reported as missing. Supports i18n-tasks key patterns. Can also be a hash of locale list → keys, with `all` applying to every locale.\n\n**Example:**\n```yaml\nignore_missing:\n  - 'errors.messages.{accepted,blank,invalid,too_short,too_long}'\n  - '{devise,simple_form}.*'\n```"
+    },
+    "ignore_unused": {
+      "$ref": "#/definitions/keyPatternsByLocale",
+      "markdownDescription": "Keys that should be considered used. Supports i18n-tasks key patterns. Can also be a hash of locale list → keys, with `all` applying to every locale.\n\n**Example:**\n```yaml\nignore_unused:\n  - 'activerecord.attributes.*'\n  - '{devise,kaminari,will_paginate}.*'\n```"
+    },
+    "ignore_eq_base": {
+      "$ref": "#/definitions/keyPatternsByLocale",
+      "markdownDescription": "Keys to exclude from the `i18n-tasks eq-base` report (values equal to the base locale). Either a list of key patterns, or a hash of comma-separated locale list → key patterns, with `all` applying to every locale.\n\n**Example:**\n```yaml\nignore_eq_base:\n  all:\n    - common.ok\n  fr,es:\n    - common.brand\n```"
+    },
+    "ignore_inconsistent_interpolations": {
+      "$ref": "#/definitions/keyPatternsByLocale",
+      "markdownDescription": "Keys to exclude from the `i18n-tasks check-consistent-interpolations` report. Supports i18n-tasks key patterns.\n\n**Example:**\n```yaml\nignore_inconsistent_interpolations:\n  - 'activerecord.attributes.*'\n```"
+    },
+    "relative_roots": {
+      "type": "array",
+      "items": { "type": "string" },
+      "deprecationMessage": "Move `relative_roots` under `search`.",
+      "markdownDescription": "**Deprecated:** use `search.relative_roots` instead."
+    },
     "translation": {
-      "markdownDescription": "Translation backend configuration for automatic translation of missing keys. Use `i18n-tasks translate-missing` to translate.\n\n**Available backends:**\n- `google` - Google Translate API\n- `deepl` - DeepL Pro API (recommended for quality)\n- `yandex` - Yandex Translate API\n- `openai` - OpenAI API\n- `watsonx` - IBM watsonx AI\n\n**Example:**\n```yaml\ntranslation:\n  backend: deepl\n  deepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```",
-      "oneOf": [
-        { "$ref": "#/definitions/google" },
-        { "$ref": "#/definitions/deepl" },
-        { "$ref": "#/definitions/yandex" },
-        { "$ref": "#/definitions/openai" },
-        { "$ref": "#/definitions/watsonx" }
-      ]
+      "type": "object",
+      "markdownDescription": "Translation backend configuration for automatic translation of missing keys. Use `i18n-tasks translate-missing` to translate. Settings for several backends can live side by side; `backend` (or the `--backend` CLI option) selects which one is used. API keys can also be supplied via environment variables.\n\n**Available backends:**\n- `google` - Google Translate API (default)\n- `deepl` - DeepL Pro API (recommended for quality)\n- `yandex` - Yandex Translate API\n- `openai` - OpenAI API\n- `watsonx` - IBM watsonx AI\n\n**Example:**\n```yaml\ntranslation:\n  backend: deepl\n  deepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```",
+      "properties": {
+        "backend": {
+          "enum": ["google", "deepl", "yandex", "openai", "watsonx"],
+          "default": "google",
+          "markdownDescription": "Translation backend used by `i18n-tasks translate-missing`. Can be overridden with the `--backend` CLI option.\n\n**Default:** `google`",
+          "markdownEnumDescriptions": [
+            "Use Google Translate API for automatic translation.\n\n[Get API Key](https://console.cloud.google.com/apis/credentials)",
+            "Use DeepL Pro API for high-quality automatic translation.\n\n[Get API Key](https://www.deepl.com/pro)",
+            "Use Yandex Translate API for automatic translation.\n\n[Get API Key](https://tech.yandex.com/translate)",
+            "Use OpenAI API for AI-powered translation.\n\n[Get API Key](https://platform.openai.com/api-keys)",
+            "Use IBM watsonx AI for translation.\n\n[Get Started with watsonx](https://www.ibm.com/watsonx)"
+          ]
+        },
+        "google_translate_api_key": {
+          "type": "string",
+          "markdownDescription": "Google Translate API key. Get it from [Google API Console](https://console.cloud.google.com/apis/credentials).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `GOOGLE_TRANSLATE_API_KEY`\n\n**Example:**\n```yaml\ngoogle_translate_api_key: <%= ENV['GOOGLE_TRANSLATE_API_KEY'] %>\n```"
+        },
+        "api_key": {
+          "type": "string",
+          "deprecationMessage": "Renamed to `google_translate_api_key`.",
+          "markdownDescription": "**Deprecated:** use `google_translate_api_key` instead."
+        },
+        "deepl_api_key": {
+          "type": "string",
+          "markdownDescription": "DeepL Pro API authentication key. Get it from [DeepL Pro](https://www.deepl.com/pro).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `DEEPL_AUTH_KEY`\n\n**Example:**\n```yaml\ndeepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```"
+        },
+        "deepl_host": {
+          "type": "string",
+          "markdownDescription": "DeepL API host URL. Use this for DeepL Pro API servers or custom endpoints.\n\n**Env Var:** `DEEPL_HOST`\n\n**Default:** chosen by the DeepL client: `https://api-free.deepl.com` for Free API keys (ending in `:fx`), otherwise `https://api.deepl.com` (Pro)\n\n**Example:**\n```yaml\ndeepl_host: https://api.deepl.com\n```"
+        },
+        "deepl_version": {
+          "type": "string",
+          "markdownDescription": "DeepL API version to use.\n\n**Env Var:** `DEEPL_VERSION`\n\n**Default:** `v2`"
+        },
+        "deepl_glossary_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" },
+          "markdownDescription": "List of DeepL glossary IDs to use for translations. Glossaries ensure consistent terminology across translations.\n\n**Example:**\n```yaml\ndeepl_glossary_ids:\n  - f28106eb-0e06-489e-82c6-8215d6f95089\n  - 2c6415be-1852-4f54-9e1b-d800463496b4\n```\n\n[DeepL Glossaries Documentation](https://www.deepl.com/docs-api/glossaries)"
+        },
+        "deepl_options": {
+          "type": "object",
+          "markdownDescription": "Additional options for DeepL API calls.",
+          "properties": {
+            "formality": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "default",
+                    "more",
+                    "less",
+                    "prefer_more",
+                    "prefer_less"
+                  ]
+                },
+                { "type": "string" }
+              ],
+              "markdownDescription": "Control formality level of translations.\n\n**Options:**\n- `less` - Less formal (fails for languages without formality support)\n- `more` - More formal (fails for languages without formality support)\n- `prefer_less` - Less formal, if available\n- `prefer_more` - More formal, if available\n- `default` - Default formality\n\n**Example:**\n```yaml\nformality: prefer_less\n```"
+            }
+          }
+        },
+        "deepl_locale_aliases": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "type": "string" },
+          "markdownDescription": "Map internal locale codes to DeepL-supported locale codes. Useful when your app uses simplified locale codes.\n\n**Example:**\n```yaml\ndeepl_locale_aliases:\n  en: en-us  # Map 'en' to 'en-us'\n  pt: pt-br  # Map 'pt' to 'pt-br'\n```"
+        },
+        "yandex_api_key": {
+          "type": "string",
+          "markdownDescription": "Yandex Translate API key. Get it from [Yandex](https://tech.yandex.com/translate).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `YANDEX_API_KEY`\n\n**Example:**\n```yaml\nyandex_api_key: <%= ENV['YANDEX_API_KEY'] %>\n```"
+        },
+        "openai_api_key": {
+          "type": "string",
+          "markdownDescription": "OpenAI API key. Get it from [OpenAI](https://platform.openai.com/api-keys).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `OPENAI_API_KEY`\n\n**Example:**\n```yaml\nopenai_api_key: <%= ENV['OPENAI_API_KEY'] %>\n```"
+        },
+        "openai_model": {
+          "type": "string",
+          "markdownDescription": "OpenAI model to use for translations.\n\n**Env Var:** `OPENAI_MODEL`\n\n**Default:** `gpt-4o-mini`\n\n**Example:**\n```yaml\nopenai_model: gpt-4o\n```"
+        },
+        "openai_temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.0,
+          "markdownDescription": "Sampling temperature for OpenAI translations (`0.0`\u2013`2.0`). Lower values are more deterministic.\n\n**Default:** `0.0`"
+        },
+        "openai_system_prompt": {
+          "type": "string",
+          "markdownDescription": "Custom system prompt for OpenAI translations. May contain `%{from}` and `%{to}`, which are replaced with the source and target language names (using `Kernel.format`, so escape a literal `%` as `%%`).\n\n**Default:** a built-in professional translator prompt\n\n**Example:**\n```yaml\nopenai_system_prompt: >-\n  You are a professional translator that translates content from the %{from} locale\n  to the %{to} locale in an i18n locale array.\n```"
+        },
+        "openai_locale_prompts": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "type": "string" },
+          "markdownDescription": "Per-target-locale system prompts for OpenAI translations. These override `openai_system_prompt` for the given target locales and may also use `%{from}` and `%{to}`.\n\n**Example:**\n```yaml\nopenai_locale_prompts:\n  es: >-\n    You are a professional translator specializing in Latin American Spanish.\n    Translate content from the %{from} locale to the %{to} locale.\n```"
+        },
+        "watsonx_api_key": {
+          "type": "string",
+          "markdownDescription": "IBM watsonx API key. Get it from [IBM watsonx](https://www.ibm.com/watsonx).\n\n⚠️ **Security:** Use environment variables, never commit API keys.\n\n**Env Var:** `WATSONX_API_KEY`\n\n**Example:**\n```yaml\nwatsonx_api_key: <%= ENV['WATSONX_API_KEY'] %>\n```"
+        },
+        "watsonx_project_id": {
+          "type": "string",
+          "markdownDescription": "IBM watsonx project ID. Required for watsonx API authentication.\n\n**Env Var:** `WATSONX_PROJECT_ID`\n\n**Example:**\n```yaml\nwatsonx_project_id: <%= ENV['WATSONX_PROJECT_ID'] %>\n```"
+        },
+        "watsonx_model": {
+          "type": "string",
+          "markdownDescription": "IBM watsonx model to use for translations.\n\n**Env Var:** `WATSONX_MODEL`\n\n**Default:** `meta-llama/llama-3-2-90b-vision-instruct`\n\n**Example:**\n```yaml\nwatsonx_model: ibm/granite-13b-instruct-v2\n```"
+        },
+        "watsonx_system_prompt": {
+          "type": "string",
+          "markdownDescription": "Custom system prompt for watsonx translations. May contain `%{from}` and `%{to}`, which are replaced with the source and target locale codes.\n\n**Default:** a built-in professional translator prompt"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

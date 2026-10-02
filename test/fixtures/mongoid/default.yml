@@ -43,9 +43,18 @@ production:
           mode: secondary_preferred
           tag_sets:
             - use: reporting
-        write:
-          w: 1
+        write_concern:
+          w: majority
+          j: true
+        read_concern:
+          level: majority
         max_pool_size: 20
+        max_connecting: 4
+        retry_writes: true
+        timeout_ms: 5000
+        server_api:
+          version: "1"
+          strict: false
         min_pool_size: 5
         connect_timeout: 15
         wait_queue_timeout: 10
@@ -63,12 +72,15 @@ production:
         - analytics2.example.com:27017
       options:
         read:
-          mode: nearest
-        auth_mech: scram256
+          mode: ":secondary"
+          max_staleness: 120
+          tag_sets:
+            - datacenter: east
+        auth_mech: ":scram256"
         auth_source: admin
         user: analytics_user
         password: secret
-        connect: replica_set
+        server_monitoring_mode: ":poll"
         replica_set: analytics-rs0
   options:
     app_name: my_app
@@ -80,5 +92,15 @@ production:
     duplicate_fields_exception: true
     async_query_executor: global_thread_pool
     global_executor_concurrency: 4
+    isolation_level: ":fiber"
+    map_big_decimal_to_decimal128: true
+    allow_unsafe_query_operators: false
+    allow_short_circuit_queries: true
+    in_memory_regexp_time_limit: 2.5
+    preload_models:
+      - User
+      - Post
   driver_options:
     validate_update_replace: true
+    broken_view_aggregate: false
+    include_server_address_in_errors: true

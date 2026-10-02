@@ -20,6 +20,7 @@
           ]
         }
       ],
+      "default": false,
       "markdownDescription": "Enable dependency boundary enforcement for this package. When enabled, references to constants in undeclared dependencies cause violations. **Default:** `false`\n\n- `true`: Enforce dependencies, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce dependency boundaries\n\n**Example:**\n```yaml\nenforce_dependencies: true\ndependencies:\n  - components/platform\n```",
       "markdownEnumDescriptions": [
         "Strict mode - prevents new violations from being added to package_todo.yml. New violations will cause errors instead of being recorded."
@@ -32,18 +33,6 @@
       "items": {
         "type": "string"
       }
-    },
-    "require": {
-      "type": "array",
-      "uniqueItems": true,
-      "markdownDescription": "List of Ruby files or gems to load when Packwerk processes this package. Use for custom checkers, validators, or formatters specific to this package.\n\n**Example:**\n```yaml\nrequire:\n  - ./path/to/custom_checker.rb\n  - my_gem\n```",
-      "items": {
-        "type": "string"
-      }
-    },
-    "offenses_formatter": {
-      "type": "string",
-      "markdownDescription": "Identifier for a custom offenses formatter to use when checking this package. The formatter must implement `Packwerk::OffensesFormatter` and be loaded via the `require` directive.\n\n**Example:**\n```yaml\noffenses_formatter: my_custom_formatter\n```"
     }
   },
   "additionalProperties": false

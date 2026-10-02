@@ -1,0 +1,561 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.rubyschema.org/erb_lint.json",
+  "title": "ERB Lint configuration",
+  "markdownDescription": "**ERB Lint** is a tool to help lint your ERB or HTML files using the included linters or by writing your own. Configuration lives in `.erb_lint.yml` at the root of your project.\n\n[GitHub](https://github.com/Shopify/erb_lint) | [Documentation](https://github.com/Shopify/erb_lint#configuration)",
+  "type": "object",
+  "definitions": {
+    "enabledByDefault": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "Whether this linter is enabled.\n\nThis is a **default linter**, so it is enabled unless `EnableDefaultLinters` is set to `false`.\n\n**Default:** `true`"
+    },
+    "disabledByDefault": {
+      "type": "boolean",
+      "default": false,
+      "markdownDescription": "Whether this linter is enabled.\n\nThis linter is **not** enabled by default.\n\n**Default:** `false`"
+    },
+    "exclude": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "markdownDescription": "Glob patterns for files this linter should skip. These are combined with the global `exclude` patterns.\n\nPatterns are matched against both absolute and relative paths with `File.fnmatch?`.\n\n**Example:**\n```yaml\nexclude:\n  - '**/local-lib/**/*'\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#exclude)",
+      "examples": [["**/vendor/**/*"]]
+    },
+    "rubocopOnly": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Only run the cops (or departments) listed in this array instead of all cops.\n\n**Example:**\n```yaml\nonly:\n  - Style/StringLiterals\n  - Layout\n```",
+      "examples": [["Style/StringLiterals", "Layout/SpaceInsideParens"]]
+    },
+    "rubocopConfig": {
+      "type": "object",
+      "markdownDescription": "A RuboCop configuration hash, in the same format as `.rubocop.yml`. Use `inherit_from` to share your application's RuboCop configuration.\n\nIgnored when `config_file_path` is set.\n\n**Example:**\n```yaml\nrubocop_config:\n  inherit_from:\n    - .rubocop.yml\n  Layout/InitialIndentation:\n    Enabled: false\n  Layout/TrailingEmptyLines:\n    Enabled: false\n```\n\n[RuboCop Configuration](https://docs.rubocop.org/rubocop/configuration.html)"
+    },
+    "rubocopConfigFilePath": {
+      "type": "string",
+      "markdownDescription": "Path to a RuboCop configuration file. When set, `rubocop_config` is ignored.",
+      "examples": [".erb_lint_rubocop.yml"]
+    },
+    "customLinter": {
+      "type": "object",
+      "markdownDescription": "Configuration for a custom linter loaded from the `.erb_linters` directory. Custom linters are disabled by default.\n\n[Documentation](https://github.com/Shopify/erb_lint#custom-linters)",
+      "properties": {
+        "enabled": {
+          "$ref": "#/definitions/disabledByDefault"
+        },
+        "exclude": {
+          "$ref": "#/definitions/exclude"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "EnableDefaultLinters": {
+      "type": "boolean",
+      "default": true,
+      "markdownDescription": "Enable or disable all of the default linters. Individual linters can still be turned on or off with their own `enabled` option.\n\n**Default:** `true`\n\n[Documentation](https://github.com/Shopify/erb_lint#enable-or-disable-default-linters)"
+    },
+    "glob": {
+      "type": "string",
+      "default": "**/*.html{+*,}.erb",
+      "markdownDescription": "Glob pattern for the files to lint when running with `--lint-all`.\n\n**Default:** `**/*.html{+*,}.erb`\n\n[Documentation](https://github.com/Shopify/erb_lint#usage)",
+      "examples": ["**/*.{html,text,js}{+*,}.erb"]
+    },
+    "exclude": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "markdownDescription": "Glob patterns for files that every linter should skip.\n\nPrefix patterns with `**/`, since they are matched against the target files' absolute paths.\n\n**Example:**\n```yaml\nexclude:\n  - '**/vendor/**/*'\n  - '**/node_modules/**/*'\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#exclude)",
+      "examples": [["**/vendor/**/*", "**/node_modules/**/*"]]
+    },
+    "inherit_from": {
+      "markdownDescription": "One or more configuration files to inherit linter settings from. Paths are relative to this file. Settings in this file take precedence.\n\n**Example:**\n```yaml\ninherit_from:\n  - .erb_lint_shared.yml\n```",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "inherit_gem": {
+      "type": "object",
+      "markdownDescription": "Inherit configuration from files inside installed gems. Each key is a gem name and each value is a path (or list of paths) relative to that gem's root. Gem configuration is applied before `inherit_from` and this file.\n\n**Example:**\n```yaml\ninherit_gem:\n  my_style_gem: config/erb_lint.yml\n```",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "linters": {
+      "type": "object",
+      "markdownDescription": "Per-linter configuration. Each key is the name of a linter, either built in or a custom linter from the `.erb_linters` directory.\n\n**Example:**\n```yaml\nlinters:\n  ErbSafety:\n    enabled: true\n    better_html_config: .better-html.yml\n  Rubocop:\n    enabled: true\n    rubocop_config:\n      inherit_from:\n        - .rubocop.yml\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#linters)",
+      "properties": {
+        "AllowedScriptType": {
+          "type": "object",
+          "markdownDescription": "Prevents the addition of `<script>` tags that have `type` attributes that are not in an allow-list of values.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#allowedscripttype)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "allowed_types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": ["text/javascript"],
+              "markdownDescription": "The `type` attribute values allowed on `<script>` tags.\n\n**Default:** `[\"text/javascript\"]`",
+              "examples": [["application/json", "text/javascript", "text/html"]]
+            },
+            "allow_blank": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Whether the `type` attribute may be omitted from `<script>` tags. When `false`, `<script>` tags without a type are autocorrected to `<script type=\"text/javascript\">`.\n\n**Default:** `true`"
+            },
+            "disallow_inline_scripts": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "Disallow inline `<script>` tags anywhere in ERB templates.\n\n**Default:** `false`"
+            }
+          },
+          "additionalProperties": false
+        },
+        "ClosingErbTagIndent": {
+          "type": "object",
+          "markdownDescription": "Enforces that a closing ERB tag (`%>`) on its own line is indented to match the opening tag (`<%`), and that a closing tag is on the same line as the opening tag when the opening tag is not followed by a newline.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "CommentSyntax": {
+          "type": "object",
+          "markdownDescription": "Enforces the correct ERB comment syntax (`<%# comment %>`) rather than Ruby comments inside ERB tags (`<% # comment %>`), which are not valid ERB comments.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#commentsyntax)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "DeprecatedClasses": {
+          "type": "object",
+          "markdownDescription": "Reports any CSS classes on HTML elements that match a rule set of deprecated classes.\n\n**Example:**\n```yaml\nDeprecatedClasses:\n  enabled: true\n  addendum: See UX wiki for help.\n  rule_set:\n    - deprecated: ['badge[-_\\w]*']\n      suggestion: Use the ui_badge() component instead.\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#deprecatedclasses)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "rule_set": {
+              "type": "array",
+              "default": [],
+              "markdownDescription": "A list of rules, each with a list of `deprecated` class patterns and a `suggestion` to include in the error message.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "deprecated": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": [],
+                    "markdownDescription": "A list of **regular expressions** matching the classes deprecated by this rule.",
+                    "examples": [["badge[-_\\w]*"]]
+                  },
+                  "suggestion": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "Included in the error message for this rule. Make it informative and specific to the rule.",
+                    "examples": ["Use the ui_badge() component instead."]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "addendum": {
+              "type": "string",
+              "markdownDescription": "Appended to the end of every error message reported by this linter.",
+              "examples": ["See UX wiki for help."]
+            }
+          },
+          "additionalProperties": false
+        },
+        "ErbSafety": {
+          "type": "object",
+          "markdownDescription": "Runs the checks provided by [better-html's ERB safety test helper](https://github.com/Shopify/better-html#testing-for-valid-html-and-erb). Detects unsafe interpolation of Ruby data into JavaScript contexts and enforces safe helpers like `.to_json`.\n\n[Documentation](https://github.com/Shopify/erb_lint#erbsafety)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "better_html_config": {
+              "type": "string",
+              "markdownDescription": "Path to the [better-html configuration file](https://github.com/Shopify/better-html#configuration). The file must exist.",
+              "examples": [".better-html.yml"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "ExtraNewline": {
+          "type": "object",
+          "markdownDescription": "Reports more than one consecutive blank line.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "FinalNewline": {
+          "type": "object",
+          "markdownDescription": "Enforces the presence (or absence) of a newline at the end of ERB templates.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#finalnewline)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "present": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Whether a final newline should be present.\n\n**Default:** `true`"
+            }
+          },
+          "additionalProperties": false
+        },
+        "HardCodedString": {
+          "type": "object",
+          "markdownDescription": "Reports visible hard-coded strings in the DOM. Strings nested inside JavaScript tags are not checked.\n\n**Example:**\n```yaml\nHardCodedString:\n  enabled: true\n  corrector:\n    path: path/to/corrector_file.rb\n    name: I18nCorrector\n    i18n_load_path: config/locales/en.yml\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#hardcodedstring)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "corrector": {
+              "type": "object",
+              "default": {},
+              "markdownDescription": "Configures the corrector used to autocorrect offenses. `path`, `name`, and `i18n_load_path` must all be set for autocorrection to run.",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "markdownDescription": "Path to the Ruby file that defines the corrector class.",
+                  "examples": ["path/to/corrector_file.rb"]
+                },
+                "name": {
+                  "type": "string",
+                  "markdownDescription": "Name of the corrector class.",
+                  "enum": [
+                    "I18nCorrector",
+                    "RuboCop::Corrector::I18n::HardCodedString"
+                  ]
+                },
+                "i18n_load_path": {
+                  "type": "string",
+                  "markdownDescription": "Path to the locale file(s) that strings should be translated into.",
+                  "examples": ["config/locales/en.yml"]
+                }
+              }
+            },
+            "i18n_load_path": {
+              "type": "string",
+              "default": "",
+              "markdownDescription": "Path to the locale file(s) for this linter. The corrector uses `corrector.i18n_load_path`."
+            }
+          },
+          "additionalProperties": false
+        },
+        "NoJavascriptTagHelper": {
+          "type": "object",
+          "markdownDescription": "Prevents the use of Rails' `javascript_tag` helper, which stops the HTML parser from recognising the change of parsing context. Use a `<script>` tag instead.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#nojavascripttaghelper)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "correction_style": {
+              "type": "string",
+              "default": "cdata",
+              "markdownDescription": "How autocorrected `<script>` tags are written.\n\n**Default:** `cdata`",
+              "enum": ["cdata", "plain"],
+              "markdownEnumDescriptions": [
+                "Wrap the script in `//<![CDATA[` and `//]]>` markers, matching the behaviour of `javascript_tag`",
+                "Don't add CDATA markers"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "NoUnusedDisable": {
+          "type": "object",
+          "markdownDescription": "Reports `erb_lint:disable` comments that don't disable any offense.\n\n**Example:**\n```erb\n<hr /> <%# erb_lint:disable SelfClosingTag %>\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#disable-rule-at-offense-level)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "ParserErrors": {
+          "type": "object",
+          "markdownDescription": "Reports HTML parser errors in ERB templates.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "PartialInstanceVariable": {
+          "type": "object",
+          "markdownDescription": "Reports instance variables used in partials (files whose names start with `_`).",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "RequireInputAutocomplete": {
+          "type": "object",
+          "markdownDescription": "Reports `<input>` tags (and Rails form field helpers) of types that support autocomplete but are missing an `autocomplete` attribute.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#requireinputautocomplete)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "RequireScriptNonce": {
+          "type": "object",
+          "markdownDescription": "Reports `<script>` tags and the `javascript_tag`, `javascript_include_tag` and `javascript_pack_tag` helpers that are missing a [Content Security Policy](https://guides.rubyonrails.org/security.html#content-security-policy) `nonce`.\n\n[Documentation](https://github.com/Shopify/erb_lint#requirescriptnonce)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "RightTrim": {
+          "type": "object",
+          "markdownDescription": "Enforces a consistent style for trimming at the right of an ERB tag (`-%>` or `=%>`).\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#righttrim)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "enforced_style": {
+              "type": "string",
+              "default": "-",
+              "markdownDescription": "Which right trim style to enforce.\n\n**Default:** `-`",
+              "enum": ["-", "="],
+              "markdownEnumDescriptions": ["Trim with `-%>`", "Trim with `=%>`"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "Rubocop": {
+          "type": "object",
+          "markdownDescription": "Runs RuboCop on the Ruby statements in ERB templates. Each statement is analyzed independently, so cops that need broader context (like `Lint/UselessAssignment`) can report false positives.\n\n**Example:**\n```yaml\nRubocop:\n  enabled: true\n  rubocop_config:\n    inherit_from:\n      - .rubocop.yml\n    Layout/InitialIndentation:\n      Enabled: false\n    Layout/LineLength:\n      Enabled: false\n    Layout/TrailingEmptyLines:\n      Enabled: false\n    Layout/TrailingWhitespace:\n      Enabled: false\n    Naming/FileName:\n      Enabled: false\n    Style/FrozenStringLiteralComment:\n      Enabled: false\n    Lint/UselessAssignment:\n      Enabled: false\n    Rails/OutputSafety:\n      Enabled: false\n```\n\n[Documentation](https://github.com/Shopify/erb_lint#rubocop)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "only": {
+              "$ref": "#/definitions/rubocopOnly"
+            },
+            "rubocop_config": {
+              "$ref": "#/definitions/rubocopConfig"
+            },
+            "config_file_path": {
+              "$ref": "#/definitions/rubocopConfigFilePath"
+            }
+          },
+          "additionalProperties": false
+        },
+        "RubocopText": {
+          "type": "object",
+          "markdownDescription": "Like the `Rubocop` linter, but only runs RuboCop on ERB tags that appear inside text nodes.",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "only": {
+              "$ref": "#/definitions/rubocopOnly"
+            },
+            "rubocop_config": {
+              "$ref": "#/definitions/rubocopConfig"
+            },
+            "config_file_path": {
+              "$ref": "#/definitions/rubocopConfigFilePath"
+            }
+          },
+          "additionalProperties": false
+        },
+        "SelfClosingTag": {
+          "type": "object",
+          "markdownDescription": "Enforces a self-closing tag style for void elements (`area`, `base`, `br`, `col`, `embed`, `hr`, `img`, `input`, `keygen`, `link`, `menuitem`, `meta`, `param`, `source`, `track` and `wbr`).\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#selfclosingtag)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "enforced_style": {
+              "type": "string",
+              "default": "never",
+              "markdownDescription": "Whether void elements should be self-closing.\n\n**Default:** `never`",
+              "enum": ["always", "never"],
+              "markdownEnumDescriptions": [
+                "XHTML style: `<hr />`",
+                "HTML5 style: `<hr>`"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "SpaceAroundErbTag": {
+          "type": "object",
+          "markdownDescription": "Enforces a single space after `<%` and before `%>`. Tags followed or preceded by a newline are ignored.\n\n**Enabled by default.**\n\n[Documentation](https://github.com/Shopify/erb_lint#spacearounderbtag)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "SpaceInHtmlTag": {
+          "type": "object",
+          "markdownDescription": "Enforces consistent spacing inside HTML tags, such as between attributes and around `=` and `/>`.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "SpaceIndentation": {
+          "type": "object",
+          "markdownDescription": "Enforces indentation with spaces rather than tabs.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            },
+            "tab_width": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 2,
+              "markdownDescription": "The number of spaces to replace each tab with when autocorrecting.\n\n**Default:** `2`"
+            }
+          },
+          "additionalProperties": false
+        },
+        "StrictLocals": {
+          "type": "object",
+          "markdownDescription": "Enforces a [strict locals](https://guides.rubyonrails.org/layouts_and_rendering.html#strict-locals) declaration (`<%# locals: (name:) %>`) in Rails partials.\n\n[Documentation](https://github.com/Shopify/erb_lint#strictlocals)",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/disabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        },
+        "TrailingWhitespace": {
+          "type": "object",
+          "markdownDescription": "Reports whitespace at the end of lines.\n\n**Enabled by default.**",
+          "properties": {
+            "enabled": {
+              "$ref": "#/definitions/enabledByDefault"
+            },
+            "exclude": {
+              "$ref": "#/definitions/exclude"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/customLinter"
+      }
+    }
+  },
+  "additionalProperties": false
+}

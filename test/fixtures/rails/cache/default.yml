@@ -1,21 +1,48 @@
 # yaml-language-server: $schema=../../../../dist/rails/cache.json
 %YAML 1.1
 ---
+default: &default
+  store_options: &default_store_options
+    max_age: <%= 60.days.to_i %>
+    namespace: <%= Rails.env %>
+  size_estimate_samples: 1000
+
 development:
-  databases:
-    - cache_db
+  database: cache_db
   encrypt: false
   store_options:
     max_age: 3600
     max_size: 262144
     namespace: dev_cache
 
+test:
+  <<: *default
+  store_options:
+    <<: *default_store_options
+    clear_with: delete
+
+staging:
+  connects_to:
+    database:
+      writing: cache
+  store_options:
+    max_age: null
+    max_entries: 100000
+    expiry_queue: low_priority
+    expiry_batch_size: 200
+
 production:
   databases:
     - primary_cache
     - replica_cache
   encrypt: true
+  size_estimate_samples: 10000
   store_options:
     max_age: 86400
     max_size: 524288
     namespace: prod_cache
+    active_record_instrumentation: false
+    max_key_bytesize: 512
+    expires_in: 3600
+    race_condition_ttl: 10
+    compress_threshold: 2048

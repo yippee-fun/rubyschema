@@ -6,9 +6,21 @@ inherit_from: .rubocop_todo.yml
 inherit_gem:
   rubocop-rails-omakase: rubocop.yml
 
+plugins:
+  - rubocop-performance
+  - rubocop-rails:
+      require_path: rubocop-rails
+      plugin_class_name: RuboCop::Rails::Plugin
+
+require:
+  - ./lib/custom_cops
+
 inherit_mode:
   merge:
     - Exclude
+    - AllowedMethods
+  override:
+    - Include
 
 AllCops:
   TargetRubyVersion: 3.4
@@ -23,6 +35,7 @@ AllCops:
     - "vendor/**/*"
   DisabledByDefault: false
   StyleGuideBaseURL: https://rubystyle.guide
+  TargetRailsVersion: 8.0
 
 Layout:
   Enabled: true
@@ -52,6 +65,17 @@ Layout/EmptyLineAfterMagicComment:
 Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: no_empty_lines
 
+Layout/HashAlignment:
+  AllowMultipleStyles: true
+  EnforcedColonStyle:
+    - key
+    - table
+
+Layout/MultilineAssignmentLayout:
+  SupportedTypes:
+    - block
+    - if
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
@@ -63,6 +87,14 @@ Lint/AmbiguousBlockAssociation:
   AllowedMethods:
     - change
     - not_change
+
+Lint/Debugger:
+  DebuggerMethods:
+    WebConsole: ~
+    MyDebugger:
+      - MyDebugger.debug_this
+  DebuggerRequires:
+    - debug/start
 
 Lint/MissingCopEnableDirective:
   MaxRangeSize: 10
@@ -146,6 +178,36 @@ Style/DisableCopsWithinSourceCodeDirective:
   AllowWithReason: true
   AllowedDirectives:
     - todo
+
+Style/ModuleFunction:
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - "lib/legacy/**/*"
+  Safe: true
+  SafeAutoCorrect: false
+  References:
+    - https://example.com/module-function
+
+Style/RedundantArgument:
+  Methods:
+    join: ""
+    to_i: 10
+    exit: true
+
+Style/SingleLineBlockParams:
+  Enabled: true
+  Methods:
+    - reduce:
+        - acc
+        - elem
+
+Style/YodaExpression:
+  Enabled: true
+  SupportedOperators:
+    - "*"
+    - "+"
 
 Style/MutableConstant:
   Recursive: true

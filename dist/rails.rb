@@ -6,13 +6,15 @@ failed_files = []
 
 yaml_schemas = {
   "./.circleci/config.yml"       => "https://json.schemastore.org/circleciconfig.json",
-
+  "./.erb-lint.yml"              => "https://www.rubyschema.org/erb_lint.json",
+  "./.erb_lint.yml"              => "https://www.rubyschema.org/erb_lint.json",
   "./.github/workflows/**/*.yml" => "https://json.schemastore.org/github-workflow.json",
   "./.honeybadger.yml"           => "https://www.rubyschema.org/honeybadger.json",
   "./.rubocop.yml"               => "https://www.rubyschema.org/rubocop.json",
   "./.rubocop_todo.yml"          => "https://www.rubyschema.org/rubocop.json",
   "./.standard.yml"              => "https://www.rubyschema.org/standard.json",
   "./app/**/package.yml"         => "https://www.rubyschema.org/packwerk/package.json",
+  "./config/brakeman.yml"        => "https://www.rubyschema.org/brakeman.json",
   "./config/cable.yml"           => "https://www.rubyschema.org/rails/cable.json",
   "./config/cache.yml"           => "https://www.rubyschema.org/rails/cache.json",
   "./config/database.yml"        => "https://www.rubyschema.org/rails/database.json",

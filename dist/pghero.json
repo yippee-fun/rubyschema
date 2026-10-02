@@ -13,18 +13,36 @@
   "properties": {
     "databases": {
       "type": "object",
-      "markdownDescription": "Database connections to monitor. Each key is a database identifier (e.g., `primary`, `analytics`) with connection details.\n\n**Example:**\n```yaml\ndatabases:\n  primary:\n    url: <%= ENV[\"DATABASE_URL\"] %>\n  replica:\n    url: <%= ENV[\"REPLICA_DATABASE_URL\"] %>\n```",
+      "markdownDescription": "Database connections to monitor. Each key is a database identifier (e.g., `primary`, `analytics`) with connection details. Most top-level thresholds and AWS settings can also be overridden per database.\n\n**Example:**\n```yaml\ndatabases:\n  primary:\n    url: <%= ENV[\"DATABASE_URL\"] %>\n  replica:\n    url: <%= ENV[\"REPLICA_DATABASE_URL\"] %>\n```",
       "propertyNames": { "type": "string" },
       "additionalProperties": {
         "type": "object",
         "properties": {
           "url": {
             "type": "string",
-            "markdownDescription": "PostgreSQL connection URL. Supports ERB for environment variables.\n\n**Format:** `postgres://user:password@host:port/database`\n\n**Example:**\n```yaml\nurl: <%= ENV[\"DATABASE_URL\"] %>\n```"
+            "markdownDescription": "PostgreSQL connection URL. Supports ERB for environment variables. When omitted (and no `spec` is set), the app's database connection is used.\n\n**Format:** `postgres://user:password@host:port/database`\n\n**Example:**\n```yaml\nurl: <%= ENV[\"DATABASE_URL\"] %>\n```"
+          },
+          "spec": {
+            "type": "string",
+            "markdownDescription": "Name of a database configuration in the app's `config/database.yml` to connect with (for the current environment). Only used when `url` is not set.\n\n**Example:**\n```yaml\nspec: primary\n```"
+          },
+          "name": {
+            "type": "string",
+            "markdownDescription": "Display name for this database in the PgHero interface.\n\n**Default:** the database key, titleized (e.g. `analytics` becomes `Analytics`)"
+          },
+          "capture_query_stats": {
+            "type": "boolean",
+            "markdownDescription": "Whether `pghero:capture_query_stats` captures historical query stats for this database. Set to `false` to skip it.\n\n**Default:** `true`",
+            "default": true
           },
           "aws_db_instance_identifier": {
             "type": "string",
-            "markdownDescription": "AWS RDS database instance identifier for CloudWatch metrics integration. Enables monitoring of AWS-specific metrics like CPU, storage, and IOPS.\n\n**Example:**\n```yaml\naws_db_instance_identifier: my-production-db\n```\n\nRequires `aws_access_key_id`, `aws_secret_access_key`, and `aws_region` to be configured."
+            "markdownDescription": "AWS RDS database instance identifier for CloudWatch metrics integration. Enables monitoring of AWS-specific metrics like CPU, storage, and IOPS.\n\n**Example:**\n```yaml\naws_db_instance_identifier: my-production-db\n```\n\nUses `aws_access_key_id`, `aws_secret_access_key`, and `aws_region` when configured, falling back to the `AWS_*` environment variables and the AWS SDK's default credentials."
+          },
+          "db_instance_identifier": {
+            "type": "string",
+            "markdownDescription": "Legacy alias for `aws_db_instance_identifier`.",
+            "deprecationMessage": "Use `aws_db_instance_identifier` instead."
           },
           "gcp_database_id": {
             "type": "string",
@@ -32,11 +50,33 @@
           },
           "azure_resource_id": {
             "type": "string",
-            "markdownDescription": "Azure Database for PostgreSQL resource ID for Azure Monitor integration. Enables monitoring of Azure-specific metrics.\n\n**Format:** `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.DBforPostgreSQL/servers/{serverName}`\n\n**Example:**\n```yaml\nazure_resource_id: /subscriptions/abc-123/resourceGroups/my-rg/providers/Microsoft.DBforPostgreSQL/servers/my-db\n```"
-          }
+            "markdownDescription": "Azure Database for PostgreSQL resource ID for Azure Monitor integration (pghero 3.x only). Ignored by pghero 4.0.0 and later.\n\n**Format:** `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.DBforPostgreSQL/servers/{serverName}`",
+            "deprecationMessage": "Azure system stats support was removed in pghero 4.0.0; this option is ignored."
+          },
+          "long_running_query_sec": {
+            "$ref": "#/properties/long_running_query_sec"
+          },
+          "slow_query_ms": { "$ref": "#/properties/slow_query_ms" },
+          "slow_query_calls": { "$ref": "#/properties/slow_query_calls" },
+          "total_connections_threshold": {
+            "$ref": "#/properties/total_connections_threshold"
+          },
+          "cache_hit_rate_threshold": {
+            "$ref": "#/properties/cache_hit_rate_threshold"
+          },
+          "unused_index_megabytes": {
+            "$ref": "#/properties/unused_index_megabytes"
+          },
+          "index_bloat_bytes": { "$ref": "#/properties/index_bloat_bytes" },
+          "explain_timeout_sec": { "$ref": "#/properties/explain_timeout_sec" },
+          "aws_access_key_id": { "$ref": "#/properties/aws_access_key_id" },
+          "aws_secret_access_key": {
+            "$ref": "#/properties/aws_secret_access_key"
+          },
+          "aws_region": { "$ref": "#/properties/aws_region" },
+          "filter_data": { "$ref": "#/properties/filter_data" }
         },
-        "additionalProperties": false,
-        "required": ["url"]
+        "additionalProperties": false
       }
     },
     "long_running_query_sec": {
@@ -59,21 +99,38 @@
       "markdownDescription": "Minimum number of total connections to trigger a \"high connections\" warning. Helps prevent connection pool exhaustion.\n\n**Default:** `500`\n\n**Example:**\n```yaml\ntotal_connections_threshold: 500\n```",
       "examples": [500]
     },
+    "cache_hit_rate_threshold": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum table and index cache hit rate (as a percentage) considered healthy. Lower rates trigger a warning on the overview page.\n\n**Default:** `99`\n\n**Example:**\n```yaml\ncache_hit_rate_threshold: 99\n```",
+      "examples": [99]
+    },
+    "unused_index_megabytes": {
+      "anyOf": [{ "type": "number" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum size in megabytes for an index to be reported as unused.\n\n**Default:** `10`\n\n**Example:**\n```yaml\nunused_index_megabytes: 10\n```",
+      "examples": [10]
+    },
+    "index_bloat_bytes": {
+      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Minimum amount of bloat in bytes for an index to be reported on the Index Bloat page.\n\n**Default:** `104857600` (100 MB)\n\n**Example:**\n```yaml\nindex_bloat_bytes: 104857600\n```",
+      "examples": [104857600]
+    },
     "explain": {
       "anyOf": [
         { "type": "boolean" },
         { "const": "analyze" },
         { "$ref": "#/definitions/erb" }
       ],
-      "markdownDescription": "Enable `EXPLAIN` functionality for slow queries to analyze query plans.\n\n- `false` - Disabled\n- `true` - Run `EXPLAIN` (plan only, no execution)\n- `\"analyze\"` - Run `EXPLAIN ANALYZE` (executes query to get actual timings)\n\n⚠️ **Warning:** `EXPLAIN ANALYZE` executes queries and may cause side effects. Use with caution on production databases.\n\n**Default:** `false`"
+      "markdownDescription": "Enable `EXPLAIN` functionality for slow queries to analyze query plans.\n\n- `false` - Disabled\n- `true` - Run `EXPLAIN` (plan only, no execution)\n- `\"analyze\"` - Run `EXPLAIN ANALYZE` (executes query to get actual timings)\n\n⚠️ **Warning:** `EXPLAIN ANALYZE` executes queries and may cause side effects. Use with caution on production databases.\n\n**Default:** `true` (explain is enabled when the option is not set)"
     },
     "explain_timeout_sec": {
-      "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
-      "markdownDescription": "Statement timeout in seconds for `EXPLAIN` and `EXPLAIN ANALYZE` queries. Prevents long-running explain operations from blocking the database.\n\n**Default:** `10` seconds\n\n**Example:**\n```yaml\nexplain_timeout_sec: 10\n```"
+      "anyOf": [{ "type": "number" }, { "$ref": "#/definitions/erb" }],
+      "markdownDescription": "Statement timeout in seconds for `EXPLAIN` and `EXPLAIN ANALYZE` queries. Prevents long-running explain operations from blocking the database.\n\n**Default:** `10` seconds\n\n**Example:**\n```yaml\nexplain_timeout_sec: 10\n```",
+      "examples": [10]
     },
     "visualize_url": {
       "type": "string",
-      "markdownDescription": "External URL for visualizing query execution plans. Links to a service like [explain.depesz.com](https://explain.depesz.com/) or [explain.dalibo.com](https://explain.dalibo.com/) for better plan visualization.\n\n**Example:**\n```yaml\nvisualize_url: https://explain.depesz.com/\n```"
+      "markdownDescription": "External URL for visualizing query execution plans. Links to a service like [explain.depesz.com](https://explain.depesz.com/) or [explain.dalibo.com](https://explain.dalibo.com/) for better plan visualization.\n\n**Default:** `https://tatiyants.com/pev/#/plans/new`\n\n**Example:**\n```yaml\nvisualize_url: https://explain.depesz.com/\n```",
+      "default": "https://tatiyants.com/pev/#/plans/new"
     },
     "time_zone": {
       "type": "string",
@@ -96,12 +153,12 @@
     },
     "aws_access_key_id": {
       "type": "string",
-      "markdownDescription": "AWS access key ID for CloudWatch metrics integration. Required when using `aws_db_instance_identifier` to fetch RDS performance metrics.\n\n⚠️ **Security:** Always use environment variables or IAM roles, never commit credentials to version control.\n\n**Example:**\n```yaml\naws_access_key_id: <%= ENV[\"AWS_ACCESS_KEY_ID\"] %>\n```",
+      "markdownDescription": "AWS access key ID for CloudWatch metrics integration, used with `aws_db_instance_identifier` to fetch RDS performance metrics. Defaults to the AWS SDK credentials when not set.\n\n⚠️ **Security:** Always use environment variables or IAM roles, never commit credentials to version control.\n\n**Example:**\n```yaml\naws_access_key_id: <%= ENV[\"AWS_ACCESS_KEY_ID\"] %>\n```",
       "examples": ["<%= ENV[\"AWS_ACCESS_KEY_ID\"] %>"]
     },
     "aws_secret_access_key": {
       "type": "string",
-      "markdownDescription": "AWS secret access key for CloudWatch metrics integration. Required when using `aws_db_instance_identifier` to fetch RDS performance metrics.\n\n⚠️ **Security:** Always use environment variables or IAM roles, never commit credentials to version control.\n\n**Example:**\n```yaml\naws_secret_access_key: <%= ENV[\"AWS_SECRET_ACCESS_KEY\"] %>\n```",
+      "markdownDescription": "AWS secret access key for CloudWatch metrics integration, used with `aws_db_instance_identifier` to fetch RDS performance metrics. Defaults to the AWS SDK credentials when not set.\n\n⚠️ **Security:** Always use environment variables or IAM roles, never commit credentials to version control.\n\n**Example:**\n```yaml\naws_secret_access_key: <%= ENV[\"AWS_SECRET_ACCESS_KEY\"] %>\n```",
       "examples": ["<%= ENV[\"AWS_SECRET_ACCESS_KEY\"] %>"]
     },
     "aws_region": {
@@ -147,11 +204,21 @@
         },
         { "type": "string" }
       ],
-      "markdownDescription": "AWS region for CloudWatch API calls. Required when using `aws_db_instance_identifier` to fetch RDS metrics.\n\n**Example:**\n```yaml\naws_region: us-east-1\n```"
+      "markdownDescription": "AWS region for CloudWatch API calls when using `aws_db_instance_identifier` to fetch RDS metrics.\n\n**Default:** `PGHERO_REGION` or `AWS_REGION` environment variable, then the AWS SDK region, then `us-east-1`\n\n**Example:**\n```yaml\naws_region: us-east-1\n```"
     },
     "filter_data": {
       "type": "boolean",
-      "markdownDescription": "Filter sensitive data from query text before displaying (experimental feature). Attempts to redact literal values from queries.\n\n⚠️ **Experimental:** This feature may not catch all sensitive data. Review displayed queries carefully.\n\n**Default:** `false`"
+      "markdownDescription": "Filter sensitive data from query text before displaying (experimental feature). Attempts to redact literal values from queries.\n\n⚠️ **Experimental:** This feature may not catch all sensitive data. Review displayed queries carefully.\n\nRequires the `pg_query` gem.\n\n**Default:** `false`"
+    },
+    "disable_kill": {
+      "type": "boolean",
+      "markdownDescription": "Disable killing queries and connections from the PgHero interface.\n\n**Default:** `false`",
+      "default": false
+    },
+    "override_csp": {
+      "type": "boolean",
+      "markdownDescription": "Set a `Content-Security-Policy` header of `default-src 'self' 'unsafe-inline'` on PgHero responses, overriding the app's policy so the dashboard's inline scripts and styles work.\n\n**Default:** `false`",
+      "default": false
     }
   },
   "additionalProperties": false

@@ -189,7 +189,8 @@ class SchemaTest < Minitest::Test
         when ".json"
           JSON.parse(fixture_path.read)
         else
-          YAML.safe_load(fixture_path.read, permitted_classes: [Date, Time], aliases: true)
+          # Ruby symbols (e.g. `:to_json`) are plain strings to the YAML language server
+          stringify_symbols(YAML.safe_load(fixture_path.read, permitted_classes: [Date, Time, Symbol], aliases: true))
         end
 
         errors = schemer.validate(fixture_data).to_a
@@ -199,6 +200,15 @@ class SchemaTest < Minitest::Test
   end
 
   private
+
+  def stringify_symbols(obj)
+    case obj
+    when Hash then obj.to_h { |key, value| [stringify_symbols(key), stringify_symbols(value)] }
+    when Array then obj.map { |value| stringify_symbols(value) }
+    when Symbol then obj.inspect
+    else obj
+    end
+  end
 
   # Yields every schema object in the document with its JSON pointer, skipping
   # values that aren't schemas (e.g. `default`, `enum`, `examples`).
@@ -231,7 +241,7 @@ class SchemaTest < Minitest::Test
 
     case obj
     when Hash
-      if obj.key?("description") && !%w[$schema $id].include?(path.split("/").last)
+      if obj.key?("description") && !%w[$schema $id properties].include?(path.split("/").last)
         paths << "#{path}/description"
       end
 

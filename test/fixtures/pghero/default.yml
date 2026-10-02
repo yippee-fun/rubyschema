@@ -11,14 +11,21 @@ databases:
   analytics:
     url: <%= ENV["ANALYTICS_DATABASE_URL"] %>
     gcp_database_id: my-project:us-central1:my-instance
-    azure_resource_id: my-resource-id
+    capture_query_stats: false
+    slow_query_ms: 50
+  legacy:
+    spec: secondary
+    name: Legacy DB
 
 long_running_query_sec: 60
 slow_query_ms: 20
 slow_query_calls: 100
 total_connections_threshold: 500
+cache_hit_rate_threshold: 99
+unused_index_megabytes: 10
+index_bloat_bytes: 104857600
 explain: analyze
-explain_timeout_sec: 10
+explain_timeout_sec: 2.5
 visualize_url: https://explain.dalibo.com
 time_zone: Pacific Time (US & Canada)
 username: admin
@@ -28,3 +35,5 @@ aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
 aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
 aws_region: us-east-1
 filter_data: true
+disable_kill: true
+override_csp: true
