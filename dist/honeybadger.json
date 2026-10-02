@@ -26,11 +26,11 @@
         },
         "report_data": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Enable/disable reporting of data to Honeybadger.\n\nDefault: `false` for `test`, `development`, and `cucumber` environments; `true` for all others.\n\nSet to `false` to disable error and event reporting entirely (useful for local development).\n\n[Environments Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/environments/)"
+          "markdownDescription": "Enable/disable reporting of data to Honeybadger.\n\nDefault: `false` for environments listed in `development_environments` (`test`, `development`, and `cucumber` by default); `true` for all others.\n\nSet to `false` to disable error and event reporting entirely (useful for local development).\n\n[Environments Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/environments/)"
         },
         "root": {
           "type": "string",
-          "markdownDescription": "The project's absolute root path."
+          "markdownDescription": "The project's absolute root path.\n\nDefault: the current working directory (`Rails.root` in Rails)."
         },
         "revision": {
           "type": "string",
@@ -38,7 +38,7 @@
         },
         "hostname": {
           "type": "string",
-          "markdownDescription": "The hostname of the current box."
+          "markdownDescription": "The hostname of the current box.\n\nDefault: `Socket.gethostname`"
         },
         "backend": {
           "type": "string",
@@ -46,22 +46,131 @@
         },
         "debug": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Enables verbose debug logging."
+          "markdownDescription": "Enables verbose debug logging.",
+          "default": false
+        },
+        "development_environments": {
+          "markdownDescription": "Environments which will not report data by default (use `report_data` to enable/disable explicitly).\n\nDefault: `['development', 'test', 'cucumber']`",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "default": ["development", "test", "cucumber"]
         },
         "send_data_at_exit": {
           "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Prevent the Ruby program from exiting until all queued notices have been delivered to Honeybadger. (This can take a while in some cases; see `max_queue_size`.)"
+          "markdownDescription": "Prevent the Ruby program from exiting until all queued notices have been delivered to Honeybadger. (This can take a while in some cases; see `max_queue_size`.)",
+          "default": true
         },
         "max_queue_size": {
           "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
-          "markdownDescription": "Maximum number of error notices to queue for delivery at one time.\n\nNew notices will be dropped if this number is exceeded.\n\nDefault: `100`\n\n**Note:** Increasing this value can use more memory. Decrease if you're experiencing memory issues in high-error scenarios."
+          "markdownDescription": "Maximum number of error notices to queue for delivery at one time.\n\nNew notices will be dropped if this number is exceeded.\n\nDefault: `100`\n\n**Note:** Increasing this value can use more memory. Decrease if you're experiencing memory issues in high-error scenarios.",
+          "default": 100
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "max_queue_size": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Maximum number of events for the event worker queue.",
+              "default": 100000
+            },
+            "batch_size": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Send the events batch once this many events have accumulated.",
+              "default": 1000
+            },
+            "timeout": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Timeout (in milliseconds) after which the events batch will be sent regardless of its size.",
+              "default": 30000
+            },
+            "attach_hostname": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Add the hostname to all event payloads.",
+              "default": true
+            },
+            "attach_environment": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Add the environment to all event payloads.",
+              "default": true
+            },
+            "ignore": {
+              "markdownDescription": "A list of additional events to ignore (appended to the default ignored events).\n\nA string or regex matches on `event_type`. Use a hash to query nested payloads, matching values using a string or regex.\n\nExample:\n```yaml\nevents:\n  ignore:\n    - sql.active_record\n    - event_type: process_action.action_controller\n      controller: Rails::HealthController\n```",
+              "type": "array",
+              "items": {
+                "anyOf": [{ "type": "string" }, { "type": "object" }]
+              }
+            },
+            "ignore_only": {
+              "markdownDescription": "A list of events to ignore, **overriding** the default ignored events. Accepts the same formats as `events.ignore`.",
+              "type": "array",
+              "items": {
+                "anyOf": [{ "type": "string" }, { "type": "object" }]
+              }
+            },
+            "sample_rate": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0, "maximum": 100 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Percentage of events to send to the API (0-100). A value of `0` means no events are sent, `100` means all events are sent.",
+              "default": 100
+            }
+          }
+        },
+        "sql": {
+          "type": "object",
+          "properties": {
+            "max_length": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "SQL queries larger than this many bytes are truncated instead of obfuscated (in Insights events and breadcrumbs). Scanning very large queries is slow and can exceed `Regexp.timeout`.",
+              "default": 1000000
+            }
+          }
+        },
+        "sync": {
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+          "markdownDescription": "Send all notices synchronously instead of queueing them for delivery in a background thread.",
+          "default": false
+        },
+        "plugins": {
+          "markdownDescription": "An optional list of plugins to load. Default is to load all plugins.\n\n[Plugins Documentation](https://docs.honeybadger.io/lib/ruby/gem-reference/plugins/)",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "examples": [["rails", "sidekiq"]]
+        },
+        "skipped_plugins": {
+          "markdownDescription": "An optional list of plugins to skip.\n\n[Plugins Documentation](https://docs.honeybadger.io/lib/ruby/gem-reference/plugins/)",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "examples": [["passenger", "thor"]]
         },
         "logging": {
           "type": "object",
           "properties": {
             "path": {
               "type": "string",
-              "markdownDescription": "The path (absolute, or relative from `root`) to the log file.\n\nDefault: Rails logger or STDOUT.\n\nSet to `'STDOUT'` to log to standard output.\n\nExample: `'log/honeybadger.log'`"
+              "markdownDescription": "The path (absolute, or relative from `root`) to the log file.\n\nDefault: the framework logger (e.g. `Rails.logger`) if available, otherwise logging is disabled.\n\nSet to `'STDOUT'` to log to standard output.\n\nExample: `'log/honeybadger.log'`"
             },
             "level": {
               "anyOf": [
@@ -72,20 +181,25 @@
                     "INFO",
                     "WARN",
                     "ERROR",
-                    "FATAL",
-                    "UNKNOWN"
+                    "debug",
+                    "info",
+                    "warn",
+                    "error"
                   ],
                   "markdownEnumDescriptions": [
                     "Most verbose logging level",
                     "Standard informational messages (default)",
                     "Warning messages only",
                     "Error messages only",
-                    "Fatal error messages only",
-                    "Unknown severity messages"
+                    "Most verbose logging level",
+                    "Standard informational messages (default)",
+                    "Warning messages only",
+                    "Error messages only"
                   ]
                 }
               ],
-              "markdownDescription": "The log level for Honeybadger's internal logging.\n\nDefault: `INFO`\n\nDoes nothing unless `logging.path` is also set."
+              "markdownDescription": "The log level for Honeybadger's internal logging. Case-insensitive; unrecognised values fall back to `INFO`.\n\nDefault: `INFO`",
+              "default": "INFO"
             },
             "tty_level": {
               "anyOf": [
@@ -95,25 +209,33 @@
                     "INFO",
                     "WARN",
                     "ERROR",
-                    "FATAL",
-                    "UNKNOWN"
+                    "debug",
+                    "info",
+                    "warn",
+                    "error"
                   ],
                   "markdownEnumDescriptions": [
                     "Most verbose logging level",
                     "Standard informational messages",
                     "Warning messages only",
                     "Error messages only",
-                    "Fatal error messages only",
-                    "Unknown severity messages"
+                    "Most verbose logging level",
+                    "Standard informational messages",
+                    "Warning messages only",
+                    "Error messages only"
                   ]
                 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "The log level when outputting to a terminal (TTY).\n\nMust be >= `logging.level` — any level below `logging.level` will be ignored.\n\nDefault: Same as `logging.level`"
+              "markdownDescription": "The log level when outputting to a terminal (TTY).\n\nMessages below `logging.level` are always ignored, regardless of this setting.\n\nDefault: `DEBUG`",
+              "default": "DEBUG"
+            },
+            "debug": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Override debug logging. When unset, follows the top-level `debug` option."
             }
           },
-          "additionalProperties": false,
-          "required": ["path"]
+          "additionalProperties": false
         },
         "connection": {
           "type": "object",
@@ -128,10 +250,14 @@
               "markdownDescription": "The host to use when sending data.",
               "default": "api.honeybadger.io"
             },
+            "ui_host": {
+              "type": "string",
+              "markdownDescription": "The host to use when viewing data (used when generating links to errors).",
+              "default": "app.honeybadger.io"
+            },
             "port": {
               "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
-              "markdownDescription": "The port to use when sending data.",
-              "default": 443
+              "markdownDescription": "The port to use when sending data.\n\nDefault: `443` when `connection.secure` is `true`, otherwise `80`."
             },
             "http_open_timeout": {
               "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
@@ -142,6 +268,15 @@
               "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
               "markdownDescription": "The HTTP read timeout (in seconds) when connecting to the server.",
               "default": 5
+            },
+            "system_ssl_cert_chain": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Use the system's SSL certificate chain (if available).",
+              "default": false
+            },
+            "ssl_ca_bundle_path": {
+              "type": "string",
+              "markdownDescription": "Path to a CA bundle to use when establishing secure connections."
             },
             "proxy_host": {
               "type": "string",
@@ -165,13 +300,17 @@
           "type": "object",
           "properties": {
             "filter_keys": {
-              "markdownDescription": "A list of keys to filter when sending request data.\n\nIn Rails, this also includes existing params filters configured in `config.filter_parameters`.\n\nDefault: `['password', 'password_confirmation']`\n\nExample: Add `'credit_card'`, `'ssn'`, or other sensitive field names.\n\n[Filtering Sensitive Data Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/filtering-sensitive-data/)",
+              "markdownDescription": "A list of keys to filter when sending request data.\n\nIn Rails, this also includes existing params filters configured in `config.filter_parameters`.\n\nDefault: `['password', 'password_confirmation', 'HTTP_AUTHORIZATION']`\n\nExample: Add `'credit_card'`, `'ssn'`, or other sensitive field names.\n\n[Filtering Sensitive Data Documentation](https://docs.honeybadger.io/lib/ruby/getting-started/filtering-sensitive-data/)",
               "type": "array",
               "uniqueItems": true,
               "items": {
                 "type": "string"
               },
-              "default": ["password", "password_confirmation"]
+              "default": [
+                "password",
+                "password_confirmation",
+                "HTTP_AUTHORIZATION"
+              ]
             },
             "disable_session": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
@@ -205,7 +344,8 @@
             },
             "info": {
               "type": "string",
-              "markdownDescription": "Replacement string for HTML comment in templates."
+              "markdownDescription": "Replacement string for the `<!-- HONEYBADGER ERROR -->` HTML comment in templates. `{{error_id}}` is replaced with the error's ID.\n\nDefault: `Honeybadger Error {{error_id}}`",
+              "default": "Honeybadger Error {{error_id}}"
             }
           }
         },
@@ -255,7 +395,8 @@
               "uniqueItems": true,
               "items": {
                 "type": "string"
-              }
+              },
+              "default": []
             },
             "rescue_rake": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
@@ -270,6 +411,14 @@
               "anyOf": [{ "type": "integer" }, { "$ref": "#/definitions/erb" }],
               "markdownDescription": "The number of lines before and after the source when reporting snippets.",
               "default": 2
+            },
+            "backtrace_limit": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "The maximum number of backtrace lines to include in error reports.",
+              "default": 1000
             },
             "local_variables": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
@@ -310,6 +459,55 @@
             }
           }
         },
+        "insights": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "markdownDescription": "Enable/Disable Honeybadger Insights built-in instrumentation.\n\n[Insights Documentation](https://docs.honeybadger.io/guides/insights/)",
+              "default": true
+            },
+            "console": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable/Disable Honeybadger Insights built-in instrumentation in a Rails console.",
+                  "default": false
+                }
+              }
+            },
+            "registry_flush_interval": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "Number of seconds between metric registry flushes.",
+              "default": 60
+            }
+          }
+        },
+        "active_agent": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable automatic Insights data collection for Active Agent.",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
         "active_job": {
           "type": "object",
           "properties": {
@@ -318,7 +516,8 @@
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "The number of attempts before notifications will be sent."
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "default": 0
             },
             "insights": {
               "type": "object",
@@ -330,6 +529,22 @@
                   ],
                   "markdownDescription": "Enable automatic Insights instrumentation for this plugin.\n\nInsights provides performance monitoring and APM features.\n\nDefault: `true`\n\n[Insights Documentation](https://docs.honeybadger.io/guides/insights/)",
                   "default": true
+                },
+                "events": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Active Job events to Insights.",
+                  "default": true
+                },
+                "metrics": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Active Job metrics to Insights.",
+                  "default": false
                 }
               }
             }
@@ -343,7 +558,8 @@
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "The number of attempts before notifications will be sent."
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "default": 0
             },
             "use_component": {
               "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
@@ -367,28 +583,31 @@
                     { "$ref": "#/definitions/erb" }
                   ],
                   "markdownDescription": "The frequency, in seconds, in which Sidekiq metrics are sampled.",
-                  "default": 60
+                  "default": 5
                 },
                 "cluster_collection": {
                   "anyOf": [
                     { "type": "boolean" },
                     { "$ref": "#/definitions/erb" }
                   ],
-                  "markdownDescription": "Enable cluster wide metric collection. If you are using Sidekiq Enterprise, this is configured automatically."
+                  "markdownDescription": "Enable cluster wide metric collection. If you are using Sidekiq Enterprise, this is configured automatically.",
+                  "default": true
                 },
                 "events": {
                   "anyOf": [
                     { "type": "boolean" },
                     { "$ref": "#/definitions/erb" }
                   ],
-                  "markdownDescription": "Enable sending Sidekiq events to Insights."
+                  "markdownDescription": "Enable sending Sidekiq events to Insights.",
+                  "default": true
                 },
                 "metrics": {
                   "anyOf": [
                     { "type": "boolean" },
                     { "$ref": "#/definitions/erb" }
                   ],
-                  "markdownDescription": "Enable sending Sidekiq metrics to Insights."
+                  "markdownDescription": "Enable sending Sidekiq metrics to Insights.",
+                  "default": false
                 }
               }
             }
@@ -414,7 +633,7 @@
                     { "$ref": "#/definitions/erb" }
                   ],
                   "markdownDescription": "The frequency, in seconds, in which SolidQueue metrics are sampled.",
-                  "default": 60
+                  "default": 5
                 },
                 "cluster_collection": {
                   "anyOf": [
@@ -423,6 +642,22 @@
                   ],
                   "markdownDescription": "Enable cluster wide metric collection.",
                   "default": true
+                },
+                "events": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending SolidQueue events to Insights.",
+                  "default": true
+                },
+                "metrics": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending SolidQueue metrics to Insights.",
+                  "default": false
                 }
               }
             }
@@ -454,6 +689,37 @@
             }
           }
         },
+        "faktory": {
+          "type": "object",
+          "properties": {
+            "attempt_threshold": {
+              "anyOf": [
+                { "type": "integer", "minimum": 0 },
+                { "$ref": "#/definitions/erb" }
+              ],
+              "markdownDescription": "The number of attempts before notifications will be sent.",
+              "default": 0
+            }
+          }
+        },
+        "resque": {
+          "type": "object",
+          "properties": {
+            "resque_retry": {
+              "type": "object",
+              "properties": {
+                "send_exceptions_when_retrying": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Send exceptions when retrying a job (with `resque-retry`).",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
         "sinatra": {
           "type": "object",
           "properties": {
@@ -468,12 +734,13 @@
           "type": "object",
           "properties": {
             "subscriber_ignore_sources": {
-              "markdownDescription": "sources (strings or regexes) that should be ignored when using the Rails error reporter.",
+              "markdownDescription": "Sources (strings or regexes) that should be ignored when using the Rails (7+) native error reporter (handled exceptions only).\n\nDefault: `['application.active_support']`",
               "type": "array",
               "uniqueItems": true,
               "items": {
                 "type": "string"
-              }
+              },
+              "default": ["application.active_support"]
             },
             "insights": {
               "type": "object",
@@ -519,6 +786,64 @@
                   ],
                   "markdownDescription": "Enable automatic Insights data collection for Autotuner.",
                   "default": true
+                },
+                "events": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Autotuner events to Insights.",
+                  "default": true
+                },
+                "metrics": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Autotuner metrics to Insights.",
+                  "default": false
+                }
+              }
+            }
+          }
+        },
+        "puma": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable automatic Insights data collection for Puma.",
+                  "default": true
+                },
+                "events": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Puma events to Insights.",
+                  "default": true
+                },
+                "metrics": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable sending Puma metrics to Insights.",
+                  "default": false
+                },
+                "collection_interval": {
+                  "anyOf": [
+                    { "type": "integer", "minimum": 0 },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "The frequency, in seconds, in which Puma stats are collected.",
+                  "default": 1
                 }
               }
             }
@@ -595,6 +920,47 @@
                   ],
                   "markdownDescription": "Enable sending `Net::HTTP` metrics to Insights.",
                   "default": false
+                }
+              }
+            }
+          }
+        },
+        "flipper": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable automatic Insights data collection for Flipper.",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "ruby_llm": {
+          "type": "object",
+          "properties": {
+            "insights": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "anyOf": [
+                    { "type": "boolean" },
+                    { "$ref": "#/definitions/erb" }
+                  ],
+                  "markdownDescription": "Enable automatic Insights data collection for RubyLLM.",
+                  "default": true
+                },
+                "subscriber": {
+                  "type": "string",
+                  "markdownDescription": "Fully qualified class name of a custom subscriber for RubyLLM instrumentation.\n\nDefault: `Honeybadger::RubyLLMSubscriber`",
+                  "examples": ["MyRubyLLMSubscriber"]
                 }
               }
             }
