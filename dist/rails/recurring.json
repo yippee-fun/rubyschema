@@ -9,19 +9,27 @@
       "markdownDescription": "Environment-specific recurring task definitions.\n\nEach property name represents a unique task identifier, and its value defines either a task (with `command`) or a job (with `class`).\n\n[Recurring Tasks Documentation](https://guides.rubyonrails.org/active_job_basics.html#recurring-tasks)",
       "additionalProperties": {
         "oneOf": [
-          { "$ref": "#/definitions/task" },
-          { "$ref": "#/definitions/job" }
+          {
+            "$ref": "#/definitions/task"
+          },
+          {
+            "$ref": "#/definitions/job"
+          }
         ]
       }
     },
     "schedule": {
       "type": "string",
-      "markdownDescription": "Natural language cron schedule expression.\n\nSupports formats like:\n- `\"every 5 minutes\"`\n- `\"every day at 5pm\"`\n- `\"0 0 * * *\"` (standard cron syntax)\n- `\"*/15 * * * *\"` (every 15 minutes)\n\nPowered by the Fugit library's natural language parsing.\n\n[Fugit Cron Documentation](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)"
+      "markdownDescription": "Natural language cron schedule expression.\n\nSupports formats like:\n- `\"every 5 minutes\"`\n- `\"every day at 5pm\"`\n- `\"0 0 * * *\"` (standard cron syntax)\n- `\"*/15 * * * *\"` (every 15 minutes)\n\nSchedules can include a time zone (e.g. `\"0 9 * * * America/New_York\"` or `\"every day at 9am America/New_York\"`). Without one, the application's `config.time_zone` is used by default (configurable via `config.solid_queue.time_zone`).\n\nParsed with Fugit and must resolve to a single cron schedule.\n\n[Fugit Cron Documentation](https://github.com/floraison/fugit?tab=readme-ov-file#fugitcron)"
     },
     "priority": {
       "markdownDescription": "Numeric priority value used when enqueuing the job.\n\nThe smaller the value, the higher the priority. `0` is the highest priority.\n\nDefault: `0`\n\n**Note:** Within the same queue, jobs will be picked in order of priority, but in a list of queues, the queue order takes precedence.",
       "type": "integer",
       "minimum": 0
+    },
+    "task_description": {
+      "type": "string",
+      "markdownDescription": "A human-readable description of the recurring task."
     },
     "task": {
       "markdownDescription": "A recurring task defined by a Ruby command string.\n\nUse this when you need to run simple Ruby code on a schedule without creating a dedicated Active Job class.",
@@ -38,7 +46,10 @@
         },
         "queue": {
           "type": "string",
-          "markdownDescription": "The queue name where the recurring task will be enqueued.\n\nDefault: `\"default\"`\n\nYou can use this to route recurring tasks to specific workers."
+          "markdownDescription": "The queue name where the recurring task will be enqueued.\n\nDefault: `\"solid_queue_recurring\"` (the queue of `SolidQueue::RecurringJob`)\n\nYou can use this to route recurring tasks to specific workers."
+        },
+        "description": {
+          "$ref": "#/definitions/task_description"
         }
       },
       "required": ["command", "schedule"],
@@ -49,12 +60,12 @@
       "properties": {
         "class": {
           "type": "string",
-          "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*Job$",
-          "markdownDescription": "The fully-qualified Active Job class name.\n\nMust end with `Job` (e.g., `\"CleanupOldRecordsJob\"` or `\"Reports::GenerateDailySummaryJob\"`)."
+          "pattern": "^(?:::)?[A-Z][a-zA-Z0-9_]*(?:::[A-Z][a-zA-Z0-9_]*)*$",
+          "markdownDescription": "The fully-qualified Active Job class name (e.g., `\"CleanupOldRecordsJob\"` or `\"Reports::GenerateDailySummaryJob\"`). Must correspond to an existing class.\n\nJobs using a different queue adapter are enqueued via `perform_later`."
         },
         "args": {
-          "type": ["array", "object"],
-          "markdownDescription": "Arguments to pass to the job's `perform` method.\n\nCan be an array of positional arguments or an object (for keyword arguments).\n\nExamples:\n- Array: `[\"2024-01-01\", true]`\n- Object: `{\"start_date\": \"2024-01-01\", \"include_archived\": true}`"
+          "type": ["array", "object", "string", "number", "boolean"],
+          "markdownDescription": "Arguments to pass to the job's `perform` method.\n\nCan be a single argument, a hash, or an array of arguments. To pass keyword arguments, add a hash as the last element of the array.\n\nExamples:\n- Single: `42`\n- Array: `[\"2024-01-01\", true]`\n- Array with kwargs: `[42, { status: \"custom_status\" }]` (enqueued as `MyJob.perform_later(42, status: \"custom_status\")`)"
         },
         "schedule": {
           "$ref": "#/definitions/schedule"
@@ -65,6 +76,9 @@
         "queue": {
           "type": "string",
           "markdownDescription": "The queue name where the recurring job will be enqueued.\n\nDefault: Uses the queue specified in the job class (via `queue_as`), or `\"default\"` if not specified.\n\nYou can use this to override the job's default queue for recurring executions."
+        },
+        "description": {
+          "$ref": "#/definitions/task_description"
         }
       },
       "required": ["class", "schedule"],
@@ -72,9 +86,21 @@
     }
   },
   "properties": {
-    "production": { "$ref": "#/definitions/environment" }
+    "production": {
+      "$ref": "#/definitions/environment"
+    }
   },
   "additionalProperties": {
-    "$ref": "#/definitions/environment"
+    "anyOf": [
+      {
+        "$ref": "#/definitions/environment"
+      },
+      {
+        "$ref": "#/definitions/task"
+      },
+      {
+        "$ref": "#/definitions/job"
+      }
+    ]
   }
 }
