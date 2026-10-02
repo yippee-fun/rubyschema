@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../dist/brakeman.json
+%YAML 1.1
+---
+
+parallel_checks: false
+report_progress: false
+quiet: true
+exit_on_warn: true
+exit_on_error: false
+ensure_latest: 7
+ensure_ignore_notes: true
+ensure_no_obsolete_ignore_entries: true
+rails3: true
+rails4: true
+rails5: true
+rails6: true
+rails7: true
+rails8: true
+force_scan: false
+run_all_checks: false
+assume_all_routes: true
+escape_html: true
+ignore_ifs: false
+disable_constant_tracking: false
+ignore_model_output: false
+ignore_attr_protected: false
+interprocedural: true
+branch_limit: -1
+parser_timeout: 30
+use_prism: true
+check_arguments: true
+safe_methods:
+  - :sanitize_markdown
+  - :safe?
+sql_safe_methods:
+  - :quote_identifier
+url_safe_methods:
+  - :safe_url
+skip_files:
+  - plugins/
+only_files:
+  - app/
+skip_vendor: true
+additional_libs_path:
+  - app/services
+engine_paths:
+  - engines/*
+  - components/*
+follow_symlinks: false
+gemfile: Gemfile
+run_checks:
+  - CheckSQL
+  - CheckCrossSiteScripting
+  - CheckMyCustomRule
+skip_checks:
+  - CheckDefaultRoutes
+enable_checks:
+  - CheckSecrets
+additional_checks_path:
+  - lib/brakeman/checks
+debug: false
+show_timing: true
+output_format: :to_json
+html_style: config/brakeman.css
+ignore_file: config/brakeman.ignore
+show_ignored: false
+combine_locations: true
+highlight_user_input: true
+output_color: :force
+report_routes: false
+message_limit: 200
+pager: false
+table_width: 120
+collapse_mass_assignment: false
+summary_only: :no_summary
+absolute_paths: false
+github_repo: yippee-fun/app/backend@main
+text_fields:
+  - :confidence
+  - :check
+  - :message
+  - :file
+  - :line
+min_confidence: 2

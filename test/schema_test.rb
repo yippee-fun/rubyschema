@@ -53,7 +53,8 @@ class SchemaTest < Minitest::Test
         when ".json"
           JSON.parse(fixture_path.read)
         else
-          YAML.safe_load(fixture_path.read, permitted_classes: [Date, Time], aliases: true)
+          # Ruby symbols (e.g. `:to_json`) are plain strings to the YAML language server
+          stringify_symbols(YAML.safe_load(fixture_path.read, permitted_classes: [Date, Time, Symbol], aliases: true))
         end
 
         errors = schemer.validate(fixture_data).to_a
@@ -63,6 +64,15 @@ class SchemaTest < Minitest::Test
   end
 
   private
+
+  def stringify_symbols(obj)
+    case obj
+    when Hash then obj.to_h { |key, value| [stringify_symbols(key), stringify_symbols(value)] }
+    when Array then obj.map { |value| stringify_symbols(value) }
+    when Symbol then obj.inspect
+    else obj
+    end
+  end
 
   def find_description_keys(obj, path = "")
     paths = []
