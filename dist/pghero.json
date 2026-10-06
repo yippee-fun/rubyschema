@@ -16,7 +16,7 @@
       "markdownDescription": "Database connections to monitor. Each key is a database identifier (e.g., `primary`, `analytics`) with connection details. Most top-level thresholds and AWS settings can also be overridden per database.\n\n**Example:**\n```yaml\ndatabases:\n  primary:\n    url: <%= ENV[\"DATABASE_URL\"] %>\n  replica:\n    url: <%= ENV[\"REPLICA_DATABASE_URL\"] %>\n```",
       "propertyNames": { "type": "string" },
       "additionalProperties": {
-        "type": "object",
+        "type": ["object", "null"],
         "properties": {
           "url": {
             "type": "string",

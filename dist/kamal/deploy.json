@@ -4,6 +4,10 @@
   "title": "Kamal Deployment Configuration",
   "markdownDescription": "Configuration for Kamal, a deployment tool that enables zero-downtime deploys, rolling restarts, and container management on any server with Docker. Originally built for Rails apps but works with any containerized web application.\n\n[Kamal Documentation](https://kamal-deploy.org/docs/configuration/overview/)",
   "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
     "registry": {
       "type": "object",
       "markdownDescription": "Docker registry configuration for pushing and pulling images.\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/docker-registry/)",
@@ -103,6 +107,7 @@
         "ssl": {
           "anyOf": [
             { "type": "boolean" },
+            { "$ref": "#/definitions/erb" },
             {
               "type": "object",
               "markdownDescription": "Use a custom SSL certificate loaded from secrets instead of Let's Encrypt. Both keys must be set.",
@@ -448,8 +453,10 @@
   },
   "properties": {
     "service": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9_-]+$",
+      "anyOf": [
+        { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+        { "$ref": "#/definitions/erb" }
+      ],
       "markdownDescription": "The service name used as the container name prefix. Required. Can only include alphanumeric characters, hyphens, and underscores.\n\n**Example:**\n```yaml\nservice: myapp\n```\n\n[Kamal Docs](https://kamal-deploy.org/docs/configuration/overview/#the-service-name)"
     },
     "image": {
@@ -632,7 +639,8 @@
               "type": "array",
               "uniqueItems": true,
               "items": { "enum": ["amd64", "arm64"] }
-            }
+            },
+            { "$ref": "#/definitions/erb" }
           ],
           "markdownDescription": "The CPU architecture(s) to build for. Can be a single value or an array.\n\n**Example:**\n```yaml\nbuilder:\n  arch:\n    - amd64\n    - arm64\n```",
           "markdownEnumDescriptions": [
@@ -645,7 +653,7 @@
           "markdownDescription": "Connection string for a remote builder. Used for builds that don't match the local architecture.\n\n**Example:**\n```yaml\nbuilder:\n  remote: ssh://docker@docker-builder\n```"
         },
         "local": {
-          "type": "boolean",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "markdownDescription": "Whether to use local builder for local architecture builds. Set to `false` to always use remote builder.\n\n**Default:** `true`\n\n**Example:**\n```yaml\nbuilder:\n  local: false\n```"
         },
         "cache": {

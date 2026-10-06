@@ -131,6 +131,11 @@
           "const": "solid_cable",
           "markdownDescription": "Adapter type for database-backed pub/sub messaging using Solid Cable."
         },
+        "channel_prefix": {
+          "type": "string",
+          "markdownDescription": "Optional prefix for channel names to avoid collisions when multiple applications share the same database.",
+          "examples": ["appname_production", "myapp_staging"]
+        },
         "connects_to": {
           "type": "object",
           "markdownDescription": "Database connection configuration for Solid Cable. Specifies which database to use for storing messages. Accepts the same options as Active Record's `connects_to`.",

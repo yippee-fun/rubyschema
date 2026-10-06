@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../dist/mongoid.json
+%YAML 1.1
+---
+# Mirrors the empty `options:` sections in Mongoid's generated config.
+development:
+  clients:
+    default:
+      database: my_app_development
+      hosts:
+        - localhost:27017
+      options:
+        # read:
+        #   mode: :primary
+  options:
+    # raise_not_found_error: true

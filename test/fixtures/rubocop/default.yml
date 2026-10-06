@@ -116,7 +116,7 @@ Metrics:
   Enabled: true
 
 Metrics/AbcSize:
-  Max: 25
+  Max: 24.5
   AllowedMethods:
     - create
   CountRepeatedAttributes: false

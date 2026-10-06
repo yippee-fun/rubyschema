@@ -3977,7 +3977,7 @@
               "type": "boolean"
             },
             "Max": {
-              "type": "integer",
+              "type": "number",
               "minimum": 0
             }
           }

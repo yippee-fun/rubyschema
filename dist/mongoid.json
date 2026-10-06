@@ -16,7 +16,7 @@
           }
         },
         "options": {
-          "type": "object",
+          "type": ["object", "null"],
           "markdownDescription": "Application-level Mongoid configuration options that control ODM behavior, callbacks, validation, and serialization. Unknown option names raise `Mongoid::Errors::InvalidConfigOption`.",
           "properties": {
             "allow_bson5_decimal128": {
@@ -286,7 +286,7 @@
       "additionalProperties": false
     },
     "clientOptions": {
-      "type": "object",
+      "type": ["object", "null"],
       "markdownDescription": "Options passed to the MongoDB Ruby driver's `Mongo::Client`. Unsupported options are ignored with a warning.\n\n[Ruby Driver Client Options](https://www.mongodb.com/docs/ruby-driver/current/connect/connection-options/)",
       "properties": {
         "app_name": {

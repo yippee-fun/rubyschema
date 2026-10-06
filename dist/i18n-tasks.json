@@ -14,6 +14,7 @@
     },
     "keyPatternsByLocale": {
       "anyOf": [
+        { "type": "null" },
         { "$ref": "#/definitions/keyPatterns" },
         {
           "type": "object",
@@ -75,7 +76,7 @@
           "markdownDescription": "Keep the existing key order when writing locale files instead of sorting keys alphabetically.\n\n**Default:** `false`"
         },
         "read": {
-          "type": "array",
+          "type": ["array", "null"],
           "markdownDescription": "Locale files or `Dir.glob` patterns where translations are read from. Supports wildcards for scanning multiple directories.\n\n**Default:** `['config/locales/%{locale}.yml']`\n\n**Example:**\n```yaml\nread:\n  - 'config/locales/**/%{locale}.yml'\n  - 'config/locales/%{locale}.yml'\n```",
           "uniqueItems": true,
           "items": {
@@ -83,7 +84,7 @@
           }
         },
         "write": {
-          "type": "array",
+          "type": ["array", "null"],
           "uniqueItems": true,
           "markdownDescription": "Locale files to write keys to, as a list of `[key pattern, file]` routes matched top to bottom. A plain string is sugar for `['*', path]`. How these rules are applied depends on `router`.\n\n**Default:** `['config/locales/%{locale}.yml']`\n\n**Example:**\n```yaml\nwrite:\n  - ['{models,views}.*', 'config/locales/\\\\1.%{locale}.yml']\n  - 'config/locales/%{locale}.yml'\n```",
           "items": {
@@ -100,7 +101,7 @@
           }
         },
         "external": {
-          "type": "array",
+          "type": ["array", "null"],
           "uniqueItems": true,
           "markdownDescription": "External translation file patterns (e.g., from gems). These are read-only and won't be modified by i18n-tasks.\n\n**Example:**\n```yaml\nexternal:\n  - 'vendor/gems/**/config/locales/%{locale}.yml'\n```",
           "items": {
@@ -112,7 +113,7 @@
           "markdownDescription": "YAML-specific write configuration for controlling file formatting.",
           "properties": {
             "write": {
-              "type": "object",
+              "type": ["object", "null"],
               "properties": {
                 "line_width": {
                   "anyOf": [
@@ -132,7 +133,7 @@
           "markdownDescription": "JSON-specific write configuration for controlling file formatting.",
           "properties": {
             "write": {
-              "type": "object",
+              "type": ["object", "null"],
               "properties": {
                 "indent": {
                   "type": "string",
@@ -295,16 +296,21 @@
       "markdownDescription": "Translation backend configuration for automatic translation of missing keys. Use `i18n-tasks translate-missing` to translate. Settings for several backends can live side by side; `backend` (or the `--backend` CLI option) selects which one is used. API keys can also be supplied via environment variables.\n\n**Available backends:**\n- `google` - Google Translate API (default)\n- `deepl` - DeepL Pro API (recommended for quality)\n- `yandex` - Yandex Translate API\n- `openai` - OpenAI API\n- `watsonx` - IBM watsonx AI\n\n**Example:**\n```yaml\ntranslation:\n  backend: deepl\n  deepl_api_key: <%= ENV['DEEPL_AUTH_KEY'] %>\n```",
       "properties": {
         "backend": {
-          "enum": ["google", "deepl", "yandex", "openai", "watsonx"],
+          "anyOf": [
+            {
+              "enum": ["google", "deepl", "yandex", "openai", "watsonx"],
+              "markdownEnumDescriptions": [
+                "Use Google Translate API for automatic translation.\n\n[Get API Key](https://console.cloud.google.com/apis/credentials)",
+                "Use DeepL Pro API for high-quality automatic translation.\n\n[Get API Key](https://www.deepl.com/pro)",
+                "Use Yandex Translate API for automatic translation.\n\n[Get API Key](https://tech.yandex.com/translate)",
+                "Use OpenAI API for AI-powered translation.\n\n[Get API Key](https://platform.openai.com/api-keys)",
+                "Use IBM watsonx AI for translation.\n\n[Get Started with watsonx](https://www.ibm.com/watsonx)"
+              ]
+            },
+            { "$ref": "#/definitions/erb" }
+          ],
           "default": "google",
-          "markdownDescription": "Translation backend used by `i18n-tasks translate-missing`. Can be overridden with the `--backend` CLI option.\n\n**Default:** `google`",
-          "markdownEnumDescriptions": [
-            "Use Google Translate API for automatic translation.\n\n[Get API Key](https://console.cloud.google.com/apis/credentials)",
-            "Use DeepL Pro API for high-quality automatic translation.\n\n[Get API Key](https://www.deepl.com/pro)",
-            "Use Yandex Translate API for automatic translation.\n\n[Get API Key](https://tech.yandex.com/translate)",
-            "Use OpenAI API for AI-powered translation.\n\n[Get API Key](https://platform.openai.com/api-keys)",
-            "Use IBM watsonx AI for translation.\n\n[Get Started with watsonx](https://www.ibm.com/watsonx)"
-          ]
+          "markdownDescription": "Translation backend used by `i18n-tasks translate-missing`. Can be overridden with the `--backend` CLI option.\n\n**Default:** `google`"
         },
         "google_translate_api_key": {
           "type": "string",

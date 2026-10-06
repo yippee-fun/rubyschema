@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../../../dist/sidekiq.json
+%YAML 1.1
+---
+concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 5) %>
+timeout: <%= ENV.fetch("SIDEKIQ_TIMEOUT", 25) %>
+verbose: <%= ENV["SIDEKIQ_VERBOSE"] == "true" %>
+queues:
+  - default
+  - mailers
+scheduler:
+  dynamic: false
+  listened_queues_only: true
+  schedule:
+    cleanup:
+      cron: "0 0 * * *"
+      class: CleanupJob
+      queue: low
+      description: Removes stale records
+    refresh_feeds:
+      every: ["10m", { first_in: "1m" }]
+      args: [42]
+production:
+  concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 10) %>
+  scheduler:
+    enabled: true

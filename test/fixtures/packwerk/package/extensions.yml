@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../../../dist/packwerk/package.json
+%YAML 1.1
+---
+# Keys added by packwerk-extensions
+enforce_dependencies: true
+enforce_privacy: strict
+public_path: lib/public/
+private_constants:
+  - "::Billing::Internal"
+strict_privacy_ignored_patterns:
+  - engines/other_engine/test/**/*
+enforce_visibility: true
+visible_to:
+  - components/checkout
+enforce_folder_privacy: false
+enforce_layers: true
+layer: product
+dependencies:
+  - components/platform

@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../dist/pghero.json
+%YAML 1.1
+---
+# An empty entry uses the app's own database connection.
+databases:
+  primary:

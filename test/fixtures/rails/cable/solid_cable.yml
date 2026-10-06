@@ -17,6 +17,7 @@ staging:
 
 production:
   adapter: solid_cable
+  channel_prefix: myapp_production
   connects_to:
     database:
       writing: cable

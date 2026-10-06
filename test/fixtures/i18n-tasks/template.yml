@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../../dist/i18n-tasks.json
+%YAML 1.1
+---
+# Mirrors the commented-out sections of i18n-tasks' generated config.
+base_locale: en
+data:
+  read:
+    ## Default:
+    # - config/locales/%{locale}.yml
+  write:
+    ## Default:
+    # - config/locales/%{locale}.yml
+  external:
+    ## Example:
+    # - "<%= %x[bundle exec gem contents devise].split("\n").grep(/locales/).first %>"
+  yaml:
+    write:
+      # line_width: -1
+ignore_unused:
+  # - 'activerecord.attributes.*'
+translation:
+  backend: <%= ENV.fetch("I18N_TRANSLATION_BACKEND", "google") %>

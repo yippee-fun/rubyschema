@@ -4,13 +4,19 @@
   "title": "Sidekiq configuration",
   "markdownDescription": "Configuration for Sidekiq, a background job processor for Ruby.\n\nSidekiq uses Redis to store job and queue information. This configuration file (`config/sidekiq.yml` by default) allows you to control concurrency, queue priorities, and environment-specific settings.\n\nKeys may be written with or without a leading colon (e.g. `concurrency:` or `:concurrency:`). Top-level keys that are not options are treated as environment-specific sections.\n\n[Sidekiq Configuration Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#the-sidekiq-configuration-file)",
   "definitions": {
+    "erb": {
+      "type": "string",
+      "pattern": "^<%=.*%>$"
+    },
     "environment": {
-      "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).\n\nKeys may be written with or without a leading colon (e.g. `concurrency:` or `:concurrency:`).",
+      "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).",
       "properties": {
         "concurrency": {
-          "type": "integer",
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
           "markdownDescription": "Number of threads Sidekiq will use to process jobs concurrently.\n\nDefault: `5` (or `RAILS_MAX_THREADS` when that environment variable is set)\n\n**Important:** Your database connection pool should be set to at least this value in `config/database.yml`.\n\nExample: `pool: <%= ENV['RAILS_MAX_THREADS'] || 10 %>`\n\n**Note:** Concurrency higher than 50 is not recommended.\n\n[Concurrency Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#concurrency)",
-          "minimum": 1,
           "default": 5
         },
         "queues": {
@@ -36,13 +42,15 @@
           "default": ["default"]
         },
         "timeout": {
-          "type": "integer",
-          "minimum": 1,
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
           "default": 25,
           "markdownDescription": "Number of seconds Sidekiq waits for running jobs to finish when shutting down, before pushing them back to Redis.\n\nDefault: `25`\n\n**CLI equivalent:** `-t, --timeout NUM`"
         },
         "verbose": {
-          "type": "boolean",
+          "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
           "default": false,
           "markdownDescription": "Enable verbose (`DEBUG` level) logging.\n\nDefault: `false`\n\n**CLI equivalent:** `-v, --verbose`"
         },
@@ -68,35 +76,18 @@
             "type": "object",
             "properties": {
               "concurrency": {
-                "type": "integer",
-                "minimum": 1,
+                "anyOf": [
+                  { "type": "integer", "minimum": 1 },
+                  { "$ref": "#/definitions/erb" }
+                ],
                 "markdownDescription": "Number of threads this capsule uses to process jobs."
               },
               "queues": {
                 "$ref": "#/definitions/environment/properties/queues"
-              },
-              ":concurrency": {
-                "$ref": "#/definitions/environment/properties/capsules/additionalProperties/properties/concurrency"
-              },
-              ":queues": {
-                "$ref": "#/definitions/environment/properties/queues"
               }
             },
             "additionalProperties": false,
-            "allOf": [
-              {
-                "anyOf": [
-                  { "required": ["concurrency"] },
-                  { "required": [":concurrency"] }
-                ]
-              },
-              {
-                "anyOf": [
-                  { "required": ["queues"] },
-                  { "required": [":queues"] }
-                ]
-              }
-            ]
+            "required": ["concurrency", "queues"]
           }
         },
         "max_retries": {
@@ -149,62 +140,105 @@
           "default": false,
           "markdownDescription": "Disable Sidekiq's default `start`, `done` and `fail` log lines for each job.\n\nDefault: `false`"
         },
-        ":concurrency": {
-          "$ref": "#/definitions/environment/properties/concurrency"
-        },
-        ":queues": {
-          "$ref": "#/definitions/environment/properties/queues"
-        },
-        ":timeout": {
-          "$ref": "#/definitions/environment/properties/timeout"
-        },
-        ":verbose": {
-          "$ref": "#/definitions/environment/properties/verbose"
-        },
-        ":tag": { "$ref": "#/definitions/environment/properties/tag" },
-        ":labels": {
-          "$ref": "#/definitions/environment/properties/labels"
-        },
-        ":require": {
-          "$ref": "#/definitions/environment/properties/require"
-        },
-        ":capsules": {
-          "$ref": "#/definitions/environment/properties/capsules"
-        },
-        ":max_retries": {
-          "$ref": "#/definitions/environment/properties/max_retries"
-        },
-        ":dead_max_jobs": {
-          "$ref": "#/definitions/environment/properties/dead_max_jobs"
-        },
-        ":dead_timeout_in_seconds": {
-          "$ref": "#/definitions/environment/properties/dead_timeout_in_seconds"
-        },
-        ":average_scheduled_poll_interval": {
-          "$ref": "#/definitions/environment/properties/average_scheduled_poll_interval"
-        },
-        ":poll_interval_average": {
-          "$ref": "#/definitions/environment/properties/poll_interval_average"
-        },
-        ":max_iteration_runtime": {
-          "$ref": "#/definitions/environment/properties/max_iteration_runtime"
-        },
-        ":redis_idle_timeout": {
-          "$ref": "#/definitions/environment/properties/redis_idle_timeout"
-        },
-        ":logged_job_attributes": {
-          "$ref": "#/definitions/environment/properties/logged_job_attributes"
-        },
-        ":skip_default_job_logging": {
-          "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+        "scheduler": {
+          "type": "object",
+          "markdownDescription": "Configuration for [sidekiq-scheduler](https://github.com/sidekiq-scheduler/sidekiq-scheduler), a plugin that enqueues jobs on a schedule.\n\nRequires the `sidekiq-scheduler` gem (version 5 or later).\n\nExample:\n```yaml\nscheduler:\n  schedule:\n    cleanup:\n      cron: \"0 0 * * *\"\n      class: CleanupJob\n```",
+          "properties": {
+            "enabled": {
+              "anyOf": [{ "type": "boolean" }, { "$ref": "#/definitions/erb" }],
+              "default": true,
+              "markdownDescription": "Enable or disable the scheduler for this process.\n\nDefault: `true`"
+            },
+            "dynamic": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "Reload the schedule from Redis at runtime, so it can be changed without restarting Sidekiq.\n\nDefault: `false`"
+            },
+            "dynamic_every": {
+              "type": "string",
+              "default": "5s",
+              "markdownDescription": "How often to check for schedule changes when `dynamic` is enabled, in rufus-scheduler duration syntax.\n\nDefault: `\"5s\"`"
+            },
+            "listened_queues_only": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "Only schedule jobs whose queue is processed by this Sidekiq process.\n\nDefault: `false`"
+            },
+            "rufus_scheduler_options": {
+              "type": "object",
+              "markdownDescription": "Options passed to the underlying rufus-scheduler instance, e.g. `max_work_threads`."
+            },
+            "schedule": {
+              "type": "object",
+              "markdownDescription": "Scheduled jobs, keyed by name. The name is used as the job class unless `class` is given.",
+              "additionalProperties": {
+                "type": "object",
+                "markdownDescription": "A scheduled job. Set exactly one of `cron`, `every`, `interval`, `at` or `in`.",
+                "properties": {
+                  "cron": {
+                    "type": ["string", "array"],
+                    "markdownDescription": "Cron expression, with optional seconds, e.g. `\"0 */5 * * * *\"`."
+                  },
+                  "every": {
+                    "type": ["string", "array"],
+                    "markdownDescription": "Run repeatedly at this interval, e.g. `\"1h\"` or `[\"1h\", { first_in: \"10s\" }]`."
+                  },
+                  "interval": {
+                    "type": ["string", "array"],
+                    "markdownDescription": "Like `every`, but the interval is measured from the end of the previous run."
+                  },
+                  "at": {
+                    "type": ["string", "array"],
+                    "markdownDescription": "Run once at this time, e.g. `\"3000/01/01 07:00\"`."
+                  },
+                  "in": {
+                    "type": ["string", "array"],
+                    "markdownDescription": "Run once after this delay, e.g. `\"1h\"`."
+                  },
+                  "class": {
+                    "type": "string",
+                    "markdownDescription": "Job class to enqueue. Defaults to the job's name."
+                  },
+                  "queue": {
+                    "type": "string",
+                    "markdownDescription": "Queue to enqueue the job on. Defaults to the job class's queue."
+                  },
+                  "args": {
+                    "markdownDescription": "Arguments passed to `perform`. Use a hash together with `keyword_argument: true` for keyword arguments."
+                  },
+                  "description": {
+                    "type": "string",
+                    "markdownDescription": "Description shown in the Sidekiq Web UI."
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Enable or disable this job.\n\nDefault: `true`"
+                  },
+                  "include_metadata": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Pass a metadata hash (with `scheduled_at`) as the last argument to `perform`.\n\nDefault: `false`"
+                  },
+                  "keyword_argument": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Pass a hash in `args` as keyword arguments.\n\nDefault: `false`"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
         },
         "strict": {
           "type": "boolean",
           "markdownDescription": "Accepted for compatibility with older Sidekiq versions and ignored."
-        },
-        ":strict": {
-          "$ref": "#/definitions/environment/properties/strict"
         }
+      },
+      "propertyNames": {
+        "pattern": "^[^:]",
+        "errorMessage": "Write keys without a leading colon, e.g. `concurrency:` instead of `:concurrency:`."
       },
       "additionalProperties": false,
       "type": "object"
@@ -260,64 +294,19 @@
     "skip_default_job_logging": {
       "$ref": "#/definitions/environment/properties/skip_default_job_logging"
     },
-    ":concurrency": {
-      "$ref": "#/definitions/environment/properties/concurrency"
-    },
-    ":queues": {
-      "$ref": "#/definitions/environment/properties/queues"
-    },
-    ":timeout": {
-      "$ref": "#/definitions/environment/properties/timeout"
-    },
-    ":verbose": {
-      "$ref": "#/definitions/environment/properties/verbose"
-    },
-    ":tag": { "$ref": "#/definitions/environment/properties/tag" },
-    ":labels": {
-      "$ref": "#/definitions/environment/properties/labels"
-    },
-    ":require": {
-      "$ref": "#/definitions/environment/properties/require"
-    },
-    ":capsules": {
-      "$ref": "#/definitions/environment/properties/capsules"
-    },
-    ":max_retries": {
-      "$ref": "#/definitions/environment/properties/max_retries"
-    },
-    ":dead_max_jobs": {
-      "$ref": "#/definitions/environment/properties/dead_max_jobs"
-    },
-    ":dead_timeout_in_seconds": {
-      "$ref": "#/definitions/environment/properties/dead_timeout_in_seconds"
-    },
-    ":average_scheduled_poll_interval": {
-      "$ref": "#/definitions/environment/properties/average_scheduled_poll_interval"
-    },
-    ":poll_interval_average": {
-      "$ref": "#/definitions/environment/properties/poll_interval_average"
-    },
-    ":max_iteration_runtime": {
-      "$ref": "#/definitions/environment/properties/max_iteration_runtime"
-    },
-    ":redis_idle_timeout": {
-      "$ref": "#/definitions/environment/properties/redis_idle_timeout"
-    },
-    ":logged_job_attributes": {
-      "$ref": "#/definitions/environment/properties/logged_job_attributes"
-    },
-    ":skip_default_job_logging": {
-      "$ref": "#/definitions/environment/properties/skip_default_job_logging"
+    "scheduler": {
+      "$ref": "#/definitions/environment/properties/scheduler"
     },
     "development": { "$ref": "#/definitions/environment" },
     "production": { "$ref": "#/definitions/environment" },
     "staging": { "$ref": "#/definitions/environment" },
     "strict": {
       "$ref": "#/definitions/environment/properties/strict"
-    },
-    ":strict": {
-      "$ref": "#/definitions/environment/properties/strict"
     }
+  },
+  "propertyNames": {
+    "pattern": "^[^:]",
+    "errorMessage": "Write keys without a leading colon, e.g. `concurrency:` instead of `:concurrency:`."
   },
   "additionalProperties": { "$ref": "#/definitions/environment" }
 }
