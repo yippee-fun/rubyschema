@@ -33,6 +33,118 @@
       "items": {
         "type": "string"
       }
+    },
+    "enforce_privacy": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ],
+      "default": false,
+      "markdownDescription": "Enable privacy enforcement for this package. References from other packages to constants outside the public folder cause violations.\n\n- `true`: Enforce, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nenforce_privacy: true\n```"
+    },
+    "public_path": {
+      "type": "string",
+      "default": "app/public/",
+      "markdownDescription": "Folder holding this package's public API, relative to the package root.\n\n**Default:** `app/public/`\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\npublic_path: lib/public/\n```"
+    },
+    "private_constants": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Only enforce privacy on these constants instead of everything outside the public folder. Requires `enforce_privacy`.\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nprivate_constants:\n  - \"::Billing::Internal\"\n```"
+    },
+    "ignored_private_constants": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Private constants that do not cause privacy violations.\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nignored_private_constants:\n  - \"::Billing::LegacyInvoice\"\n```"
+    },
+    "strict_privacy_ignored_patterns": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "File patterns whose privacy violations are allowed when `enforce_privacy` is `\"strict\"`.\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nstrict_privacy_ignored_patterns:\n  - engines/other_engine/test/**/*\n```"
+    },
+    "enforce_visibility": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ],
+      "default": false,
+      "markdownDescription": "Enable visibility enforcement for this package. Only packages listed in `visible_to` may reference it.\n\n- `true`: Enforce, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nenforce_visibility: true\nvisible_to:\n  - components/checkout\n```"
+    },
+    "visible_to": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Packages allowed to reference this package when `enforce_visibility` is enabled.\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nvisible_to:\n  - components/checkout\n```"
+    },
+    "enforce_folder_privacy": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ],
+      "default": false,
+      "markdownDescription": "Only allow this package to be referenced by its parent and sibling packages.\n\n- `true`: Enforce, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nenforce_folder_privacy: true\n```"
+    },
+    "layer": {
+      "type": "string",
+      "markdownDescription": "The layer this package belongs to. Must be one of the `layers` in `packwerk.yml`. Packages may only depend on packages in the same or a lower layer.\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nlayer: utility\n```"
+    },
+    "enforce_layers": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ],
+      "default": false,
+      "markdownDescription": "Enable layer enforcement for this package.\n\n- `true`: Enforce, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nenforce_layers: true\nlayer: product\n```"
+    },
+    "enforce_architecture": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "strict"
+          ]
+        }
+      ],
+      "default": false,
+      "markdownDescription": "Enable layer enforcement for this package, when `packwerk.yml` uses the legacy `architecture_layers` key.\n\n- `true`: Enforce, allow recording violations in `package_todo.yml`\n- `\"strict\"`: Prevent new violations from being added to `package_todo.yml`\n- `false`: Don't enforce\n\nRequires [packwerk-extensions](https://github.com/rubyatscale/packwerk-extensions).\n\n**Example:**\n```yaml\nenforce_architecture: true\nlayer: product\n```",
+      "deprecationMessage": "Rename `architecture_layers` to `layers` in packwerk.yml and use `enforce_layers`."
     }
   },
   "additionalProperties": false

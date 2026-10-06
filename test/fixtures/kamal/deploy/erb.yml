@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=../../../../dist/kamal/deploy.json
+%YAML 1.1
+---
+# Kamal renders deploy.yml through ERB before parsing it.
+service: <%= ENV.fetch("SERVICE_NAME", "myapp") %>
+image: myapp/web
+servers:
+  - 192.168.0.1
+proxy:
+  host: myapp.example.com
+  ssl: <%= ENV["SSL"] == "true" %>
+builder:
+  arch: <%= Kamal::Utils.docker_arch %>
+  local: <%= ENV["CI"].nil? %>

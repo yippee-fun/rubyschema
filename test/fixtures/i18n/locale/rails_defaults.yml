@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../../../../dist/i18n/locale.json
+%YAML 1.1
+---
+# Excerpt from activesupport/lib/active_support/locale/en.yml
+en:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+    day_names:
+      - Sunday
+      - Monday
+    month_names:
+      - ~
+      - January
+      - February
+    order:
+      - :year
+      - :month
+      - :day
+  number:
+    format:
+      separator: "."
+      delimiter: ","
+      precision: 3
+      round_mode: default
+      significant: false
+      strip_insignificant_zeros: false

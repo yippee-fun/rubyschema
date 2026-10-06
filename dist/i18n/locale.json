@@ -11,11 +11,21 @@
         "type": "string"
       },
       "additionalProperties": {
-        "oneOf": [{ "type": "string" }, { "$ref": "#/definitions/config" }]
+        "$ref": "#/definitions/value"
       }
+    },
+    "value": {
+      "anyOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        {
+          "type": "array",
+          "items": { "type": ["string", "number", "boolean", "null"] }
+        },
+        { "$ref": "#/definitions/config" }
+      ]
     }
   },
   "additionalProperties": {
-    "$ref": "#/definitions/config"
+    "anyOf": [{ "$ref": "#/definitions/config" }, { "type": "null" }]
   }
 }
