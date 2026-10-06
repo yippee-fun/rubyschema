@@ -12,7 +12,10 @@
       "markdownDescription": "Environment-specific configuration for Sidekiq.\n\nSettings defined here will override top-level settings when running in the specified environment (e.g., `production`, `staging`, `development`).",
       "properties": {
         "concurrency": {
-          "anyOf": [{ "type": "integer", "minimum": 1 }, { "$ref": "#/definitions/erb" }],
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
           "markdownDescription": "Number of threads Sidekiq will use to process jobs concurrently.\n\nDefault: `5` (or `RAILS_MAX_THREADS` when that environment variable is set)\n\n**Important:** Your database connection pool should be set to at least this value in `config/database.yml`.\n\nExample: `pool: <%= ENV['RAILS_MAX_THREADS'] || 10 %>`\n\n**Note:** Concurrency higher than 50 is not recommended.\n\n[Concurrency Documentation](https://github.com/sidekiq/sidekiq/wiki/Advanced-Options#concurrency)",
           "default": 5
         },
@@ -39,7 +42,10 @@
           "default": ["default"]
         },
         "timeout": {
-          "anyOf": [{ "type": "integer", "minimum": 1 }, { "$ref": "#/definitions/erb" }],
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "$ref": "#/definitions/erb" }
+          ],
           "default": 25,
           "markdownDescription": "Number of seconds Sidekiq waits for running jobs to finish when shutting down, before pushing them back to Redis.\n\nDefault: `25`\n\n**CLI equivalent:** `-t, --timeout NUM`"
         },
@@ -70,7 +76,10 @@
             "type": "object",
             "properties": {
               "concurrency": {
-                "anyOf": [{ "type": "integer", "minimum": 1 }, { "$ref": "#/definitions/erb" }],
+                "anyOf": [
+                  { "type": "integer", "minimum": 1 },
+                  { "$ref": "#/definitions/erb" }
+                ],
                 "markdownDescription": "Number of threads this capsule uses to process jobs."
               },
               "queues": {
