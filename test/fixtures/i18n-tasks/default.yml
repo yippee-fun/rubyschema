@@ -55,7 +55,10 @@ search:
     - I18n::Tasks::Scanners::AstMatchers::DefaultI18nSubjectMatcher
   scanners:
     - ["::I18n::Tasks::Scanners::RubyScanner", { only: ["*.rb"] }]
-    - ["::I18n::Tasks::Scanners::PatternWithScopeScanner", { exclude: ["*.erb", "*.rb"] }]
+    - [
+        "::I18n::Tasks::Scanners::PatternWithScopeScanner",
+        { exclude: ["*.erb", "*.rb"] },
+      ]
 translation:
   backend: deepl
   deepl_api_key: "abc123"

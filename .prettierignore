@@ -1,0 +1,3 @@
+# Prettier collapses the whitespace the homepage editor mock relies on.
+dist/index.html
+vendor/

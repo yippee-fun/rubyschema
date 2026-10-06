@@ -19,7 +19,7 @@ production:
     priority: 0
   a_periodic_job:
     class: MyJob
-    args: [ 42, { status: "custom_status" } ]
+    args: [42, { status: "custom_status" }]
     schedule: every second
     description: Runs MyJob with a custom status
   my_periodic_resque_job:

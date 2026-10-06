@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=../../../dist/brakeman.json
 %YAML 1.1
 ---
-
 parallel_checks: false
 report_progress: false
 quiet: true

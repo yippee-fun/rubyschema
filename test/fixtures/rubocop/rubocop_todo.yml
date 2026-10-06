@@ -10,23 +10,23 @@
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterGuardClause:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, DefLikeMacros, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
 Layout/EmptyLineBetweenDefs:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 4
 # This cop supports safe autocorrection (--autocorrect).
 Layout/SpaceAfterComma:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
@@ -35,8 +35,8 @@ Layout/SpaceAfterComma:
 # SupportedStylesForRationalLiterals: space, no_space
 Layout/SpaceAroundOperators:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
@@ -53,17 +53,17 @@ Metrics/ParameterLists:
 # AllowedNames: as, at, by, cc, db, id, if, in, io, ip, of, on, os, pp, to
 Naming/MethodParameterName:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "spec/**/*"
+    - "test/**/*"
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -71,16 +71,16 @@ Style/Documentation:
 # SupportedStyles: always, always_true, never
 Style/FrozenStringLiteralComment:
   Exclude:
-    - '**/*.arb'
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "**/*.arb"
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 Style/IfUnlessModifier:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
@@ -88,24 +88,24 @@ Style/IfUnlessModifier:
 # SupportedStyles: predicate, comparison
 Style/NilComparison:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowMultipleReturnValues.
 Style/RedundantReturn:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowAsExpressionSeparator.
 Style/Semicolon:
   Exclude:
-    - 'lib/a.rb'
-    - 'lib/b.rb'
+    - "lib/a.rb"
+    - "lib/b.rb"
 
 # Offense count: 6
 # This cop supports safe autocorrection (--autocorrect).
