@@ -105,35 +105,35 @@ You can find all available schemas below or in the [`dist` directory](./dist).
 
 ## Supported Config Files
 
-| Name          | File                     | Schema URL                           |
-| ------------- | ------------------------ | ------------------------------------ |
-| Rails DB      | `database.yml`           | [`./dist/rails/database.json`](./dist/rails/database.json) |
-| ActiveStorage | `storage.yml`            | [`./dist/rails/storage.json`](./dist/rails/storage.json) |
-| SolidQueue    | `recurring.yml`          | [`./dist/rails/recurring.json`](./dist/rails/recurring.json) |
-| SolidQueue    | `queue.yml`              | [`./dist/rails/queue.json`](./dist/rails/queue.json) |
-| SolidCache    | `cache.yml`              | [`./dist/rails/cache.json`](./dist/rails/cache.json) |
-| SolidCable    | `cable.yml`              | [`./dist/rails/cable.json`](./dist/rails/cable.json) |
-| RuboCop       | `.rubocop.yml`           | [`./dist/rubocop.json`](./dist/rubocop.json) |
-| RuboCop       | `.rubocop_todo.yml`      | [`./dist/rubocop.json`](./dist/rubocop.json) |
-| Vite          | `vite.json`              | [`./dist/vite.json`](./dist/vite.json) |
-| Kamal         | `deploy.yml`             | [`./dist/kamal/deploy.json`](./dist/kamal/deploy.json) |
-| I18n          | `locales/{language}.yml` | [`./dist/i18n/locale.json`](./dist/i18n/locale.json) |
-| Sidekiq       | `sidekiq.yml`            | [`./dist/sidekiq.json`](./dist/sidekiq.json) |
-| RoRvsWild     | `rorvswild.yml`          | [`./dist/rorvswild.json`](./dist/rorvswild.json) |
-| Standard      | `.standard.yml`          | [`./dist/standard.json`](./dist/standard.json) |
-| ERB Lint      | `.erb_lint.yml`          | [`./dist/erb_lint.json`](./dist/erb_lint.json) |
-| Brakeman      | `config/brakeman.yml`    | [`./dist/brakeman.json`](./dist/brakeman.json) |
-| Honeybadger   | `honeybadger.yml`        | [`./dist/honeybadger.json`](./dist/honeybadger.json) |
-| Shoryuken     | `shoryuken.yml`          | [`./dist/shoryuken.json`](./dist/shoryuken.json) |
+| Name          | File                     | Schema URL                                                     |
+| ------------- | ------------------------ | -------------------------------------------------------------- |
+| Rails DB      | `database.yml`           | [`./dist/rails/database.json`](./dist/rails/database.json)     |
+| ActiveStorage | `storage.yml`            | [`./dist/rails/storage.json`](./dist/rails/storage.json)       |
+| SolidQueue    | `recurring.yml`          | [`./dist/rails/recurring.json`](./dist/rails/recurring.json)   |
+| SolidQueue    | `queue.yml`              | [`./dist/rails/queue.json`](./dist/rails/queue.json)           |
+| SolidCache    | `cache.yml`              | [`./dist/rails/cache.json`](./dist/rails/cache.json)           |
+| SolidCable    | `cable.yml`              | [`./dist/rails/cable.json`](./dist/rails/cable.json)           |
+| RuboCop       | `.rubocop.yml`           | [`./dist/rubocop.json`](./dist/rubocop.json)                   |
+| RuboCop       | `.rubocop_todo.yml`      | [`./dist/rubocop.json`](./dist/rubocop.json)                   |
+| Vite          | `vite.json`              | [`./dist/vite.json`](./dist/vite.json)                         |
+| Kamal         | `deploy.yml`             | [`./dist/kamal/deploy.json`](./dist/kamal/deploy.json)         |
+| I18n          | `locales/{language}.yml` | [`./dist/i18n/locale.json`](./dist/i18n/locale.json)           |
+| Sidekiq       | `sidekiq.yml`            | [`./dist/sidekiq.json`](./dist/sidekiq.json)                   |
+| RoRvsWild     | `rorvswild.yml`          | [`./dist/rorvswild.json`](./dist/rorvswild.json)               |
+| Standard      | `.standard.yml`          | [`./dist/standard.json`](./dist/standard.json)                 |
+| ERB Lint      | `.erb_lint.yml`          | [`./dist/erb_lint.json`](./dist/erb_lint.json)                 |
+| Brakeman      | `config/brakeman.yml`    | [`./dist/brakeman.json`](./dist/brakeman.json)                 |
+| Honeybadger   | `honeybadger.yml`        | [`./dist/honeybadger.json`](./dist/honeybadger.json)           |
+| Shoryuken     | `shoryuken.yml`          | [`./dist/shoryuken.json`](./dist/shoryuken.json)               |
 | Packwerk      | `package.yml`            | [`./dist/packwerk/package.json`](./dist/packwerk/package.json) |
-| Lefthook      | `lefthook.yml`           | [`./dist/lefthook.json`](./dist/lefthook.json) |
-| Lefthook      | `lefthook.json`          | [`./dist/lefthook.json`](./dist/lefthook.json) |
-| Lefthook      | `lefthook.toml`          | [`./dist/lefthook.json`](./dist/lefthook.json) |
-| Scout APM     | `scout_apm.yml`          | [`./dist/scout_apm.json`](./dist/scout_apm.json) |
-| Mongoid       | `mongoid.yml`            | [`./dist/mongoid.json`](./dist/mongoid.json) |
-| Pghero        | `pghero.yml`             | [`./dist/pghero.json`](./dist/pghero.json) |
-| I18n-tasks    | `i18n-tasks.yml`         | [`./dist/i18n-tasks.json`](./dist/i18n-tasks.json) |
-| Blazer        | `config/blazer.yml`      | [`./dist/blazer.json`](./dist/blazer.json) |
+| Lefthook      | `lefthook.yml`           | [`./dist/lefthook.json`](./dist/lefthook.json)                 |
+| Lefthook      | `lefthook.json`          | [`./dist/lefthook.json`](./dist/lefthook.json)                 |
+| Lefthook      | `lefthook.toml`          | [`./dist/lefthook.json`](./dist/lefthook.json)                 |
+| Scout APM     | `scout_apm.yml`          | [`./dist/scout_apm.json`](./dist/scout_apm.json)               |
+| Mongoid       | `mongoid.yml`            | [`./dist/mongoid.json`](./dist/mongoid.json)                   |
+| Pghero        | `pghero.yml`             | [`./dist/pghero.json`](./dist/pghero.json)                     |
+| I18n-tasks    | `i18n-tasks.yml`         | [`./dist/i18n-tasks.json`](./dist/i18n-tasks.json)             |
+| Blazer        | `config/blazer.yml`      | [`./dist/blazer.json`](./dist/blazer.json)                     |
 
 ## Contributing
 

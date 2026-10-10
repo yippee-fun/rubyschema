@@ -8,7 +8,7 @@ run = "bundle install"
 [tasks.format]
 description = "Format code with Prettier and Rubocop"
 run = [
-  "npx prettier --write .",
+  "npx prettier@3.8.1 --write .",
   "bundle exec rubocop -A"
 ]
 
