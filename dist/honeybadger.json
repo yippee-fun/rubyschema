@@ -76,8 +76,8 @@
                 { "type": "integer", "minimum": 0 },
                 { "$ref": "#/definitions/erb" }
               ],
-              "markdownDescription": "Maximum number of events for the event worker queue.",
-              "default": 100000
+              "markdownDescription": "Maximum number of events for the event worker queue.\n\nRaise this if your app sends large bursts of events.\n\nDefault: `10000` (`100000` before honeybadger 6.10.0)",
+              "default": 10000
             },
             "batch_size": {
               "anyOf": [
