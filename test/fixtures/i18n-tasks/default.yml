@@ -67,6 +67,7 @@ translation:
   openai_api_key: "sk-abc123"
   openai_model: gpt-4o-mini
   openai_temperature: 0.0
+  openai_reasoning_effort: none
   openai_system_prompt: >-
     You are a professional translator that translates content from the %{from} locale
     to the %{to} locale in an i18n locale array.
