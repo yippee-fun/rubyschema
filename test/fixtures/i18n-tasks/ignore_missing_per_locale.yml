@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../../dist/i18n-tasks.json
+%YAML 1.1
+---
+base_locale: en
+translation:
+  backend: openai
+  openai_api_key: <%= ENV["OPENAI_API_KEY"] %>
+  openai_reasoning_effort: low
+ignore_missing:
+  all:
+    - "errors.messages.{accepted,blank,invalid,too_short,too_long}"
+  fr,es:
+    - "{devise,simple_form}.*"

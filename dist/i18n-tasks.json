@@ -271,7 +271,7 @@
     },
     "ignore_missing": {
       "$ref": "#/definitions/keyPatternsByLocale",
-      "markdownDescription": "Keys that should not be reported as missing. Supports i18n-tasks key patterns. Can also be a hash of locale list → keys, with `all` applying to every locale.\n\n**Example:**\n```yaml\nignore_missing:\n  - 'errors.messages.{accepted,blank,invalid,too_short,too_long}'\n  - '{devise,simple_form}.*'\n```"
+      "markdownDescription": "Keys that should not be reported as missing. Supports i18n-tasks key patterns. Can also be a hash of comma-separated locale list → keys, with `all` applying to every locale (applied per locale since i18n-tasks 1.2.0).\n\n**Example:**\n```yaml\nignore_missing:\n  - 'errors.messages.{accepted,blank,invalid,too_short,too_long}'\n  - '{devise,simple_form}.*'\n```\n\n**Per locale:**\n```yaml\nignore_missing:\n  all:\n    - 'errors.messages.{accepted,blank,invalid,too_short,too_long}'\n  fr,es:\n    - '{devise,simple_form}.*'\n```"
     },
     "ignore_unused": {
       "$ref": "#/definitions/keyPatternsByLocale",
@@ -383,7 +383,12 @@
           "minimum": 0,
           "maximum": 2,
           "default": 0.0,
-          "markdownDescription": "Sampling temperature for OpenAI translations (`0.0`\u2013`2.0`). Lower values are more deterministic.\n\n**Default:** `0.0`"
+          "markdownDescription": "Sampling temperature for OpenAI translations (`0.0`\u2013`2.0`). Lower values are more deterministic. Only sent when `openai_reasoning_effort` is unset or `none`; setting both with another reasoning effort is an error.\n\n**Default:** `0.0`"
+        },
+        "openai_reasoning_effort": {
+          "type": "string",
+          "examples": ["low"],
+          "markdownDescription": "Reasoning effort passed to the OpenAI API as `reasoning_effort` (for reasoning models), e.g. `none`, `minimal`, `low`, `medium`, `high`. With any value other than `none`, temperature is not sent, so don't set `openai_temperature` as well.\n\n**Default:** unset (the model's default)\n\n**Example:**\n```yaml\nopenai_reasoning_effort: low\n```"
         },
         "openai_system_prompt": {
           "type": "string",
@@ -411,6 +416,15 @@
           "type": "string",
           "markdownDescription": "Custom system prompt for watsonx translations. May contain `%{from}` and `%{to}`, which are replaced with the source and target locale codes.\n\n**Default:** a built-in professional translator prompt"
         }
+      },
+      "if": {
+        "required": ["openai_reasoning_effort"],
+        "properties": {
+          "openai_reasoning_effort": { "not": { "enum": ["none", ""] } }
+        }
+      },
+      "then": {
+        "not": { "required": ["openai_temperature"] }
       },
       "additionalProperties": false
     }
