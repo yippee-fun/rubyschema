@@ -417,6 +417,15 @@
           "markdownDescription": "Custom system prompt for watsonx translations. May contain `%{from}` and `%{to}`, which are replaced with the source and target locale codes.\n\n**Default:** a built-in professional translator prompt"
         }
       },
+      "if": {
+        "required": ["openai_reasoning_effort"],
+        "properties": {
+          "openai_reasoning_effort": { "not": { "enum": ["none", ""] } }
+        }
+      },
+      "then": {
+        "not": { "required": ["openai_temperature"] }
+      },
       "additionalProperties": false
     }
   },
